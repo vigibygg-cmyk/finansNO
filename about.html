@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Om oss | ProTools</title>
+    <meta name="theme-color" content="#2b6cb0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Paimta tiesiai iš about_pvz.html */
+        :root {
+            --bg: #f7f9fa; --card: #ffffff; --text: #1a202c; --muted: #718096;
+            --primary: #2b6cb0; --border: #e2e8f0; --radius: 10px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Navbar */
+        .navbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 15px 0; margin-bottom: 40px; position: sticky; top: 0; z-index: 100; }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .logo-sub { font-size: 12px; color: var(--muted); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: var(--text); font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: var(--primary); }
+        .phone-btn { background: #f0fff4; color: #276749; padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn { padding: 6px; font-size: 18px; border: 1px solid transparent; background: transparent; cursor: pointer; }
+        .lang-btn.active { background: var(--bg); border-color: var(--border); border-radius: 4px; }
+        .hamburger { display: none; font-size: 24px; border: none; background: none; cursor: pointer; }
+
+        /* Content */
+        .content { background: var(--card); padding: 40px; border-radius: var(--radius); border: 1px solid var(--border); }
+        h1 { margin-bottom: 20px; font-size: 32px; }
+        h2 { margin-top: 30px; margin-bottom: 15px; font-size: 24px; color: var(--primary); }
+        p { margin-bottom: 15px; color: var(--text); }
+        
+        .profile { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; background: #ebf8ff; padding: 20px; border-radius: 8px; }
+        .profile-icon { font-size: 50px; }
+        
+        footer { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--border); }
+            .nav-links.active { display: flex; }
+            .hamburger { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="logo-area" style="display:flex; flex-direction:column;">
+                <div class="logo-title"><i class="fa-solid fa-calculator"></i> ProTools</div>
+                <div class="logo-sub">by Vytautas Giedraitis</div>
+            </a>
+            <div class="nav-right">
+                <button class="hamburger" id="mobile-menu-btn">☰</button>
+                <div class="nav-links" id="nav-links">
+                    <a href="index.html" class="nav-link" data-i18n="nav_home">Hjem</a>
+                    <a href="tools.html" class="nav-link" data-i18n="nav_tools">Verktøy</a>
+                    <a href="about.html" class="nav-link active" data-i18n="nav_about">Om oss</a>
+                    <a href="contact.html" class="nav-link" data-i18n="nav_contact">Kontakt</a>
+                </div>
+                <a href="tel:94844497" class="phone-btn">📞 94844497</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="no">NO</button>
+                    <button class="lang-btn" data-lang="lt">LT</button>
+                    <button class="lang-btn" data-lang="pl">PL</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <h1 data-i18n="title">Om prosjektet</h1>
+            
+            <div class="profile">
+                <div class="profile-icon">👨‍💻</div>
+                <div>
+                    <strong data-i18n="dev_title">Utviklet av Vytautas Giedraitis</strong>
+                    <p style="margin:0; font-size:14px;" data-i18n="dev_desc">Selvstendig utvikler & finans-entusiast</p>
+                </div>
+            </div>
+
+            <h2 data-i18n="mission_title">Vår misjon</h2>
+            <p data-i18n="mission_text">
+                Å navigere i det norske systemet som innvandrer kan være utfordrende. Skatteregler, NAV-rettigheter og byråkrati er ofte komplisert.
+                ProTools er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.
+            </p>
+
+            <h2 data-i18n="free_title">Alltid gratis</h2>
+            <p data-i18n="free_text">
+                Jeg tror på tilgjengelig kunnskap. Disse verktøyene er gratis å bruke for alle. Prosjektet drives på fritiden, og støttes av frivillige donasjoner (kaffe).
+            </p>
+
+            <h2 data-i18n="tech_title">Teknologien</h2>
+            <p data-i18n="tech_text">
+                Ingen data sendes til servere. Alle beregninger skjer lokalt i din nettleser for maksimalt personvern. Vi bruker moderne AI-modeller for å hjelpe deg med tekstgenerering.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 ProTools by Vytautas Giedraitis</p>
+        </div>
+    </footer>
+
+    <script>
+        const T = {
+            no: {
+                nav_home: "Hjem", nav_tools: "Verktøy", nav_about: "Om oss", nav_contact: "Kontakt",
+                title: "Om prosjektet",
+                dev_title: "Utviklet av Vytautas Giedraitis",
+                dev_desc: "Selvstendig utvikler & finans-entusiast",
+                mission_title: "Vår misjon",
+                mission_text: "Å navigere i det norske systemet som innvandrer kan være utfordrende. ProTools er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.",
+                free_title: "Alltid gratis",
+                free_text: "Jeg tror på tilgjengelig kunnskap. Disse verktøyene er gratis å bruke for alle. Prosjektet drives på fritiden.",
+                tech_title: "Teknologien",
+                tech_text: "Ingen data sendes til servere. Alle beregninger skjer lokalt i din nettleser for maksimalt personvern."
+            },
+            en: {
+                nav_home: "Home", nav_tools: "Tools", nav_about: "About", nav_contact: "Contact",
+                title: "About the Project",
+                dev_title: "Developed by Vytautas Giedraitis",
+                dev_desc: "Independent Developer & Finance Enthusiast",
+                mission_title: "Our Mission",
+                mission_text: "Navigating the Norwegian system as an immigrant can be challenging. ProTools makes it simple. We provide free, professional tools to give you control over your finances and rights.",
+                free_title: "Always Free",
+                free_text: "I believe in accessible knowledge. These tools are free for everyone. The project is run in my spare time.",
+                tech_title: "Technology",
+                tech_text: "No data is sent to servers. All calculations happen locally in your browser for maximum privacy."
+            },
+            lt: {
+                nav_home: "Pradžia", nav_tools: "Įrankiai", nav_about: "Apie mus", nav_contact: "Kontaktai",
+                title: "Apie projektą",
+                dev_title: "Sukūrė Vytautas Giedraitis",
+                dev_desc: "Nepriklausomas kūrėjas ir finansų entuziastas",
+                mission_title: "Mūsų misija",
+                mission_text: "Imigrantams Norvegijos sistema gali būti paini. ProTools sukurta tam, kad tai palengvintų. Teikiame nemokamus, profesionalius įrankius jūsų finansiniam saugumui.",
+                free_title: "Visada nemokamai",
+                free_text: "Tikiu prieinamomis žiniomis. Visi įrankiai yra nemokami. Projektas vystomas laisvalaikiu.",
+                tech_title: "Technologija",
+                tech_text: "Jokie duomenys nesiunčiami į serverius. Visi skaičiavimai vyksta jūsų naršyklėje, užtikrinant privatumą."
+            },
+            pl: {
+                nav_home: "Główna", nav_tools: "Narzędzia", nav_about: "O nas", nav_contact: "Kontakt",
+                title: "O projekcie",
+                dev_title: "Opracowane przez Vytautasa Giedraitisa",
+                dev_desc: "Niezależny deweloper i entuzjasta finansów",
+                mission_title: "Nasza misja",
+                mission_text: "Poruszanie się po norweskim systemie może być trudne. ProTools to ułatwia. Oferujemy darmowe narzędzia, które dają kontrolę nad Twoimi finansami.",
+                free_title: "Zawsze za darmo",
+                free_text: "Wierzę w dostępną wiedzę. Narzędzia są darmowe dla wszystkich. Projekt prowadzony w wolnym czasie.",
+                tech_title: "Technologia",
+                tech_text: "Żadne dane nie są wysyłane na serwery. Wszystkie obliczenia odbywają się lokalnie w Twojej przeglądarce."
+            },
+            ru: {
+                nav_home: "Главная", nav_tools: "Инструменты", nav_about: "О нас", nav_contact: "Контакт",
+                title: "О проекте",
+                dev_title: "Разработано Витаутасом Гедрайтисом",
+                dev_desc: "Разработчик и финансовый энтузиаст",
+                mission_title: "Наша миссия",
+                mission_text: "Навигация в норвежской системе может быть сложной. ProTools упрощает это. Мы предлагаем бесплатные инструменты для контроля над вашими финансами.",
+                free_title: "Всегда бесплатно",
+                free_text: "Я верю в доступность знаний. Инструменты бесплатны. Проект разрабатывается в свободное время.",
+                tech_title: "Технологии",
+                tech_text: "Данные не отправляются на серверы. Все расчеты происходят локально в вашем браузере для приватности."
+            }
+        };
+
+        function setLang(lang) {
+            if(!T[lang]) return;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(T[lang][key]) el.textContent = T[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+            localStorage.setItem('protools_lang', lang);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('protools_lang') || 'no';
+            setLang(saved);
+            document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('nav-links').classList.toggle('active'));
+        });
+    </script>
+</body>
+</html>

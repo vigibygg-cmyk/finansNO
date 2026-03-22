@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV tool V2 by Vytautas G.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --sidebar-bg: #2d3436;
+            --main-bg: #ffffff;
+            --accent: #0984e3;
+            --main-text-color: #2d3436;
+            --sidebar-text-color: #ffffff;
+            --font-family: 'Inter', sans-serif;
+            --section-spacing: 25px;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            background: #dfe6e9; 
+            margin: 0; 
+            padding: 40px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-family: 'Inter', sans-serif;
+            transition: background 0.3s;
+        }
+
+        /* Valdymo skydas */
+        .no-print {
+            width: 210mm;
+            background: white;
+            padding: 24px;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 140px; }
+        .control-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #b2bec3; letter-spacing: 0.5px; }
+
+        select, input[type="color"] {
+            padding: 10px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fdfdfd;
+            cursor: pointer;
+            width: 100%;
+            transition: border 0.2s;
+        }
+        select:focus { border-color: var(--accent); outline: none; }
+
+        /* CV Puslapis */
+        .cv-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: var(--main-bg);
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+            color: var(--main-text-color);
+            font-family: var(--font-family);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar { 
+            background: var(--sidebar-bg); 
+            padding: 40px 30px; 
+            color: var(--sidebar-text-color); 
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .main-content { 
+            padding: 50px 60px; 
+            background: var(--main-bg);
+        }
+
+        /* Įvesties laukai */
+        input, textarea, select.editable-select {
+            width: 100%; border: 1px solid transparent; background: transparent;
+            padding: 4px; font-size: 14px; color: inherit; font-family: inherit;
+            resize: none; transition: background 0.2s;
+        }
+        input:hover, textarea:hover { background: rgba(0,0,0,0.03); border-radius: 4px; }
+        input:focus, textarea:focus { outline: none; background: rgba(0,0,0,0.05); border-radius: 4px; }
+
+        .name-header { margin-bottom: 40px; }
+        .name-input { font-size: 38px !important; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; line-height: 1.1; margin-bottom: 5px; }
+        .title-input { font-size: 18px !important; color: var(--accent); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Sekcijų antraštės */
+        h2 {
+            font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;
+        }
+        .main-content h2 { color: var(--main-text-color); border-bottom: 2px solid #f1f2f6; padding-bottom: 8px; margin-top: 35px; position: relative; }
+        .main-content h2::after { content: ''; height: 2px; width: 40px; background: var(--accent); position: absolute; bottom: -2px; left: 0; }
+        .sidebar h2 { color: var(--sidebar-text-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+
+        /* Kontaktai ir informacija */
+        .contact-item { margin-bottom: 15px; }
+        .contact-item label { font-size: 10px; font-weight: 700; opacity: 0.6; text-transform: uppercase; display: block; margin-bottom: 3px; }
+        .contact-item input, .contact-item textarea { font-size: 13px; font-weight: 400; opacity: 0.9; }
+
+        /* Dinaminiai elementai */
+        .dynamic-item { margin-bottom: 25px; position: relative; }
+        .item-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .item-header { font-weight: 700; font-size: 16px; flex: 1; }
+        .item-date { font-size: 12px; opacity: 0.6; text-align: right; width: 120px; }
+        .item-sub { color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+        .item-desc { font-size: 13.5px; line-height: 1.6; opacity: 0.8; }
+
+        /* Nuotrauka */
+        .photo-container {
+            width: 180px; height: 180px; 
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative;
+        }
+        .photo-container img { position: absolute; width: 100%; transition: transform 0.1s; }
+        .photo-container span { font-size: 12px; font-weight: 600; opacity: 0.5; text-align: center; padding: 20px; }
+
+        /* Mygtukai */
+        .btn-add {
+            color: var(--accent); background: #f1f2f6; border: none;
+            padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+            cursor: pointer; margin-top: 10px; width: 100%; text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .btn-add:hover { background: var(--accent); color: white; }
+
+        .btn-remove { 
+            position: absolute; left: -45px; top: 0; 
+            color: #ff7675; border: none; background: #fff; 
+            cursor: pointer; border-radius: 50%; width: 24px; height: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center;
+        }
+
+        .actions-bar { margin-left: auto; display: flex; gap: 12px; }
+        .btn-action {
+            padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 700; font-size: 13px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-action:active { transform: translateY(2px); }
+        .btn-save { background: #00b894; color: white; }
+        .btn-print { background: #2d3436; color: white; }
+
+        /* Kalbų elementai */
+        .lang-entry { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
+        .lang-entry input { font-size: 13px; font-weight: 600; }
+        .lang-entry select { 
+            width: 80px; font-size: 11px; background: rgba(255,255,255,0.1); 
+            color: white; border: none; border-radius: 4px; padding: 2px 5px;
+        }
+        .lang-entry select option { color: black; }
+
+        @media print {
+            .no-print, .btn-add, .btn-remove, .photo-controls { display: none !important; }
+            body { padding: 0; background: white; }
+            .cv-page { box-shadow: none; width: 100%; margin: 0; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body oninput="saveToLocal()">
+
+<div class="no-print">
+    <div class="control-group">
+        <label>Interface Language</label>
+        <select id="langSelect" onchange="changeLanguage()">
+            <option value="lt">Lietuvių</option>
+            <option value="en">English</option>
+            <option value="no">Norsk</option>
+            <option value="ru">Русский</option>
+            <option value="pl">Polski</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Font Style</label>
+        <select id="fontSelect" onchange="updateStyles()">
+            <option value="'Inter', sans-serif">Inter (Modern)</option>
+            <option value="'Poppins', sans-serif">Poppins (Soft)</option>
+            <option value="'Montserrat', sans-serif">Montserrat (Geometric)</option>
+            <option value="'Roboto', sans-serif">Roboto (Standard)</option>
+            <option value="'Playfair Display', serif">Playfair (Classic)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Sidebar Background</label>
+        <select id="sidebarBgSelect" onchange="updateStyles()">
+            <option value="#2d3436">Charcoal Grey</option>
+            <option value="#0984e3">Bright Blue</option>
+            <option value="#6c5ce7">Royal Purple</option>
+            <option value="#d63031">Elegant Red</option>
+            <option value="#00b894">Mint Green</option>
+            <option value="#222f3e">Deep Night</option>
+            <option value="#f5f6fa">Snow White</option>
+            <option value="#b2bec3">Concrete Grey</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Accent Color</label>
+        <input type="color" id="accentColor" value="#0984e3" oninput="updateStyles()">
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn-action btn-save" id="btn-save-ui" onclick="downloadHTML()">SAVE HTML</button>
+        <button class="btn-action btn-print" id="btn-print-ui" onclick="window.print()">PRINT / PDF</button>
+    </div>
+</div>
+
+<div class="cv-page" id="cv">
+    <aside class="sidebar">
+        <div>
+            <div class="photo-container" onclick="document.getElementById('photoInp').click()">
+                <img id="photoPreview" style="display:none;">
+                <span id="photoTxt">Spustelėkite ir įkelkite nuotrauką</span>
+                <input type="file" id="photoInp" hidden onchange="handlePhoto(this)">
+            </div>
+            
+            <div class="photo-controls" id="photoCtrls" style="display:none; padding: 0 10px;">
+                <label id="lbl-photo-ctrls" style="font-size: 9px; opacity: 0.5; display: block; text-align: center; margin-bottom: 5px;">SCALE AND POSITION</label>
+                <input type="range" id="zoomRange" min="0.5" max="3" step="0.05" value="1" oninput="updatePhotoStyle()" style="margin-bottom: 5px;">
+                <input type="range" id="shiftRange" min="-150" max="150" step="1" value="0" oninput="updatePhotoStyle()">
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h2 id="sec-contacts">Kontaktai</h2>
+            <div class="contact-item">
+                <label id="lbl-phone">Telefonas</label>
+                <input type="text" id="cv-phone" placeholder="+370 ...">
+            </div>
+            <div class="contact-item">
+                <label id="lbl-email">El. Paštas</label>
+                <input type="text" id="cv-email" placeholder="vardas@pavyzdys.lt">
+            </div>
+            <div class="contact-item">
+                <label id="lbl-address">Adresas</label>
+                <textarea id="cv-address" rows="2" placeholder="Gatvė, Miestas" oninput="autoHeight(this)"></textarea>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h2 id="sec-driving">Vairuotojo pažymėjimas</h2>
+            <input type="text" id="cv-driving" placeholder="Kategorijos (pvz. B)">
+        </div>
+
+        <div class="sidebar-section">
+            <h2 id="sec-languages">Kalbos</h2>
+            <div id="lang-list"></div>
+            <button class="btn-add" id="btn-add-lang" onclick="addLang()" style="background: rgba(255,255,255,0.1); color: white;">+ Pridėti</button>
+        </div>
+
+        <div class="sidebar-section">
+            <h2 id="sec-skills">Įgūdžiai</h2>
+            <textarea id="cv-skills" rows="6" oninput="autoHeight(this)" placeholder="Įgūdis 1&#10;Įgūdis 2..."></textarea>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="name-header">
+            <input type="text" class="name-input" id="cv-name" placeholder="VARDAS PAVARDĖ">
+            <input type="text" class="title-input" id="cv-title" placeholder="JŪSŲ PAREIGOS">
+        </header>
+
+        <section>
+            <h2 id="sec-about">Apie mane</h2>
+            <textarea id="cv-about" rows="3" oninput="autoHeight(this)" class="item-desc" placeholder="Trumpas prisistatymas..."></textarea>
+        </section>
+
+        <section>
+            <h2 id="sec-experience">Darbo patirtis</h2>
+            <div id="exp-list"></div>
+            <button class="btn-add" id="btn-add-exp" onclick="addItem('exp-list')">+ PRIDĖTI PATIRTĮ</button>
+        </section>
+
+        <section>
+            <h2 id="sec-education">Išsilavinimas</h2>
+            <div id="edu-list"></div>
+            <button class="btn-add" id="btn-add-edu" onclick="addItem('edu-list')">+ PRIDĖTI IŠSILAVINIMĄ</button>
+        </section>
+
+        <section>
+            <h2 id="sec-courses">Kursai ir sertifikatai</h2>
+            <div id="course-list"></div>
+            <button class="btn-add" id="btn-add-course" onclick="addItem('course-list')">+ PRIDĖTI KURSĄ</button>
+        </section>
+
+        <section>
+            <h2 id="sec-interests">Interesai</h2>
+            <textarea id="cv-interests" rows="2" oninput="autoHeight(this)" class="item-desc" placeholder="Laisvalaikio pomėgiai..."></textarea>
+        </section>
+    </main>
+</div>
+
+<script>
+    const translations = {
+        lt: {
+            phone: "Telefonas", phone_ph: "+370 ...", email: "El. Paštas", email_ph: "vardas@pavyzdys.lt", 
+            address: "Adresas", addr_ph: "Gatvė, Miestas", driving: "Vairuotojo pažymėjimas", driving_ph: "Kategorijos",
+            skills: "Įgūdžiai", skills_ph: "Įgūdis 1\nĮgūdis 2...", languages: "Kalbos", about: "Apie mane", about_ph: "Trumpas prisistatymas...",
+            experience: "Darbo patirtis", education: "Išsilavinimas", courses: "Kursai ir sertifikatai", 
+            interests: "Interesai", interests_ph: "Laisvalaikio pomėgiai...",
+            pos: "Pareigos", comp: "Įmonė / Įstaiga", date: "Data (Nuo - Iki)", desc: "Atsakomybės ir pasiekimai...", 
+            deg: "Specialybė / Laipsnis", inst: "Mokymosi įstaiga", course: "Kurso pavadinimas", native: "Gimtoji", 
+            add_exp: "+ PRIDĖTI PATIRTĮ", add_edu: "+ PRIDĖTI IŠSILAVINIMĄ", add_course: "+ PRIDĖTI KURSĄ", add_lang: "+ PRIDĖTI KALBĄ",
+            name_ph: "VARDAS PAVARDĖ", title_ph: "JŪSŲ PAREIGOS", photo_txt: "Spustelėkite ir įkelkite nuotrauką", lang_ph: "Kalba",
+            contacts: "Kontaktai", photo_ctrls: "SCALE AND POSITION"
+        },
+        en: {
+            phone: "Phone", phone_ph: "+000 ...", email: "Email", email_ph: "name@example.com", 
+            address: "Address", addr_ph: "Street, City", driving: "Driving License", driving_ph: "Categories",
+            skills: "Skills", skills_ph: "Skill 1\nSkill 2...", languages: "Languages", about: "About Me", about_ph: "Short introduction...",
+            experience: "Work Experience", education: "Education", courses: "Courses & Certificates", 
+            interests: "Interests", interests_ph: "Hobbies and interests...",
+            pos: "Position", comp: "Company / Organization", date: "Date (From - To)", desc: "Responsibilities and achievements...", 
+            deg: "Degree / Specialization", inst: "Institution", course: "Course Name", native: "Native", 
+            add_exp: "+ ADD EXPERIENCE", add_edu: "+ ADD EDUCATION", add_course: "+ ADD COURSE", add_lang: "+ ADD LANGUAGE",
+            name_ph: "FULL NAME", title_ph: "YOUR POSITION", photo_txt: "Click to upload photo", lang_ph: "Language",
+            contacts: "Contacts", photo_ctrls: "SCALE AND POSITION"
+        },
+        no: {
+            phone: "Telefon", phone_ph: "+47 ...", email: "E-post", email_ph: "navn@eksempel.no", 
+            address: "Adresse", addr_ph: "Gate, By", driving: "Førerkort", driving_ph: "Kategorier",
+            skills: "Ferdigheter", skills_ph: "Ferdighet 1\nFerdighet 2...", languages: "Språk", about: "Om meg", about_ph: "Kort introduksjon...",
+            experience: "Arbeidserfaring", education: "Utdanning", courses: "Kurs", 
+            interests: "Interesser", interests_ph: "Hobbyer og interesser...",
+            pos: "Stilling", comp: "Firma", date: "Dato", desc: "Beskrivelse...", 
+            deg: "Grad", inst: "Institusjon", course: "Kursnavn", native: "Morsmål", 
+            add_exp: "+ LEGG TIL ERFARING", add_edu: "+ LEGG TIL UTDANNING", add_course: "+ LEGG TIL KURS", add_lang: "+ LEGG TIL SPRÅK",
+            name_ph: "FULLT NAVN", title_ph: "DIN STILLING", photo_txt: "Klikk for å laste opp bilde", lang_ph: "Språk",
+            contacts: "Kontakter", photo_ctrls: "SCALE AND POSITION"
+        },
+        ru: {
+            phone: "Телефон", phone_ph: "+7 ...", email: "Эл. почта", email_ph: "имя@пример.ru", 
+            address: "Адрес", addr_ph: "Улица, Город", driving: "Водительские права", driving_ph: "Категории",
+            skills: "Навыки", skills_ph: "Навык 1\nНавык 2...", languages: "Языки", about: "Обо мне", about_ph: "Краткое вступление...",
+            experience: "Опыт работы", education: "Образование", courses: "Курсы и сертификаты", 
+            interests: "Интересы", interests_ph: "Хобби и интересы...",
+            pos: "Должность", comp: "Компания / Организация", date: "Дата (С - По)", desc: "Обязанности и достижения...", 
+            deg: "Специальность / Степень", inst: "Учебное заведение", course: "Название курса", native: "Родной", 
+            add_exp: "+ ДОБАВИТЬ ОПЫТ", add_edu: "+ ДОБАВИТЬ ОБРАЗОВАНИЕ", add_course: "+ ДОБАВИТЬ КУРС", add_lang: "+ ДОБАВИТЬ ЯЗЫК",
+            name_ph: "ИМЯ ФАМИЛИЯ", title_ph: "ВАША ДОЛЖНОСТЬ", photo_txt: "Нажмите, чтобы загрузить фото", lang_ph: "Язык",
+            contacts: "Контакты", photo_ctrls: "SCALE AND POSITION"
+        },
+        pl: {
+            phone: "Telefon", phone_ph: "+48 ...", email: "E-mail", email_ph: "imie@przyklad.pl", 
+            address: "Adres", addr_ph: "Ulica, Miasto", driving: "Prawo jazdy", driving_ph: "Kategorie",
+            skills: "Umiejętności", skills_ph: "Umiejętność 1\nUmiejętność 2...", languages: "Języki", about: "O mnie", about_ph: "Krótkie przedstawienie...",
+            experience: "Doświadczenie zawodowe", education: "Edukacja", courses: "Kursy i certyfikaty", 
+            interests: "Zainteresowania", interests_ph: "Hobby i zainteresowania...",
+            pos: "Stanowisko", comp: "Firma / Instytucja", date: "Data (Od - Do)", desc: "Obowiązki i osiągnięcia...", 
+            deg: "Specjalizacja / Stopień", inst: "Instytucja", course: "Nazwa kursu", native: "Ojczysty", 
+            add_exp: "+ DODAJ DOŚWIADCZENIE", add_edu: "+ DODAJ EDUKACJĘ", add_course: "+ DODAJ KURS", add_lang: "+ DODAJ JĘZYK",
+            name_ph: "IMIĘ NAZWISKO", title_ph: "TWOJE STANOWISKO", photo_txt: "Kliknij, aby dodać zdjęcie", lang_ph: "Język",
+            contacts: "Kontakty", photo_ctrls: "SCALE AND POSITION"
+        }
+    };
+
+    function updateStyles() {
+        const root = document.documentElement;
+        const sidebarBg = document.getElementById('sidebarBgSelect').value;
+        const accent = document.getElementById('accentColor').value;
+        const font = document.getElementById('fontSelect').value;
+
+        root.style.setProperty('--sidebar-bg', sidebarBg);
+        root.style.setProperty('--accent', accent);
+        root.style.setProperty('--font-family', font);
+
+        const isDark = isColorDark(sidebarBg);
+        root.style.setProperty('--sidebar-text-color', isDark ? '#ffffff' : '#2d3436');
+        saveToLocal();
+    }
+
+    function isColorDark(color) {
+        if (!color.startsWith('#')) return true;
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        return ((r * 299 + g * 587 + b * 114) / 1000) < 160;
+    }
+
+    function autoHeight(el) { 
+        el.style.height = 'auto'; 
+        el.style.height = el.scrollHeight + 'px'; 
+    }
+
+    function handlePhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.getElementById('photoPreview');
+                img.src = e.target.result; img.style.display = 'block';
+                document.getElementById('photoTxt').style.display = 'none';
+                document.getElementById('photoCtrls').style.display = 'block';
+                saveToLocal();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function updatePhotoStyle() {
+        const zoom = document.getElementById('zoomRange').value;
+        const shift = document.getElementById('shiftRange').value;
+        document.getElementById('photoPreview').style.transform = `scale(${zoom}) translateY(${shift}px)`;
+        saveToLocal();
+    }
+
+    function changeLanguage() {
+        const lang = document.getElementById('langSelect').value;
+        const t = translations[lang] || translations.en;
+
+        // Photo controls label
+        document.getElementById('lbl-photo-ctrls').innerText = t.photo_ctrls;
+
+        // CV Headers
+        document.getElementById('sec-contacts').innerText = t.contacts;
+        document.getElementById('lbl-phone').innerText = t.phone;
+        document.getElementById('cv-phone').placeholder = t.phone_ph;
+        document.getElementById('lbl-email').innerText = t.email;
+        document.getElementById('cv-email').placeholder = t.email_ph;
+        document.getElementById('lbl-address').innerText = t.address;
+        document.getElementById('cv-address').placeholder = t.addr_ph;
+
+        document.getElementById('sec-driving').innerText = t.driving;
+        document.getElementById('cv-driving').placeholder = t.driving_ph;
+        document.getElementById('sec-skills').innerText = t.skills;
+        document.getElementById('cv-skills').placeholder = t.skills_ph;
+
+        document.getElementById('sec-languages').innerText = t.languages;
+        
+        document.getElementById('sec-about').innerText = t.about;
+        document.getElementById('cv-about').placeholder = t.about_ph;
+
+        document.getElementById('sec-experience').innerText = t.experience;
+        document.getElementById('sec-education').innerText = t.education;
+        document.getElementById('sec-courses').innerText = t.courses;
+        
+        document.getElementById('sec-interests').innerText = t.interests;
+        document.getElementById('cv-interests').placeholder = t.interests_ph;
+
+        document.getElementById('btn-add-exp').innerText = t.add_exp;
+        document.getElementById('btn-add-edu').innerText = t.add_edu;
+        document.getElementById('btn-add-course').innerText = t.add_course;
+        document.getElementById('btn-add-lang').innerText = t.add_lang;
+
+        document.getElementById('cv-name').placeholder = t.name_ph;
+        document.getElementById('cv-title').placeholder = t.title_ph;
+        document.getElementById('photoTxt').innerText = t.photo_txt;
+
+        // Dynamic Items Placeholder Update
+        document.querySelectorAll('#exp-list .dynamic-item').forEach(item => {
+            item.querySelectorAll('input')[0].placeholder = t.pos;
+            item.querySelectorAll('input')[1].placeholder = t.date;
+            item.querySelectorAll('input')[2].placeholder = t.comp;
+            if(item.querySelector('textarea')) item.querySelector('textarea').placeholder = t.desc;
+        });
+        document.querySelectorAll('#edu-list .dynamic-item').forEach(item => {
+            item.querySelectorAll('input')[0].placeholder = t.deg;
+            item.querySelectorAll('input')[1].placeholder = t.date;
+            item.querySelectorAll('input')[2].placeholder = t.inst;
+        });
+        document.querySelectorAll('#course-list .dynamic-item').forEach(item => {
+            item.querySelectorAll('input')[0].placeholder = t.course;
+            item.querySelectorAll('input')[1].placeholder = t.date;
+            item.querySelectorAll('input')[2].placeholder = t.inst;
+        });
+
+        // Languages List Update
+        document.querySelectorAll('.lang-entry').forEach(div => {
+            div.querySelector('input').placeholder = t.lang_ph;
+            div.querySelector('select').options[0].text = t.native;
+        });
+
+        saveToLocal();
+    }
+
+    function addItem(listId, data = null) {
+        const container = document.getElementById(listId);
+        const lang = document.getElementById('langSelect').value;
+        const t = translations[lang] || translations.en;
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        
+        let placeholders = {};
+        if(listId === 'exp-list') placeholders = { h: t.pos, s: t.comp, d: t.date, tx: t.desc };
+        else if(listId === 'edu-list') placeholders = { h: t.deg, s: t.inst, d: t.date };
+        else placeholders = { h: t.course, s: t.inst, d: t.date };
+
+        div.innerHTML = `
+            <button class="btn-remove" onclick="this.parentElement.remove(); saveToLocal();">✕</button>
+            <div class="item-row">
+                <input type="text" class="item-header" placeholder="${placeholders.h}" value="${data?.h || ''}">
+                <input type="text" class="item-date" placeholder="${placeholders.d}" value="${data?.d || ''}">
+            </div>
+            <input type="text" class="item-sub" placeholder="${placeholders.s}" value="${data?.s || ''}">
+            ${listId === 'exp-list' ? `<textarea rows="2" class="item-desc" placeholder="${placeholders.tx}" oninput="autoHeight(this)">${data?.desc || ''}</textarea>` : ''}
+        `;
+        container.appendChild(div);
+        if(div.querySelector('textarea')) autoHeight(div.querySelector('textarea'));
+        saveToLocal();
+    }
+
+    function addLang(data = null) {
+        const t = translations[document.getElementById('langSelect').value] || translations.en;
+        const div = document.createElement('div');
+        div.className = 'lang-entry';
+        div.innerHTML = `
+            <input type="text" placeholder="${t.lang_ph}" style="flex:1" value="${data?.n || ''}">
+            <select class="editable-select">
+                <option value="Native" ${data?.v === 'Native' ? 'selected' : ''}>${t.native}</option>
+                <option value="C2" ${data?.v === 'C2' ? 'selected' : ''}>C2</option>
+                <option value="C1" ${data?.v === 'C1' ? 'selected' : ''}>C1</option>
+                <option value="B2" ${data?.v === 'B2' ? 'selected' : ''}>B2</option>
+                <option value="B1" ${data?.v === 'B1' ? 'selected' : ''}>B1</option>
+                <option value="A2" ${data?.v === 'A2' ? 'selected' : ''}>A2</option>
+                <option value="A1" ${data?.v === 'A1' ? 'selected' : ''}>A1</option>
+            </select>
+            <button onclick="this.parentElement.remove(); saveToLocal();" style="color:#ff7675; border:none; background:none; cursor:pointer;">✕</button>
+        `;
+        document.getElementById('lang-list').appendChild(div);
+        saveToLocal();
+    }
+
+    function saveToLocal() {
+        const data = {
+            name: document.getElementById('cv-name').value,
+            title: document.getElementById('cv-title').value,
+            phone: document.getElementById('cv-phone').value,
+            email: document.getElementById('cv-email').value,
+            address: document.getElementById('cv-address').value,
+            about: document.getElementById('cv-about').value,
+            driving: document.getElementById('cv-driving').value,
+            skills: document.getElementById('cv-skills').value,
+            interests: document.getElementById('cv-interests').value,
+            photo: document.getElementById('photoPreview').src,
+            zoom: document.getElementById('zoomRange').value,
+            shift: document.getElementById('shiftRange').value,
+            lang: document.getElementById('langSelect').value,
+            font: document.getElementById('fontSelect').value,
+            sidebar: document.getElementById('sidebarBgSelect').value,
+            accent: document.getElementById('accentColor').value,
+            exp: Array.from(document.getElementById('exp-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value,
+                desc: c.querySelector('textarea')?.value
+            })),
+            edu: Array.from(document.getElementById('edu-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value
+            })),
+            courses: Array.from(document.getElementById('course-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value
+            })),
+            langs: Array.from(document.getElementById('lang-list').children).map(c => ({
+                n: c.querySelector('input').value,
+                v: c.querySelector('select').value
+            }))
+        };
+        localStorage.setItem('cv_pro_v2_storage', JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+        const saved = localStorage.getItem('cv_pro_v2_storage');
+        if (!saved) { addItem('exp-list'); addItem('edu-list'); addItem('course-list'); addLang(); return; }
+        const d = JSON.parse(saved);
+        
+        document.getElementById('cv-name').value = d.name || '';
+        document.getElementById('cv-title').value = d.title || '';
+        document.getElementById('cv-phone').value = d.phone || '';
+        document.getElementById('cv-email').value = d.email || '';
+        document.getElementById('cv-address').value = d.address || '';
+        document.getElementById('cv-about').value = d.about || '';
+        document.getElementById('cv-driving').value = d.driving || '';
+        document.getElementById('cv-skills').value = d.skills || '';
+        document.getElementById('cv-interests').value = d.interests || '';
+
+        if (d.photo && d.photo.startsWith('data:')) {
+            const img = document.getElementById('photoPreview');
+            img.src = d.photo; img.style.display = 'block';
+            document.getElementById('photoTxt').style.display = 'none';
+            document.getElementById('photoCtrls').style.display = 'block';
+            document.getElementById('zoomRange').value = d.zoom || 1;
+            document.getElementById('shiftRange').value = d.shift || 0;
+            updatePhotoStyle();
+        }
+
+        document.getElementById('langSelect').value = d.lang || 'lt';
+        document.getElementById('fontSelect').value = d.font || "'Inter', sans-serif";
+        document.getElementById('sidebarBgSelect').value = d.sidebar || '#2d3436';
+        document.getElementById('accentColor').value = d.accent || '#0984e3';
+
+        d.exp?.forEach(i => addItem('exp-list', i));
+        d.edu?.forEach(i => addItem('edu-list', i));
+        d.courses?.forEach(i => addItem('course-list', i));
+        d.langs?.forEach(i => addLang(i));
+
+        changeLanguage();
+        updateStyles();
+    }
+
+    function downloadHTML() {
+        saveToLocal();
+        const content = document.documentElement.outerHTML;
+        const blob = new Blob([content], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `CV_Export_${document.getElementById('cv-name').value || 'V2'}.html`;
+        a.click();
+    }
+
+    window.onload = loadFromLocal;
+</script>
+</body>
+</html>

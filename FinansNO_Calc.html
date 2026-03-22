@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FinansNO Calc by Vytautas Giedraitis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ═══ LIGHT DESIGN SYSTEM ═══ */
+:root{
+  --bg:#f0f4f8;
+  --surface:#ffffff;
+  --card:#ffffff;
+  --card2:#f8fafc;
+  --border:#e2e8f0;
+  --border2:#cbd5e1;
+  --text:#0f172a;
+  --text2:#334155;
+  --muted:#64748b;
+  --muted2:#94a3b8;
+  --accent:#2563eb;
+  --accent-light:#eff6ff;
+  --accent2:#3b82f6;
+  --cyan:#0891b2;
+  --success:#059669;
+  --success-light:#ecfdf5;
+  --warning:#d97706;
+  --warning-light:#fffbeb;
+  --danger:#dc2626;
+  --danger-light:#fef2f2;
+  --info:#7c3aed;
+  --info-light:#f5f3ff;
+  --synced:#0284c7;
+  --synced-light:#e0f2fe;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.05);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.1),0 1px 4px rgba(0,0,0,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.5;}
+
+/* ═══ HEADER ═══ */
+header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.header-inner{display:flex;justify-content:space-between;align-items:center;height:60px;max-width:1280px;margin:0 auto;}
+.logo-area{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#0891b2);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;}
+.logo-text h1{font-size:16px;font-weight:800;color:var(--accent);line-height:1.1;}
+.logo-text small{font-size:10px;color:var(--muted);display:block;}
+.header-right{display:flex;align-items:center;gap:8px;}
+select.lang-sel{padding:7px 12px;border-radius:8px;border:1px solid var(--border2);background:#fff;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;outline:none;}
+select.lang-sel:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
+
+/* ═══ SYNC BADGE ═══ */
+.sync-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:var(--synced-light);color:var(--synced);border:1px solid #bae6fd;letter-spacing:0.04em;}
+.sync-badge i{font-size:9px;}
+
+/* ═══ TABS ═══ */
+.tabs-nav{background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tabs-inner{display:flex;max-width:1280px;margin:0 auto;padding:0 20px;}
+.tab-btn{padding:12px 16px;border:none;background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.18s;min-height:44px;}
+.tab-btn:hover{color:var(--text);background:var(--bg);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-btn .tab-dot{display:none;width:6px;height:6px;border-radius:50%;background:var(--synced);margin-left:4px;vertical-align:middle;}
+.tab-btn.has-data .tab-dot{display:inline-block;}
+
+/* ═══ CONTAINER ═══ */
+.container{max-width:1280px;margin:0 auto;padding:20px;}
+
+/* ═══ TOOLBAR ═══ */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
+.scen-wrap{display:flex;background:var(--card2);padding:3px;border-radius:9px;border:1px solid var(--border);}
+.scen-btn{padding:6px 16px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);font-family:'Inter',sans-serif;transition:all 0.18s;min-height:36px;}
+.scen-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,0.35);}
+.tool-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.18s;min-height:36px;}
+.tool-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
+.home-btn{text-decoration:none;color:var(--muted);}
+.home-btn:hover{color:var(--accent);}
+.spacer{flex:1;}
+
+/* ═══ GRID LAYOUTS ═══ */
+.dashboard{display:grid;grid-template-columns:360px 1fr;gap:20px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
+@media(max-width:680px){.two-col{grid-template-columns:1fr;}}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:var(--shadow);}
+.card:last-child{margin-bottom:0;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.card-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px;}
+.card-title i{color:var(--accent);width:16px;}
+.mod-stripe{border-top:3px solid var(--accent);border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;}
+.mod-stripe.blue{border-top-color:#2563eb;}
+.mod-stripe.green{border-top-color:#059669;}
+.mod-stripe.orange{border-top-color:#d97706;}
+.mod-stripe.red{border-top-color:#dc2626;}
+.mod-stripe.purple{border-top-color:#7c3aed;}
+.mod-head{padding:14px 18px;border-bottom:1px solid var(--border);background:var(--card2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.mod-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.mod-body{padding:18px;}
+
+/* ═══ SYNCED FIELD ═══ */
+.field-synced input,.field-synced select{border-color:var(--synced)!important;background:var(--synced-light)!important;}
+.field-synced label::after{content:" 🔗";font-size:10px;color:var(--synced);}
+
+/* ═══ INPUTS ═══ */
+.fg{margin-bottom:12px;position:relative;}
+.fg label{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);}
+.iw{position:relative;}
+input[type=number],input[type=text],select.inp{
+  width:100%;padding:11px 40px 11px 13px;
+  border-radius:9px;border:1px solid var(--border);
+  background:#fff;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:15px;font-weight:500;
+  outline:none;transition:border-color 0.18s,box-shadow 0.18s;
+  min-height:44px;-moz-appearance:textfield;
+}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;}
+input:focus,select.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.12);}
+input.readonly-synced{background:var(--synced-light);border-color:#bae6fd;color:var(--synced);font-weight:600;}
+.sfx{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--muted);pointer-events:none;font-family:'JetBrains Mono',monospace;}
+select.inp{padding-right:13px;cursor:pointer;}
+
+/* ═══ TOOLTIP ═══ */
+.tip-wrap{position:relative;display:inline-flex;cursor:help;}
+.tip-icon{color:var(--muted2);font-size:12px;margin-left:2px;transition:color 0.15s;}
+.tip-icon:hover{color:var(--accent);}
+.tip-box{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  width:260px;background:#1e293b;color:#e2e8f0;
+  border-radius:9px;padding:12px 14px;font-size:12px;font-weight:400;line-height:1.55;
+  z-index:999;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.25);
+  white-space:normal;text-transform:none;letter-spacing:0;
+}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1e293b;}
+.tip-wrap:hover .tip-box,.tip-wrap:focus-within .tip-box{display:block;}
+@media(max-width:480px){.tip-box{width:220px;left:0;transform:none;}}
+
+/* ═══ RANGE ═══ */
+input[type=range]{width:100%;height:5px;border-radius:3px;outline:none;border:none;accent-color:var(--accent);background:var(--border);cursor:pointer;margin:8px 0;min-height:auto;}
+
+/* ═══ EXP ROWS ═══ */
+.exp-row{display:grid;grid-template-columns:1fr 130px;gap:8px;align-items:start;margin-bottom:8px;}
+.exp-label{font-size:13px;font-weight:500;color:var(--text2);padding-top:12px;display:flex;align-items:center;gap:4px;}
+.exp-row .iw input{padding:9px 36px 9px 10px;font-size:13px;min-height:40px;}
+.exp-row .sfx{font-size:10px;}
+
+/* ═══ KPI ═══ */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;text-align:center;box-shadow:var(--shadow);}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px;}
+.kpi-val{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);}
+.kpi-val.pos{color:var(--success);}
+.kpi-val.neg{color:var(--danger);}
+.kpi-val.warn{color:var(--warning);}
+@media(max-width:480px){.kpi-grid{grid-template-columns:1fr 1fr;}.kpi:last-child{grid-column:1/-1;}.kpi-val{font-size:17px;}}
+
+/* ═══ STATUS PILLS ═══ */
+.pill{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:0.06em;display:inline-flex;align-items:center;gap:5px;}
+.pill-stable{background:var(--success-light);color:var(--success);border:1px solid #a7f3d0;}
+.pill-erosion{background:var(--warning-light);color:var(--warning);border:1px solid #fde68a;}
+.pill-critical{background:var(--danger-light);color:var(--danger);border:1px solid #fecaca;}
+.pill-info{background:var(--info-light);color:var(--info);border:1px solid #ddd6fe;}
+
+/* ═══ RESULT ROWS ═══ */
+.rr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed var(--border);}
+.rr:last-child{border-bottom:none;}
+.rr-label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:4px;}
+.rr-val{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);}
+.rr-val.pos{color:var(--success);}
+.rr-val.neg{color:var(--danger);}
+.rr-val.warn{color:var(--warning);}
+.rr-val.accent{color:var(--accent);}
+
+/* ═══ ADVISORY ═══ */
+.advisory{margin-top:14px;padding:12px 15px;border-radius:9px;font-size:13px;line-height:1.6;border-left:3px solid var(--accent);background:var(--accent-light);}
+.advisory.warn{border-left-color:var(--warning);background:var(--warning-light);}
+.advisory.danger{border-left-color:var(--danger);background:var(--danger-light);}
+.advisory.success{border-left-color:var(--success);background:var(--success-light);}
+
+/* ═══ TAGS ═══ */
+.tag{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.05em;}
+.tag-blue{background:var(--accent-light);color:var(--accent);}
+.tag-green{background:var(--success-light);color:var(--success);}
+.tag-orange{background:var(--warning-light);color:var(--warning);}
+.tag-red{background:var(--danger-light);color:var(--danger);}
+.tag-synced{background:var(--synced-light);color:var(--synced);border:1px solid #bae6fd;}
+
+/* ═══ WARNINGS LIST ═══ */
+.warn-list{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.warn-item{padding:9px 13px;border-radius:8px;font-size:12px;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.warn-item.w{background:var(--warning-light);border:1px solid #fde68a;color:#92400e;}
+.warn-item.d{background:var(--danger-light);border:1px solid #fecaca;color:#991b1b;}
+.warn-item.i{background:var(--info-light);border:1px solid #ddd6fe;color:#5b21b6;}
+
+/* ═══ DIVIDER ═══ */
+.divider{display:flex;align-items:center;gap:10px;margin:14px 0 12px;}
+.divider span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ═══ PROGRESS ═══ */
+.prog-wrap{background:var(--bg);border-radius:4px;height:7px;overflow:hidden;}
+.prog-bar{height:100%;border-radius:4px;transition:width 0.4s ease;}
+.prog-blue{background:linear-gradient(90deg,#2563eb,#0891b2);}
+.prog-green{background:linear-gradient(90deg,#059669,#34d399);}
+.prog-red{background:linear-gradient(90deg,#dc2626,#f97316);}
+
+/* ═══ SKATT COMPARE ═══ */
+.skatt-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:14px 0;}
+.skatt-box{background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border);text-align:center;}
+.skatt-box.rec{border-color:var(--accent);background:var(--accent-light);}
+.skatt-box .lbl{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.skatt-box .val{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+@media(max-width:600px){.skatt-compare{grid-template-columns:1fr;}.skatt-arrow{transform:rotate(90deg);}}
+
+/* ═══ TIMELINE TABLE ═══ */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:9px;border:1px solid var(--border);}
+table.tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:580px;}
+table.tbl th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);background:var(--card2);border-bottom:1px solid var(--border);white-space:nowrap;}
+table.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:middle;}
+table.tbl tr:last-child td{border-bottom:none;}
+table.tbl tr:hover td{background:var(--accent-light);}
+.tbl-pos{color:var(--success);font-weight:600;}
+.tbl-neg{color:var(--danger);font-weight:600;}
+.tbl-warn{color:var(--warning);font-weight:600;}
+
+/* ═══ SOURCE INFO BOX ═══ */
+.source-box{background:var(--info-light);border:1px solid #ddd6fe;border-radius:9px;padding:12px 14px;font-size:12px;color:#5b21b6;margin-bottom:14px;line-height:1.55;}
+.source-box strong{display:block;margin-bottom:3px;font-size:13px;}
+
+/* ═══ CHART ═══ */
+.chart-wrap{position:relative;height:260px;width:100%;}
+
+/* ═══ SECTION HEADER ═══ */
+.section-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.section-h h2{font-size:15px;font-weight:700;}
+
+/* ═══ FOOTER ═══ */
+footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);background:var(--surface);margin-top:20px;}
+footer strong{color:var(--accent);}
+
+/* ═══ TAB PANELS ═══ */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ═══ INFO NOTE ═══ */
+.note{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:12px;color:var(--text2);line-height:1.55;margin-top:10px;}
+.note.blue{background:var(--accent-light);border-color:#bfdbfe;color:#1e40af;}
+.note.green{background:var(--success-light);border-color:#a7f3d0;color:#065f46;}
+.note.orange{background:var(--warning-light);border-color:#fde68a;color:#92400e;}
+.note.red{background:var(--danger-light);border-color:#fecaca;color:#991b1b;}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  .container{padding:14px;}
+  .toolbar{gap:6px;}
+  .dashboard{gap:14px;}
+  input[type=number],input[type=text],select.inp{font-size:16px!important;min-height:44px;}
+  .exp-row{grid-template-columns:1fr 110px;}
+  .card{padding:14px;}
+  .mod-body{padding:14px;}
+}
+@media(max-width:480px){
+  .logo-text small{display:none;}
+  .tool-btn span{display:none;}
+  .tool-btn{padding:8px 10px;}
+}
+@media print{
+  header,.tabs-nav,.toolbar,button,select.lang-sel,.no-print{display:none!important;}
+  body{background:#fff;}
+  .card,.mod-stripe{box-shadow:none;border:1px solid #ccc;}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="header-inner">
+  <div class="logo-area">
+    <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+    <div class="logo-text">
+      <h1>FinansNO Calc</h1>
+      <small>by Vytautas Giedraitis</small>
+    </div>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="tool-btn home-btn" title="Home">
+      <i class="fa-solid fa-house"></i>
+      <span data-i18n="btn_home">Home</span>
+    </a>
+    <select class="lang-sel" id="langSel" onchange="changeLang()">
+      <option value="en">🇬🇧 EN</option>
+      <option value="lt">🇱🇹 LT</option>
+      <option value="no">🇳🇴 NO</option>
+      <option value="pl">🇵🇱 PL</option>
+      <option value="ru">🇷🇺 RU</option>
+    </select>
+  </div>
+</div>
+</header>
+
+<nav class="tabs-nav">
+<div class="tabs-inner">
+  <button class="tab-btn active" onclick="showTab('overview')" id="tbtn-overview"><span data-i18n="tab_overview">Apžvalga</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('dagpenger')" id="tbtn-dagpenger"><span data-i18n="tab_dagpenger">Dagpenger</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('permittering')" id="tbtn-permittering"><span data-i18n="tab_permit">Permittering</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('employer')" id="tbtn-employer"><span data-i18n="tab_employer">Darbdavys</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('budget')" id="tbtn-budget"><span data-i18n="tab_budget">Biudžetas</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('skatt')" id="tbtn-skatt"><span data-i18n="tab_skatt">Mokesčiai</span><span class="tab-dot"></span></button>
+  <button class="tab-btn" onclick="showTab('timeline')" id="tbtn-timeline"><span data-i18n="tab_timeline">12 mėn.</span><span class="tab-dot"></span></button>
+</div>
+</nav>
+
+<div class="container">
+
+<div class="toolbar">
+  <div class="scen-wrap">
+    <button class="scen-btn active" id="sbA" onclick="switchScen('A')">Scen. A</button>
+    <button class="scen-btn" id="sbB" onclick="switchScen('B')">Scen. B</button>
+  </div>
+  <div class="spacer"></div>
+  <button class="tool-btn" onclick="resetAll()"><i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset">Išvalyti</span></button>
+  <button class="tool-btn" onclick="exportData()"><i class="fa-solid fa-download"></i> <span data-i18n="btn_export">Eksportuoti</span></button>
+  <button class="tool-btn" onclick="document.getElementById('impF').click()"><i class="fa-solid fa-upload"></i> <span data-i18n="btn_import">Importuoti</span></button>
+  <input type="file" id="impF" style="display:none" onchange="importData(this)">
+  <button class="tool-btn" onclick="window.print()"><i class="fa-solid fa-print"></i></button>
+</div>
+
+<!-- ██ TAB: OVERVIEW ██ -->
+<div class="tab-panel active" id="tab-overview">
+<div class="dashboard">
+<aside>
+
+  <!-- INCOME CARD -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-coins"></i> <span data-i18n="card_income">Pajamų šaltiniai</span></span>
+      <span class="pill pill-info" style="font-size:9px;" data-i18n="main_source">PAGRINDINIS</span>
+    </div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_annual">Metinės pajamos (Bruto)</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_annual">Jūsų visos metinės pajamos IŠ DARBDAVIO, prieš mokesčius (NOK). Jei žinote tik mėnesinį — padauginkite iš 12. Ši reikšmė automatiškai persiunčiama į Dagpenger, Permittering, Darbdavio ir Mokesčių skaičiuokles.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="incomeAnnual" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_status">Darbo statusas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_status">Pasirinkite jūsų dabartinę situaciją. Nuo to priklauso visi skaičiavimai: ar gaunate pilną atlyginimą, NAV išmoką, ar derinį.</span></span>
+      </label>
+      <select class="inp" id="statusMain" onchange="recalc()">
+        <option value="active" data-i18n="st_active">Dirbu (pilnas etatas)</option>
+        <option value="permittering" data-i18n="st_permit">Permittering (laikinas atleidimas)</option>
+        <option value="unemployed" data-i18n="st_unemployed">Bedarbis – gaunu Dagpenger (NAV)</option>
+      </select>
+    </div>
+
+    <div id="permitPctWrap" style="display:none" class="fg">
+      <label>
+        <span data-i18n="l_permit_pct">Permittering procentas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_permit_pct">Kiek procentų jūsų darbo laikinai atleisti? 100% = visiškai nedirbate. 50% = dirbate pusę etato, kita pusė kompensuojama per NAV. Tarpinės reikšmės leidžiamos (pvz. 60%, 80%).</span></span>
+      </label>
+      <div class="iw"><input type="number" id="permitPct" value="100" min="1" max="100" oninput="recalc()" inputmode="numeric"><span class="sfx">%</span></div>
+    </div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_tax">Mokesčių tarifas (skattekort)</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_tax">Jūsų dabartinis mokesčių procentas. Rasit savo skattekort dokumente arba Altinn.no portale. 2026 m. standartinis yra ~22–34% priklausomai nuo pajamų lygio. Ši reikšmė automatiškai perduodama kitiems skaičiuotuvams.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="taxRate" value="30" min="0" max="60" oninput="recalc()" inputmode="numeric"><span class="sfx">%</span></div>
+    </div>
+
+    <div class="divider"><span data-i18n="sec_family">Šeima ir papildomos pajamos</span></div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_partner">Partnerio netto pajamos (mėn.)</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_partner">Sutuoktinio arba partnerio pajamos Į RANKAS (po mokesčių) per mėnesį. Jei dirba – įveskite faktinę sumą. Šios pajamos pridedamos prie bendro šeimos biudžeto.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="incomePartner" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_child">Vaiko pinigai (Barnetrygd)</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_child">2026 m.: Barnetrygd = 1 766 NOK/mėn. vaikui iki 6 m., 1 310 NOK/mėn. vaikui 6–18 m. Jei turite vaikų iki 18 m. ir registruoti Norvegijoje – paprastai gaunate automatiškai per NAV.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="incomeChild" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+
+    <div class="fg">
+      <label>
+        <span data-i18n="l_extra">Papildomos pajamos (mėn., netto)</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_extra">Bet kokios kitos pajamos į rankas: dalinis darbas pas kitą darbdavį, nuomojamas butas, individualios veiklos (ENK) pajamos, studentų stipendija ir pan. Įveskite sumą PRIEŠ tai sumokėjus mokesčius.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="incomeExtra" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+  </div><!-- /income card -->
+
+  <!-- EXPENSES CARD -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-wallet"></i> <span data-i18n="card_expenses">Mėnesinės išlaidos</span></span>
+      <span id="totalExpTag" style="font-size:12px;font-weight:700;color:var(--danger);font-family:'JetBrains Mono',monospace;">0</span>
+    </div>
+    <div class="note blue" style="margin-bottom:12px;font-size:11px;" data-i18n="exp_note">Įvestos išlaidos automatiškai naudojamos Biudžeto ir 12 mėn. plano skaičiuoklėse.</div>
+
+    <div class="exp-row">
+      <span class="exp-label">🏠 <span data-i18n="exp_housing">Nuoma / Hipoteka</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_housing">Mėnesinis mokestis už butą (husleie) arba būsto paskolos įmoka (boliglån). Osle vidutinė nuoma ~12 000–18 000 NOK, mažesniuose miestuose ~7 000–11 000 NOK.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expHousing" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">🛒 <span data-i18n="exp_food">Maistas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_food">Maisto produktų pirkimas parduotuvėse (Rema 1000, Kiwi, Coop ir kt.). Vienas žmogus ~3 000–5 000 NOK/mėn., šeima su vaikais ~7 000–12 000 NOK/mėn.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expFood" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">🚌 <span data-i18n="exp_transport">Transportas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_transport">Autobusas, troleibusas, metro mėnesinis bilietas (~820–1050 NOK priklausomai nuo miesto), arba automobilio išlaidos (kuras, draudimas, parkavimas).</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expTransport" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">💳 <span data-i18n="exp_loans">Paskolos / kreditas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_loans">Visos paskolos: forbrukslån, kreditinės kortelės minimali įmoka, automobilio lizingas, studijų paskolos įmoka. Rekomenduojama, kad bendra paskolų našta neviršytų 35% pajamų.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expLoans" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">👶 <span data-i18n="exp_kids">Vaikų išlaidos</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_kids">Darželio mokestis (barnehage) 2026 m.: maks. 1 200 NOK/mėn. (3–5 m. vaikams – nemokama 20h/sav.), drabužiai, mokykliniai reikmenys, sporto/laisvalaikio veiklos.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expKids" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">🛡️ <span data-i18n="exp_insurance">Draudimai</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_ins">Innboforsikring (turto draudimas, ~150–300 NOK/mėn.), sveikatos, gyvybės draudimai. Automobilio draudimas paprastai įtrauktas į transporto išlaidas.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expInsurance" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">📱 <span data-i18n="exp_phone">Telefonas / internetas</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_phone">Mobiliojo ryšio planas (~200–600 NOK/mėn.) + namų internetas (~300–500 NOK/mėn.). Galima susitaupyti renkantis kombinuotus paketus (Telia, Telenor, Ice).</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expPhone" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-label">📦 <span data-i18n="exp_other">Kita</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_exp_other">Laisvalaikis, restoranai, apranga, grožis, el. sąskaitos, sportas, prenumeratos (Netflix ir kt.). Rekomenduojama turėti bent ~1 000–2 000 NOK rezervo neplanuotoms išlaidoms.</span></span>
+      </span>
+      <div class="iw"><input type="number" id="expOther" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+  </div><!-- /expenses -->
+
+  <!-- RESERVES -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-piggy-bank"></i> <span data-i18n="card_reserves">Rezervai</span></span>
+    </div>
+    <div class="fg">
+      <label>
+        <span data-i18n="l_savings">Santaupos iš viso</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_savings">Visa suma, kurią turite šiuo metu santaupų sąskaitoje (BSU, sparekonto ir kt.). Ši suma naudojama skaičiuoti kiek mėnesių galite padengti deficitą, jei pajamos sumažėja.</span></span>
+      </label>
+      <div class="iw"><input type="number" id="savings" placeholder="0" oninput="recalc()" inputmode="numeric"><span class="sfx">NOK</span></div>
+    </div>
+    <div class="fg" id="navWaitWrap">
+      <label>
+        <span data-i18n="l_nav_wait">NAV wait: </span><b id="waitVal">4</b> <span data-i18n="l_weeks">wks</span>
+        <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_wait">Only relevant if you are on Permittering or Unemployed (NAV). This is the gap between losing income and receiving the first NAV payment — typically 3–8 weeks in 2026. During this period you must cover expenses from savings. Set to 0 if you already receive NAV payments.</span></span>
+      </label>
+      <input type="range" id="navWait" min="0" max="16" value="4" oninput="recalc()">
+      <div id="navWaitNote" style="font-size:11px;color:var(--muted);margin-top:2px;" data-i18n="nav_wait_note_active">Not applicable when working full time — set to 0.</div>
+    </div>
+  </div>
+
+</aside>
+<main>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label" data-i18n="kpi_balance">Mėnesio balansas</div>
+      <div class="kpi-val" id="kpiBalance">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" data-i18n="kpi_burn">Deficitas/mėn.</div>
+      <div class="kpi-val" id="kpiBurn">0</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" data-i18n="kpi_survive">Santaupų mėnesiai</div>
+      <div class="kpi-val" id="kpiSurvive">∞</div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="card" style="border-left:4px solid var(--accent);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <span style="font-size:15px;font-weight:700;" data-i18n="overview_title">Strateginė apžvalga</span>
+      <span class="pill pill-stable" id="statusBadge" data-i18n="pill_stable">STABILU</span>
+    </div>
+    <div class="two-col">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px;" data-i18n="your_net">Your net (monthly)</div>
+        <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--accent);" id="yourNet">0</div>
+        <div class="rr" style="margin-top:10px;"><span class="rr-label" data-i18n="l_monthly_gross">Monthly gross:</span><span class="rr-val" id="rMonthlyGross">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_monthly_tax">Monthly tax:</span><span class="rr-val neg" id="rMonthlyTax">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_daily">Daily income:</span><span class="rr-val" id="rDaily">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_weekly">Weekly income:</span><span class="rr-val" id="rWeekly">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_wait_cost">NAV wait cost:</span><span class="rr-val neg" id="rWaitCost">0</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px;" data-i18n="household_net">Šeimos netto (mėn.)</div>
+        <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--cyan);" id="householdNet">0</div>
+        <div class="rr" style="margin-top:10px;"><span class="rr-label" data-i18n="l_partner_disp">Partneris:</span><span class="rr-val" id="rPartner">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_child_disp">Vaiko pinigai:</span><span class="rr-val" id="rChild">0</span></div>
+        <div class="rr"><span class="rr-label" data-i18n="l_extra_disp">Papildoma:</span><span class="rr-val" id="rExtra">0</span></div>
+      </div>
+    </div>
+    <div class="advisory" id="advisoryBox" data-i18n="adv_enter">Įveskite duomenis, kad gautumėte patarimą.</div>
+    <div class="warn-list" id="warningsList"></div>
+  </div>
+
+  <!-- INCOME LOSS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-arrow-trend-down"></i> <span data-i18n="income_loss_title">Pajamų kritimo analizė</span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div style="text-align:center;background:var(--card2);border-radius:9px;padding:12px;border:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:4px;" data-i18n="was_salary">Buvęs netto</div>
+        <div style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="lossWas">—</div>
+      </div>
+      <div style="text-align:center;background:var(--warning-light);border-radius:9px;padding:12px;border:1px solid #fde68a;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--warning);margin-bottom:4px;" data-i18n="now_income">Dabar netto</div>
+        <div style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--warning);" id="lossNow">—</div>
+      </div>
+      <div style="text-align:center;background:var(--danger-light);border-radius:9px;padding:12px;border:1px solid #fecaca;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--danger);margin-bottom:4px;" data-i18n="loss_diff">Praradimas/mėn.</div>
+        <div style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--danger);" id="lossDiff">—</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+      <span style="color:var(--muted);" data-i18n="income_ratio">Pajamų išsaugojimas</span>
+      <b id="lossRatioPct">—</b>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar prog-blue" id="lossRatioBar" style="width:0%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px;" id="lossYearly"></div>
+  </div>
+
+  <!-- CHART -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-chart-area"></i> <span data-i18n="chart_title">12 mėnesių santaupų prognozė</span></span>
+      <span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;" id="chartTag"></span>
+    </div>
+    <div class="chart-wrap"><canvas id="projChart"></canvas></div>
+  </div>
+
+</main>
+</div>
+</div><!-- /tab-overview -->
+
+<!-- ██ TAB: DAGPENGER ██ -->
+<div class="tab-panel" id="tab-dagpenger">
+<div class="mod-stripe blue">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-hand-holding-dollar" style="color:#2563eb"></i> <span data-i18n="dag_title">Dagpenger (NAV) Kalkuliatorius</span></span>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+      <span class="tag tag-synced" data-i18n="auto_synced">🔗 Sinchronizuota</span>
+      <span class="tag tag-blue">2026</span>
+    </div>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="dag_source_title">📊 Iš kur imami duomenys?</strong>
+      <span data-i18n="dag_source_text">Metinės pajamos ir mokesčių tarifas automatiškai perkelti iš Apžvalgos kortelės. Galite juos keisti čia — tai paveiks tik šį skaičiuotuvą, ne pagrindinį. 2026 m. G reikšmė: <b>130 160 NOK</b> (nuo 2025-05-01). Maks. bazė: 6G = <b>780 960 NOK</b>. Koeficientas: <b>62,4%</b>.</span>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="fg field-synced" id="dag_annual_fg">
+          <label>
+            <span data-i18n="dag_12m">Metinės pajamos – 12 mėn. bazė</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_dag_12m">Jūsų pajamos iš paskutinių 12 mėnesių (prieš prarandant darbą). NAV naudoja šią bazę arba 36 mėn. vidurkį — priklausomai nuo to, kuri didesnė. Iš Apžvalgos perkeltos jūsų metinės pajamos.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="dag12m" placeholder="0" oninput="calcDag(false)" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg">
+          <label>
+            <span data-i18n="dag_36m">Metinės pajamos – 36 mėn. vidurkis</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_dag_36m">Jei jūsų pajamos pastaruoju metu augo ar svyravo, įveskite 36 mėn. vidurkį. NAV automatiškai pasirenka naudingesnę jums (didesnę) bazę. Palikite tuščią, jei naudosite tik 12 mėn. duomenis.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="dag36m" placeholder="0" oninput="calcDag(false)" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg field-synced" id="dag_tax_fg">
+          <label>
+            <span data-i18n="dag_tax">Mokesčių tarifas</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_dag_tax">Naudojamas apskaičiuoti netto (į rankas) išmoką. Perkeltas iš Apžvalgos. Svarbu: Dagpenger gausite su atskiru skattekort — rekomenduojama jį atnaujinti (žr. Mokesčių skaičiuotuvą).</span></span>
+          </label>
+          <div class="iw"><input type="number" id="dagTax" value="30" oninput="calcDag(false)" inputmode="numeric"><span class="sfx">%</span></div>
+        </div>
+        <div class="note blue" style="font-size:11px;">
+          <b data-i18n="dag_conditions_title">⚠️ Dagpenger sąlygos 2026 m.:</b><br>
+          <span data-i18n="dag_conditions">• Min. pajamos paskutiniuose 12 mėn.: 3G (~390 480 NOK) ARBA 36 mėn. vidurkis 3G<br>• Dirbote Norvegijoje (ar ES/EEE) ir mokėjote NIN mokesčius<br>• Esate registruoti kaip darbo ieškantis NAV sistemoje<br>• Negaunate pensijos ar kitų NAV išmokų tuo pačiu metu</span>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:12px;" data-i18n="dag_results">Rezultatai</div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_basis">Skaičiavimo bazė (max 6G):</span><span class="rr-val accent" id="dagBasis">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_which_base">Naudojama bazė:</span><span class="rr-val" id="dagWhichBase">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_annual_gross">Metinė bruto išmoka (62.4%):</span><span class="rr-val" id="dagAnnualGross">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_monthly_gross">Mėnesinis bruto:</span><span class="rr-val" id="dagMonthlyGross">—</span></div>
+          <div class="rr" style="border-top:2px solid var(--accent);padding-top:10px;margin-top:4px;">
+            <span class="rr-label" data-i18n="dag_monthly_net"><b>Mėnesinis NETTO (į rankas):</b></span>
+            <span class="rr-val accent" style="font-size:16px;" id="dagMonthlyNet">—</span>
+          </div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_daily">Dienos netto (darbo diena):</span><span class="rr-val" id="dagDaily">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="dag_weekly">Savaitinė netto:</span><span class="rr-val" id="dagWeekly">—</span></div>
+        </div>
+        <div style="margin-top:10px;padding:12px;border-radius:8px;font-size:12px;" id="dagAdviceBox" class="advisory"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ██ TAB: PERMITTERING ██ -->
+<div class="tab-panel" id="tab-permittering">
+<div class="mod-stripe orange">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-pause-circle" style="color:#d97706"></i> <span data-i18n="perm_title">Permittering Kalkuliatorius</span></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="tag tag-synced">🔗 Sinchronizuota</span>
+      <span class="tag tag-orange">2026</span>
+    </div>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="perm_source_title">📊 Iš kur imami duomenys?</strong>
+      <span data-i18n="perm_source_text">Mėnesinis atlyginimas (iš Apžvalgos metinių ÷ 12) ir mokesčių tarifas automatiškai perkelti. Permittering — tai laikinas atleidimas iš darbo. Darbdavys privalo įspėti iš anksto (pvz. 14 d. ar ilgiau, priklausomai nuo stažo). Pirmąsias 15 dienų moka darbdavys, vėliau — NAV (Dagpenger).</span>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="perm_salary">Mėnesinis atlyginimas (bruto)</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_perm_salary">Jūsų atlyginimas prieš mokesčius per mėnesį. Perkeltas iš Apžvalgos (metinės ÷ 12). Galite keisti čia. Šis skaičius naudojamas apskaičiuoti darbdavio mokamą sumą pirmosiomis 15 dienų.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="permSalary" placeholder="0" oninput="calcPerm()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg">
+          <label>
+            <span data-i18n="perm_pct">Permittering procentas</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_perm_pct">Kiek jūsų darbo laikinai atleista? 100% = visiškai nedirbate, gausite pilną NAV dagpenger. 50% = dirbate pusę etato, kitą pusę kompensuoja NAV. Tarpinės reikšmės (pvz. 60%) taip pat galimos.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="permPct" value="100" min="1" max="100" oninput="calcPerm()" inputmode="numeric"><span class="sfx">%</span></div>
+        </div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="perm_tax">Mokesčių tarifas</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_perm_tax">Perkeltas iš Apžvalgos. Per permittering darbdavio mokamas atlyginimas apmokestinamas standartiškai. NAV dalis — gali reikėti atskiro skattekort (žr. Mokesčių skaičiuotuvą).</span></span>
+          </label>
+          <div class="iw"><input type="number" id="permTax" value="30" oninput="calcPerm()" inputmode="numeric"><span class="sfx">%</span></div>
+        </div>
+        <div class="fg">
+          <label>
+            <span data-i18n="perm_months">Planuojama trukmė</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_perm_months">Kiek mėnesių tikitės būti permittering. Naudojama apskaičiuoti bendrą praradimą. Maks. Dagpenger išmoka per permittering – iki 52 sav. (26 sav. tam tikrais atvejais), 2026 m. reguliavimas gali keistis.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="permMonths" value="3" min="1" max="36" oninput="calcPerm()" inputmode="numeric"><span class="sfx" data-i18n="sfx_months">mėn.</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--success-light);border:1px solid #a7f3d0;border-radius:10px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--success);margin-bottom:10px;" data-i18n="perm_employer_period">✅ Darbdavio laikotarpis (pirmos 15 darbo dienų)</div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_daily_sal">Dienos atlyginimas (bruto):</span><span class="rr-val" id="permDailySal">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_employer_total">Darbdavys sumoka (netto):</span><span class="rr-val pos" id="permEmpTotal">—</span></div>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:10px;" data-i18n="perm_nav_period">NAV laikotarpis (po 15 dienų)</div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_nav_monthly">NAV dalis (mėn., netto):</span><span class="rr-val accent" id="permNavNet">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_work_part">Darbo dalis, jei dalinis (netto):</span><span class="rr-val" id="permWorkPart">—</span></div>
+          <div class="rr" style="border-top:2px solid var(--border);padding-top:8px;margin-top:4px;">
+            <span class="rr-label"><b data-i18n="perm_total_monthly">Viso per mėnesį (netto):</b></span>
+            <span class="rr-val warn" style="font-size:16px;" id="permTotalMonthly">—</span>
+          </div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_avg">Vidutinės pajamos laikotarpiu:</span><span class="rr-val" id="permAvg">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="perm_total_loss">Bendras praradimas per laikotarpį:</span><span class="rr-val neg" id="permTotalLoss">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ██ TAB: EMPLOYER ██ -->
+<div class="tab-panel" id="tab-employer">
+<div class="mod-stripe green">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-building" style="color:#059669"></i> <span data-i18n="emp_title">Darbdavio laikotarpis (Arbeidsgiverperiode)</span></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="tag tag-synced">🔗 Sinchronizuota</span>
+      <span class="tag tag-green">15 DIENŲ</span>
+    </div>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="emp_source_title">📊 Kas yra Arbeidsgiverperiode ir kada taikoma?</strong>
+      <span data-i18n="emp_source_text">Arbeidsgiverperiode – tai laikotarpis, kai <b>darbdavys</b> privalo mokėti jūsų atlyginimą (ne NAV). 2026 m. taikoma šiose situacijose:<br>
+      1. <b>Permittering</b> – pirmos 15 darbo dienų nuo permittering pradžios<br>
+      2. <b>Liga (sykmelding)</b> – pirmos 16 kalendorinių dienų (tada perima NAV sykmeldingpenger)<br>
+      3. <b>Tėvystės atostogos</b> – tam tikrais atvejais prieš perduodant į NAV<br><br>
+      Svarbiausia: per šį laikotarpį jūsų pajamos NESUMAŽĖJA – gaunate visą atlyginimą.</span>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="emp_monthly">Mėnesinis atlyginimas (bruto)</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_emp_monthly">Jūsų mėnesinis atlyginimas pagal darbo sutartį, prieš mokesčius. Perkeltas iš Apžvalgos (metinės ÷ 12). Galite keisti.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="empMonthly" placeholder="0" oninput="calcEmp()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="emp_tax">Mokesčių tarifas</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_emp_tax">Perkeltas iš Apžvalgos. Per darbdavio laikotarpį mokesčiai taikomi kaip įprastai pagal jūsų skattekort.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="empTax" value="30" oninput="calcEmp()" inputmode="numeric"><span class="sfx">%</span></div>
+        </div>
+        <div class="fg">
+          <label>
+            <span data-i18n="emp_scenario">Situacija</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_emp_scenario">Pasirinkite savo situaciją: Permittering – 15 darbo dienų (apie 3 sav.); Liga – 16 kalendorinių dienų. Tai keičia dienų skaičių skaičiavime.</span></span>
+          </label>
+          <select class="inp" id="empScenario" onchange="calcEmp()">
+            <option value="15" data-i18n="emp_scen_permit">Permittering (15 darbo dienų)</option>
+            <option value="16" data-i18n="emp_scen_sick">Liga / Sykmelding (16 kal. dienų)</option>
+            <option value="custom" data-i18n="emp_scen_custom">Kitas skaičius dienų</option>
+          </select>
+        </div>
+        <div class="fg" id="empCustomDaysWrap" style="display:none;">
+          <label data-i18n="emp_days_custom">Dienų skaičius</label>
+          <div class="iw"><input type="number" id="empDays" value="15" min="1" max="30" oninput="calcEmp()" inputmode="numeric"><span class="sfx" data-i18n="sfx_days">d.</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="note green" style="margin-bottom:12px;">
+          <b data-i18n="emp_good_news">✅ Gera žinia:</b> <span data-i18n="emp_good_news_text">Per darbdavio laikotarpį pajamos NESUMAŽĖJA. Gaunate visą atlyginimą pagal darbo sutartį.</span>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:12px;" data-i18n="emp_results">Skaičiavimo rezultatai</div>
+          <div class="rr"><span class="rr-label" data-i18n="emp_daily_bruto">Dienos bruto:</span><span class="rr-val" id="empDailyBruto">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="emp_daily_netto">Dienos netto:</span><span class="rr-val" id="empDailyNetto">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="emp_period_bruto">Laikotarpio bruto:</span><span class="rr-val" id="empPeriodBruto">—</span></div>
+          <div class="rr" style="border-top:2px solid var(--success);padding-top:8px;margin-top:4px;">
+            <span class="rr-label"><b data-i18n="emp_period_netto">Laikotarpio netto (į rankas):</b></span>
+            <span class="rr-val pos" style="font-size:16px;" id="empPeriodNetto">—</span>
+          </div>
+          <div class="rr"><span class="rr-label" data-i18n="emp_remaining_days">Likusios mėnesio darbo dienos:</span><span class="rr-val" id="empRemDays">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="emp_remaining_nav">NAV mokės likusiam laikotarpiui (est.):</span><span class="rr-val warn" id="empRemNav">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ██ TAB: BUDGET ██ -->
+<div class="tab-panel" id="tab-budget">
+<div class="mod-stripe purple">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-scale-balanced" style="color:#7c3aed"></i> <span data-i18n="bud_title">Biudžeto ir Išgyvenimo Analizė</span></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="tag tag-synced">🔗 Sinchronizuota</span>
+    </div>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="bud_source_title">📊 Iš kur imami duomenys?</strong>
+      <span data-i18n="bud_source_text">Pajamos automatiškai perkeltos iš Apžvalgos (jūsų šeimos netto). Išlaidos taip pat perkopijuotos iš Apžvalgos išlaidų skilties. Galite keisti bet kurią reikšmę čia – Apžvalgos duomenys nebus pakeisti. Ši skaičiuoklė suteikia detalesnę išlaidų struktūros analizę su fiksuotų/kintamų išlaidų skirtumu.</span>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="bud_income">Mėnesinės pajamos (netto, šeima)</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_bud_income">Visos šeimos pajamos į rankas per mėnesį (jūsų + partnerio + vaikų pinigai + papildoma). Perkelta iš Apžvalgos.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="budIncome" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="divider"><span data-i18n="bud_fixed">🔒 Fiksuotos išlaidos</span></div>
+        <div class="exp-row">
+          <span class="exp-label">🏠 <span data-i18n="bud_rent">Nuoma / hipoteka</span><span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question" style="font-size:10px;"></i><span class="tip-box" data-i18n="tip_bud_rent">Fiksuotas mėnesinis mokestis kurį mokate kiekvieną mėnesį, neatsižvelgiant į situaciją.</span></span></span>
+          <div class="iw"><input type="number" id="budRent" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">💳 <span data-i18n="bud_loan">Paskolos įmokos</span></span>
+          <div class="iw"><input type="number" id="budLoan" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">🛡️ <span data-i18n="bud_insurance">Draudimai</span></span>
+          <div class="iw"><input type="number" id="budInsurance" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">📱 <span data-i18n="bud_phone">Telefonas / internetas</span></span>
+          <div class="iw"><input type="number" id="budPhone" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="divider"><span data-i18n="bud_variable">📊 Kintamos išlaidos</span></div>
+        <div class="exp-row">
+          <span class="exp-label">🛒 <span data-i18n="bud_food">Maistas</span></span>
+          <div class="iw"><input type="number" id="budFood" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">🚌 <span data-i18n="bud_transport">Transportas</span></span>
+          <div class="iw"><input type="number" id="budTransport" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">👶 <span data-i18n="bud_kids">Vaikai / darželis</span></span>
+          <div class="iw"><input type="number" id="budKids" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="exp-row">
+          <span class="exp-label">📦 <span data-i18n="bud_other2">Kita</span></span>
+          <div class="iw"><input type="number" id="budOther" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg" style="margin-top:10px;">
+          <label>
+            <span data-i18n="bud_savings_amt">Santaupos</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_bud_savings">Esama santaupų suma. Naudojama apskaičiuoti kiek mėnesių galite padengti deficitą.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="budSavings" placeholder="0" oninput="calcBud()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:12px;" data-i18n="bud_summary">Biudžeto suvestinė</div>
+          <div class="rr"><span class="rr-label" data-i18n="bud_fixed_total">Fiksuotos išlaidos:</span><span class="rr-val" id="budFixedTotal">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="bud_variable_total">Kintamos išlaidos:</span><span class="rr-val" id="budVarTotal">—</span></div>
+          <div class="rr" style="border-top:2px solid var(--border);padding-top:8px;margin-top:4px;">
+            <span class="rr-label"><b data-i18n="bud_total_exp">Visos išlaidos:</b></span><span class="rr-val" id="budTotalExp">—</span>
+          </div>
+          <div class="rr"><span class="rr-label" data-i18n="bud_balance_month">Mėnesio balansas:</span><span class="rr-val" id="budBalance" style="font-size:16px;">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="bud_survive_months">Santaupų užteks:</span><span class="rr-val warn" id="budSurvive">—</span></div>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:10px;" data-i18n="bud_structure">Išlaidų struktūra</div>
+          <div id="budStructure"></div>
+        </div>
+        <div class="warn-list" id="budWarnings"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ██ TAB: SKATT ██ -->
+<div class="tab-panel" id="tab-skatt">
+<div class="mod-stripe red">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-receipt" style="color:#dc2626"></i> <span data-i18n="skatt_title">Mokesčių Korekcija (Skattekort) 2026</span></span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <span class="tag tag-synced">🔗 Sinchronizuota</span>
+      <span class="tag tag-red">2026 LENTELĖ</span>
+    </div>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="skatt_source_title">📊 Kaip veikia Skattekort 2026?</strong>
+      <span data-i18n="skatt_source_text">Jei jūsų pajamos sumažėja (pvz. pradedant Dagpenger), turite PAKEISTI savo skattekort, kad nebūtumėte apmokestinti pagal senąjį, didesnį tarifą. <b>Atsargiai:</b> per mažas tarifas = metų gale damokėsite! Per didelis = per mokėsite, bet grąžins. Skaičiuoklė naudoja 2026 m. Skatteetaten progresines lenteles ir rekomenduoja tikslų tarifą, vengiant permokos ir damokos rizikos.</span>
+    </div>
+
+    <div class="note orange" style="margin-bottom:16px;line-height:1.7;">
+      <b data-i18n="skatt_warning_title">⚠️ IMPORTANT — Read before acting:</b>
+      <span data-i18n="skatt_warning_text"> This calculator gives a <b>theoretical approximation only</b>. The recommended % is based on a simplified model (minstefradrag + personfradrag + trinnskatt). In reality your actual tax depends on: extra income, feriepenger, part-year employment, capital gains, deductions, and NAV-specific rules. <b>The recommended rate is NOT a guarantee</b> — you may still owe tax (restskatt) at year end. <u>Always verify with <a href="https://www.skatteetaten.no" target="_blank">skatteetaten.no</a> or a tax advisor before changing your skattekort.</u> Use this only as a starting point for your own decision.</span>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="skatt_old_annual">Buvusios metinės pajamos (bruto)</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_skatt_old">Jūsų pajamos iš ankstesnio darbo per metus. Perkeltos iš Apžvalgos. Tai yra bazė, pagal kurią šiuo metu nustatytas jūsų skattekort.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="skattOldAnnual" placeholder="0" oninput="calcSkatt()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <div class="fg field-synced">
+          <label>
+            <span data-i18n="skatt_old_tax">Dabartinis skattekort tarifas</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_skatt_old_tax">Procentas kuris šiuo metu yra jūsų skattekort. Rasite: Altinn.no arba skatteetaten.no portale. Perkeltas iš Apžvalgos mokesčių tarifo lauko.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="skattOldTax" placeholder="30" oninput="calcSkatt()" inputmode="numeric"><span class="sfx">%</span></div>
+        </div>
+        <div class="fg">
+          <label>
+            <span data-i18n="skatt_new_annual">Naujos metinės pajamos (Dagpenger arba mažesnis atlyginimas)</span>
+            <span class="tip-wrap"><i class="tip-icon fa-solid fa-circle-question"></i><span class="tip-box" data-i18n="tip_skatt_new">Jūsų numatomos naujos metinės pajamos (pvz. iš Dagpenger). Jei gausite Dagpenger tik dalį metų — susumuokite: pvz. 3 mėn. darbo + 9 mėn. Dagpenger. Skaičiuoklė apskaičiuos teisingą bendrą metinį apmokestinimą.</span></span>
+          </label>
+          <div class="iw"><input type="number" id="skattNewAnnual" placeholder="0" oninput="calcSkatt()" inputmode="numeric"><span class="sfx">NOK</span></div>
+        </div>
+        <!-- 2026 TAX TABLE - correct effective rates with minstefradrag -->
+        <div class="note blue" style="margin-top:8px;">
+          <b data-i18n="skatt_table_title">📋 2026 effective tax rates (incl. all deductions):</b><br>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;line-height:2.0;">
+            <div>200 000 NOK &rarr; <b>~8%</b> eff. / rec. <b>~10%</b></div>
+            <div>300 000 NOK &rarr; <b>~15%</b> eff. / rec. <b>~17%</b></div>
+            <div>400 000 NOK &rarr; <b>~20%</b> eff. / rec. <b>~22%</b></div>
+            <div>500 000 NOK &rarr; <b>~22%</b> eff. / rec. <b>~24%</b></div>
+            <div>600 000 NOK &rarr; <b>~24%</b> eff. / rec. <b>~26%</b></div>
+            <div>700 000 NOK &rarr; <b>~26%</b> eff. / rec. <b>~28%</b></div>
+            <div>1 000 000 NOK &rarr; <b>~31%</b> eff. / rec. <b>~33%</b></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;" data-i18n="skatt_table_note">Eff. = mathematical effective rate (trygd 7.8% + inntektsskatt 22% + trinnskatt, after minstefradrag + personfradrag). Rec. = eff. +2% safety buffer to avoid restskatt. Source: Skatteetaten 2026.</div>
+        </div>
+      </div>
+      <div>
+        <div class="skatt-compare">
+          <div class="skatt-box">
+            <div class="lbl" data-i18n="skatt_before">CURRENT RATE</div>
+            <div class="val" style="color:var(--muted);" id="skattBeforeVal">—</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;" data-i18n="skatt_current_label">your skattekort %</div>
+          </div>
+          <i class="fa-solid fa-arrow-right" style="color:var(--muted);font-size:18px;"></i>
+          <div class="skatt-box rec">
+            <div class="lbl" style="color:var(--accent);" data-i18n="skatt_recommended">RECOMMENDED</div>
+            <div class="val" style="color:var(--accent);" id="skattRecVal">—</div>
+            <div style="font-size:10px;color:var(--accent);margin-top:4px;" data-i18n="skatt_new_rate">safe minimum rate</div>
+          </div>
+        </div>
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+          <div class="rr"><span class="rr-label" data-i18n="skatt_old_monthly_tax">Senas mėn. mokestis:</span><span class="rr-val" id="skattOldMonthTax">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="skatt_new_monthly_tax">Naujas mėn. mokestis:</span><span class="rr-val" id="skattNewMonthTax">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="skatt_monthly_saving">Skirtumas per mėnesį:</span><span class="rr-val pos" id="skattMonthlySaving">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="skatt_annual_saving">Skirtumas per metus:</span><span class="rr-val pos" style="font-size:15px;" id="skattAnnualSaving">—</span></div>
+          <div class="rr"><span class="rr-label" data-i18n="skatt_overpay_risk">Permokos rizika (metinė):</span><span class="rr-val neg" id="skattOverpay">—</span></div>
+        </div>
+        <div style="margin-top:12px;" id="skattAdvice" class="advisory"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ██ TAB: TIMELINE ██ -->
+<div class="tab-panel" id="tab-timeline">
+<div class="mod-stripe blue">
+  <div class="mod-head">
+    <span class="mod-title"><i class="fa-solid fa-calendar-days" style="color:#2563eb"></i> <span data-i18n="tl_title">12 Mėnesių Detalus Planas</span></span>
+    <span class="tag tag-synced">🔗 Iš Apžvalgos</span>
+  </div>
+  <div class="mod-body">
+    <div class="source-box">
+      <strong data-i18n="tl_source_title">📊 Iš kur imami šio plano duomenys?</strong>
+      <span data-i18n="tl_source_text">Visi duomenys automatiškai paimami iš <b>Apžvalgos kortelės</b>:<br>
+      • <b>Pajamos</b> = jūsų netto (pagal darbo statusą ir Dagpenger formulę) + partnerio + vaiko pinigai + papildoma<br>
+      • <b>Išlaidos</b> = visos Apžvalgos išlaidos sudėtos<br>
+      • <b>Statusas</b> = pirmi mėnesiai rodo „NAV laukimą" (pagal slankiklį), tada pereina į normalias Dagpenger arba atlyginimo pajamas<br>
+      • <b>Santaupos</b> = Apžvalgos santaupų reikšmė, nuo kurios pradedama skaičiuoti<br>
+      Norėdami keisti duomenis – grįžkite į Apžvalgos kortelę.</span>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl" id="timelineTable">
+        <thead>
+          <tr>
+            <th data-i18n="tl_month">Mėnuo</th>
+            <th data-i18n="tl_status">Statusas</th>
+            <th data-i18n="tl_income">Pajamos</th>
+            <th data-i18n="tl_expenses">Išlaidos</th>
+            <th data-i18n="tl_balance">Balansas</th>
+            <th data-i18n="tl_savings">Santaupos</th>
+            <th data-i18n="tl_eval">Vertinimas</th>
+          </tr>
+        </thead>
+        <tbody id="timelineBody">
+          <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px;" data-i18n="tl_empty">Įveskite duomenis Apžvalgos kortelėje</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-wrap" style="margin-top:20px;height:240px;"><canvas id="timelineChart"></canvas></div>
+  </div>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <div style="margin-bottom:6px;font-size:13px;">
+    <strong>FinansNO Calc</strong> — <span data-i18n="footer_desc">Finansų planavimo platforma imigrantams Norvegijoje</span>
+  </div>
+  <div style="margin-bottom:8px;font-size:11px;color:var(--muted2);" data-i18n="footer_disclaimer">
+    Informacinis įrankis. Skaičiavimai grindžiami oficialiais NAV ir Skatteetaten 2026 m. duomenimis. Konsultuokitės su specialistu prieš priimdami svarbius finansinius sprendimus.
+  </div>
+  <div style="font-size:12px;">
+    © 2025–2026 <strong>Vytautas Giedraitis</strong>. <span data-i18n="footer_rights">Visos teisės saugomos.</span>
+  </div>
+</footer>
+
+<script>
+// =========== CONSTANTS 2026 ===========
+// G (Grunnbelop) from May 1 2025: 130 160 NOK. Est. May 2026: ~130 512 NOK. Using 130 160.
+const G2026 = 130160;
+const MAX_G = 6 * G2026;           // 780 960 NOK
+const MIN_G = 3 * G2026;           // 390 480 NOK - minimum for dagpenger eligibility
+const DAG_RATE = 0.624;            // 62.4% of basis
+const WORK_DAYS_YEAR = 260;
+const WORK_DAYS_MONTH = WORK_DAYS_YEAR / 12; // ~21.67
+const EMPLOYER_DAYS_PERMIT = 15;   // arbeidsgiverperiode for permittering
+const EMPLOYER_DAYS_SICK   = 16;   // arbeidsgiverperiode for sickness (calendar days)
+const BARNETRYGD_2026 = 2012;      // NOK/month per child (all ages 0-18), from Feb 1 2026
+const BARNEHAGE_MAX_2026 = 1200;   // NOK/month max kindergarten fee, from Aug 2025
+
+// =========== 2026 NORWAY TAX MODEL ===========
+// Full model: Trygdeavgift + Minstefradrag + Personfradrag + Inntektsskatt + Trinnskatt
+// Source: Skatteetaten 2026 / Lovdata / NAV
+const TAX = {
+  trygdeavgift:    0.078,   // 7.8% on gross wage income (reduced from 7.9%)
+  inntektsskatt:   0.22,    // 22% flat on alminnelig inntekt
+  personfradrag:   109500,  // personal allowance 2026 (est.)
+  minstefradrag_rate: 0.46, // 46% of income
+  minstefradrag_min:  31800,
+  minstefradrag_max:  104450,
+  // Trinnskatt brackets (marginal, applied to GROSS income):
+  trinnskatt: [
+    {from:208050,  to:292850,  rate:0.017},
+    {from:292850,  to:670000,  rate:0.040},
+    {from:670000,  to:937900,  rate:0.136},
+    {from:937900,  to:1350000, rate:0.166},
+    {from:1350000, to:Infinity,rate:0.176}
+  ]
+};
+
+// Returns effective tax rate % for a given annual gross wage income
+function calcEffectiveTaxRate2026(income){
+  if(income <= 0) return 0;
+  // 1. Trygdeavgift: 7.8% on gross
+  const trygd = income * TAX.trygdeavgift;
+  // 2. Minstefradrag (standard employee deduction, reduces alminnelig inntekt)
+  const mf = Math.max(TAX.minstefradrag_min, Math.min(income * TAX.minstefradrag_rate, TAX.minstefradrag_max));
+  // 3. Alminnelig inntekt after minstefradrag and personfradrag
+  const almInntekt = Math.max(0, income - mf - TAX.personfradrag);
+  // 4. Inntektsskatt: 22% on alminnelig inntekt
+  const inntektsskatt = almInntekt * TAX.inntektsskatt;
+  // 5. Trinnskatt: marginal brackets on gross income
+  let trinnskatt = 0;
+  for(const b of TAX.trinnskatt){
+    if(income > b.from)
+      trinnskatt += (Math.min(income, b.to) - b.from) * b.rate;
+  }
+  const totalTax = trygd + inntektsskatt + trinnskatt;
+  return (totalTax / income) * 100;
+}
+
+// Returns recommended skattekort % = effective rate + 2% safety buffer
+// Buffer prevents restskatt (tax debt at year end) for users with extra income,
+// feriepenger, partial year work, or rounding differences.
+function recommendedSkattekortRate(income){
+  const eff = calcEffectiveTaxRate2026(income);
+  return Math.min(eff + 2.0, 50.0); // cap at 50%
+}
+
+// =========== STATE ===========
+let lang = 'en';
+let currentScen = 'A';
+let scenarios = {A:{},B:{}};
+let projChartInst = null;
+let tlChartInst = null;
+
+function t(k){ return (T[lang]||T.lt)[k] || k; }
+const fmt = n => new Intl.NumberFormat('no-NO',{style:'currency',currency:'NOK',maximumFractionDigits:0}).format(n||0);
+const fmtN = n => new Intl.NumberFormat('no-NO',{maximumFractionDigits:0}).format(n||0);
+const gv = id => parseFloat(document.getElementById(id)?.value)||0;
+const sv = (id,v) => { const el=document.getElementById(id); if(el) el.value=v||''; };
+
+// =========== AUTO SYNC FROM OVERVIEW ===========
+function syncToModules(){
+  const annual  = gv('incomeAnnual');
+  const tax     = gv('taxRate') || 30;
+  const monthly = annual > 0 ? Math.round(annual / 12) : 0;
+  const hn      = window._lastHouseholdNet || 0;
+  const status  = document.getElementById('statusMain') ? document.getElementById('statusMain').value : 'active';
+
+  // sf: set field value only if user hasn't manually overridden it
+  function sf(id, val){
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(!el._userEdited){
+      el.value = (val !== '' && val !== null && val !== undefined) ? val : '';
+    }
+  }
+
+  // sfTax: ALWAYS sync tax % fields — they must follow overview taxRate
+  // (user can still change them manually in sub-tabs)
+  function sfTax(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(!el._userEdited) el.value = tax;
+  }
+
+  // --- Income fields ---
+  sf('dag12m',         annual || '');
+  sfTax('dagTax');
+
+  sf('permSalary',     monthly || '');
+  sfTax('permTax');
+
+  sf('empMonthly',     monthly || '');
+  sfTax('empTax');
+
+  // --- Skatt ---
+  sf('skattOldAnnual', annual || '');
+  sfTax('skattOldTax');
+
+  // Auto-populate new income for skatt based on current status
+  if(annual > 0){
+    const basis = Math.min(annual, MAX_G);
+    let newAnnual = annual;
+    if(status === 'unemployed'){
+      newAnnual = Math.round(basis * DAG_RATE);
+    } else if(status === 'permittering'){
+      const ppct = gv('permitPct') || 100;
+      newAnnual = Math.round(annual * ((100-ppct)/100) + basis * (ppct/100) * DAG_RATE);
+    }
+    sf('skattNewAnnual', newAnnual);
+  }
+
+  // --- Budget ---
+  sf('budIncome',      hn > 0 ? Math.round(hn) : '');
+  sf('budRent',        gv('expHousing')   || '');
+  sf('budFood',        gv('expFood')      || '');
+  sf('budTransport',   gv('expTransport') || '');
+  sf('budLoan',        gv('expLoans')     || '');
+  sf('budInsurance',   gv('expInsurance') || '');
+  sf('budPhone',       gv('expPhone')     || '');
+  sf('budKids',        gv('expKids')      || '');
+  sf('budOther',       gv('expOther')     || '');
+  sf('budSavings',     gv('savings')      || '');
+
+  // Re-run all sub-calculators
+  calcDag(true);
+  calcPerm();
+  calcEmp();
+  calcBud();
+  calcSkatt();
+}
+
+// Mark field as user-edited when manually changed in sub-modules
+function markEdited(id){ const el=document.getElementById(id); if(el) el._userEdited=true; }
+
+// =========== MAIN RECALC ===========
+function recalc(){
+  const annual   = gv('incomeAnnual');
+  const partner  = gv('incomePartner');
+  const child    = gv('incomeChild');
+  const extra    = gv('incomeExtra');
+  const status   = document.getElementById('statusMain').value;
+  const ppct     = gv('permitPct') || 100;
+  const tax      = gv('taxRate') || 30;
+
+  document.getElementById('permitPctWrap').style.display = status==='permittering' ? 'block' : 'none';
+
+  // NAV wait: only relevant for non-active statuses
+  const navWaitEl  = document.getElementById('navWait');
+  const navWaitWrap = document.getElementById('navWaitWrap');
+  const navWaitNote = document.getElementById('navWaitNote');
+  if(status === 'active'){
+    // When working, NAV wait is irrelevant — show as dimmed, force to 0
+    navWaitEl.value = '0';
+    navWaitWrap.style.opacity = '0.4';
+    navWaitWrap.style.pointerEvents = 'none';
+    if(navWaitNote) navWaitNote.style.display = 'block';
+  } else {
+    navWaitWrap.style.opacity = '1';
+    navWaitWrap.style.pointerEvents = 'auto';
+    if(navWaitNote) navWaitNote.style.display = 'none';
+  }
+  const waitWks = status === 'active' ? 0 : (parseInt(navWaitEl.value) || 0);
+  document.getElementById('waitVal').textContent = waitWks;
+
+  const totalExp = gv('expHousing')+gv('expFood')+gv('expTransport')+gv('expLoans')+
+                   gv('expKids')+gv('expInsurance')+gv('expPhone')+gv('expOther');
+  const sav = gv('savings');
+  document.getElementById('totalExpTag').textContent = fmt(totalExp);
+
+  // Compute main net
+  const basis = Math.min(annual, MAX_G);
+  let annualBasis = 0;
+  if(status==='active') annualBasis = annual;
+  else if(status==='unemployed') annualBasis = basis * DAG_RATE;
+  else if(status==='permittering'){
+    const wr=(100-ppct)/100, lr=ppct/100;
+    annualBasis = annual*wr + basis*lr*DAG_RATE;
+  }
+  const monthlyGross = annualBasis / 12;
+  const monthlyNet   = monthlyGross * (1 - tax/100);
+  const monthlyTaxAmt = monthlyGross * (tax/100);
+  const dailyNet     = (annualBasis / WORK_DAYS_YEAR) * (1 - tax/100);
+  const weeklyNet    = dailyNet * 5;
+
+  // Wait cost
+  const waitMo = waitWks / 4.3;
+  let nonNav = partner + child + extra;
+  if(status==='permittering') nonNav += (annual/12)*(1-tax/100)*((100-ppct)/100);
+  const defWait = Math.max(0, totalExp - nonNav);
+  const waitCost = defWait * waitMo;
+
+  const householdNet = monthlyNet + partner + child + extra;
+  window._lastHouseholdNet = householdNet;
+  const balance = householdNet - totalExp;
+
+  // UI
+  document.getElementById('yourNet').textContent = fmt(monthlyNet);
+  document.getElementById('rMonthlyGross').textContent = fmt(monthlyGross);
+  document.getElementById('rMonthlyTax').textContent = '-'+fmt(monthlyTaxAmt);
+  document.getElementById('householdNet').textContent = fmt(householdNet);
+  document.getElementById('rDaily').textContent = fmt(dailyNet);
+  document.getElementById('rWeekly').textContent = fmt(weeklyNet);
+  document.getElementById('rWaitCost').textContent = '-'+fmt(waitCost);
+  document.getElementById('rPartner').textContent = fmt(partner);
+  document.getElementById('rChild').textContent = fmt(child);
+  document.getElementById('rExtra').textContent = fmt(extra);
+
+  // KPI
+  const balEl = document.getElementById('kpiBalance');
+  balEl.textContent = (balance>=0?'+':'')+fmt(balance);
+  balEl.className = 'kpi-val '+(balance>=0?'pos':'neg');
+
+  if(balance < 0){
+    const burn = Math.abs(balance);
+    const mos = sav > 0 ? (sav/burn).toFixed(1) : '0';
+    document.getElementById('kpiBurn').textContent = fmt(burn)+'/mo';
+    document.getElementById('kpiBurn').className = 'kpi-val neg';
+    document.getElementById('kpiSurvive').textContent = mos+' '+t('mo');
+    document.getElementById('kpiSurvive').className = 'kpi-val '+(parseFloat(mos)<3?'neg':'warn');
+
+    const badge = document.getElementById('statusBadge');
+    const adv   = document.getElementById('advisoryBox');
+    if(parseFloat(mos) < 3){
+      badge.className='pill pill-critical'; badge.textContent=t('pill_critical');
+      adv.className='advisory danger'; adv.innerHTML=t('adv_critical');
+    } else {
+      badge.className='pill pill-erosion'; badge.textContent=t('pill_erosion');
+      adv.className='advisory warn'; adv.innerHTML=`${t('adv_erosion')} <b>${mos}</b> ${t('adv_erosion2')}`;
+    }
+  } else {
+    document.getElementById('kpiBurn').textContent = '0';
+    document.getElementById('kpiBurn').className = 'kpi-val';
+    document.getElementById('kpiSurvive').textContent = 'inf';
+    document.getElementById('kpiSurvive').className = 'kpi-val pos';
+    document.getElementById('statusBadge').className='pill pill-stable';
+    document.getElementById('statusBadge').textContent=t('pill_stable');
+    document.getElementById('advisoryBox').className='advisory';
+    document.getElementById('advisoryBox').innerHTML=t('adv_stable');
+  }
+
+  // Income loss
+  const prevNet = (annual/12)*(1-tax/100);
+  const diff    = prevNet - monthlyNet;
+  const ratio   = prevNet > 0 ? (monthlyNet/prevNet)*100 : 100;
+  document.getElementById('lossWas').textContent = fmt(prevNet);
+  document.getElementById('lossNow').textContent = fmt(monthlyNet);
+  document.getElementById('lossDiff').textContent = diff>0 ? '-'+fmt(diff) : '0';
+  document.getElementById('lossRatioPct').textContent = Math.round(ratio)+'%';
+  const bar = document.getElementById('lossRatioBar');
+  bar.style.width = Math.min(100,ratio)+'%';
+  bar.className = 'prog-bar '+(ratio>75?'prog-green':ratio>50?'prog-blue':'prog-red');
+  document.getElementById('lossYearly').textContent = diff>0 ? t('loss_yearly_prefix')+' '+fmt(diff*12)+' '+t('loss_yearly_suffix') : '';
+
+  // Warnings
+  buildWarnings(householdNet, totalExp, sav, balance);
+
+  // Chart
+  buildProjChart(sav, balance, waitWks, monthlyNet, nonNav, totalExp);
+
+  // Sync values to sub-modules and re-run their calculations
+  syncToModules();
+}
+
+// =========== WARNINGS ===========
+function buildWarnings(income, expenses, savings, balance){
+  const loans   = gv('expLoans');
+  const housing = gv('expHousing');
+  const items = [];
+  if(balance < 0) items.push({t:'d',i:'fa-triangle-exclamation',m:t('warn_deficit')});
+  if(income>0 && loans/income > 0.35) items.push({t:'w',i:'fa-credit-card',m:t('warn_loan')});
+  if(income>0 && housing/income > 0.40) items.push({t:'w',i:'fa-house',m:t('warn_housing')});
+  if(savings>0 && expenses>0 && savings/expenses < 3) items.push({t:'d',i:'fa-piggy-bank',m:t('warn_savings')});
+  if(gv('taxRate') > 35 && gv('statusMain_val') !== 'active') items.push({t:'i',i:'fa-receipt',m:t('warn_tax')});
+  const el = document.getElementById('warningsList');
+  el.innerHTML = items.map(x=>`<div class="warn-item ${x.t}"><i class="fa-solid ${x.i}"></i><span>${x.m}</span></div>`).join('');
+}
+
+// =========== PROJECTION CHART ===========
+function buildProjChart(sav, balance, waitWks, mainNet, nonNav, totalExp){
+  const ctx = document.getElementById('projChart').getContext('2d');
+  const waitMo = Math.floor(waitWks/4.3);
+  const labels=[], savData=[], incData=[], expData=[];
+  let cur = sav;
+  for(let i=0;i<=12;i++){
+    labels.push(i===0?t('mo_start'):`M${i}`);
+    let moInc = 0;
+    if(i===0){ moInc=0; }
+    else if(i<=waitMo){ moInc=nonNav; }
+    else if(i===waitMo+1){ moInc=mainNet+nonNav+(mainNet*(waitWks/4.3)); }
+    else { moInc=mainNet+nonNav; }
+    const bal = i===0 ? 0 : moInc-totalExp;
+    cur = Math.max(0, cur+(i===0?0:bal));
+    savData.push(Math.round(cur));
+    incData.push(i===0?0:Math.round(moInc));
+    expData.push(i===0?0:Math.round(totalExp));
+  }
+  document.getElementById('chartTag').textContent = sav>0 ? fmt(sav)+' -> '+fmt(savData[12]) : '';
+  if(projChartInst) projChartInst.destroy();
+  projChartInst = new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:[
+      {label:t('chart_savings'),data:savData,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.08)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#2563eb'},
+      {label:t('chart_income'),data:incData,borderColor:'#059669',backgroundColor:'rgba(5,150,105,0)',borderDash:[4,3],tension:0.3,pointRadius:2},
+      {label:t('chart_expenses'),data:expData,borderColor:'#dc2626',backgroundColor:'rgba(220,38,38,0)',borderDash:[3,3],tension:0.3,pointRadius:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,labels:{color:'#64748b',font:{size:11},boxWidth:20}},
+        tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1}},
+      scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#94a3b8',font:{size:10},callback:v=>fmtN(v)}},
+              x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10}}}}}
+  });
+}
+
+// =========== DAGPENGER ===========
+function calcDag(fromSync){
+  if(!fromSync){
+  
+  }
+  const inc12 = gv('dag12m');
+  const inc36 = gv('dag36m');
+  const tax   = gv('dagTax') || 30;
+  const ids   = ['dagBasis','dagWhichBase','dagAnnualGross','dagMonthlyGross','dagMonthlyNet','dagDaily','dagWeekly'];
+  if(!inc12 && !inc36){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='--'; }); document.getElementById('dagAdviceBox').innerHTML=''; return; }
+
+  const base12 = Math.min(inc12||0, MAX_G);
+  const base36 = Math.min(inc36||0, MAX_G);
+  const basis  = Math.max(base12, base36);
+  const which  = (base12>=base36||!inc36) ? t('dag_12m_label') : t('dag_36m_label');
+  const annualGross  = basis * DAG_RATE;
+  const monthlyGross = annualGross / 12;
+  const monthlyNet   = monthlyGross * (1 - tax/100);
+  const daily        = (annualGross / WORK_DAYS_YEAR) * (1-tax/100);
+  const weekly       = daily * 5;
+
+  document.getElementById('dagBasis').textContent       = fmt(basis);
+  document.getElementById('dagWhichBase').textContent   = which;
+  document.getElementById('dagAnnualGross').textContent = fmt(annualGross);
+  document.getElementById('dagMonthlyGross').textContent= fmt(monthlyGross);
+  document.getElementById('dagMonthlyNet').textContent  = fmt(monthlyNet);
+  document.getElementById('dagDaily').textContent       = fmt(daily);
+  document.getElementById('dagWeekly').textContent      = fmt(weekly);
+
+  const srcInc = Math.max(inc12||0, inc36||0);
+  const prevNet = (srcInc/12)*(1-tax/100);
+  const ratio = prevNet>0 ? Math.round(monthlyNet/prevNet*100) : 0;
+  const adv = document.getElementById('dagAdviceBox');
+  if(basis < MIN_G){
+    adv.className='advisory danger';
+    adv.innerHTML=`🚨 <b>${t('dag_too_low')}</b> ${t('dag_too_low_text')}`;
+  } else {
+    adv.className='advisory';
+    adv.innerHTML=`📊 ${t('dag_ratio_prefix')} <b>${ratio}%</b> ${t('dag_ratio_suffix')}. ${t('dag_base_used')}: <b>${which}</b>.`;
+  }
+}
+
+// =========== PERMITTERING ===========
+function calcPerm(){
+  
+  const sal  = gv('permSalary');
+  const pct  = gv('permPct')||100;
+  const tax  = gv('permTax')||30;
+  const mos  = gv('permMonths')||3;
+  const ids  = ['permDailySal','permEmpTotal','permNavNet','permWorkPart','permTotalMonthly','permAvg','permTotalLoss'];
+  if(!sal){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='--'; }); return; }
+
+  const dailySal   = sal / WORK_DAYS_MONTH;
+  const empNetto   = dailySal * EMPLOYER_DAYS_PERMIT * (1-tax/100);
+  const annBasis   = Math.min(sal*12, MAX_G);
+  const navMonNet  = (annBasis*DAG_RATE/12)*(1-tax/100)*(pct/100);
+  const workPart   = (sal*(100-pct)/100)*(1-tax/100);
+  const totalMo    = navMonNet + workPart;
+  const empMo      = EMPLOYER_DAYS_PERMIT/WORK_DAYS_MONTH;
+  const navMo      = mos - empMo;
+  const prevNet    = sal*(1-tax/100);
+  const avg        = (prevNet*empMo + totalMo*Math.max(0,navMo)) / mos;
+  const totalLoss  = (prevNet - avg) * mos;
+
+  document.getElementById('permDailySal').textContent  = fmt(dailySal);
+  document.getElementById('permEmpTotal').textContent  = fmt(empNetto);
+  document.getElementById('permNavNet').textContent    = fmt(navMonNet);
+  document.getElementById('permWorkPart').textContent  = fmt(workPart);
+  document.getElementById('permTotalMonthly').textContent = fmt(totalMo);
+  document.getElementById('permAvg').textContent       = fmt(avg);
+  document.getElementById('permTotalLoss').textContent = '-'+fmt(Math.max(0,totalLoss));
+}
+
+// =========== EMPLOYER ===========
+function calcEmp(){
+  
+  const sal   = gv('empMonthly');
+  const tax   = gv('empTax')||30;
+  const scen  = document.getElementById('empScenario').value;
+  document.getElementById('empCustomDaysWrap').style.display = scen==='custom' ? 'block' : 'none';
+  const days  = scen==='custom' ? (gv('empDays')||15) : parseInt(scen);
+  const ids   = ['empDailyBruto','empDailyNetto','empPeriodBruto','empPeriodNetto','empRemDays','empRemNav'];
+  if(!sal){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='--'; }); return; }
+
+  const dailyB   = sal / WORK_DAYS_MONTH;
+  const dailyN   = dailyB * (1-tax/100);
+  const perB     = dailyB * days;
+  const perN     = dailyN * days;
+  const remDays  = Math.max(0, WORK_DAYS_MONTH - days);
+  const navEst   = (Math.min(sal*12,MAX_G)*DAG_RATE/WORK_DAYS_YEAR)*remDays*(1-tax/100);
+
+  document.getElementById('empDailyBruto').textContent  = fmt(dailyB);
+  document.getElementById('empDailyNetto').textContent  = fmt(dailyN);
+  document.getElementById('empPeriodBruto').textContent = fmt(perB);
+  document.getElementById('empPeriodNetto').textContent = fmt(perN);
+  document.getElementById('empRemDays').textContent     = Math.round(remDays)+' d.';
+  document.getElementById('empRemNav').textContent      = fmt(navEst);
+}
+
+// =========== BUDGET ===========
+function calcBud(){
+  
+  const inc   = gv('budIncome');
+  const fixed = gv('budRent')+gv('budLoan')+gv('budInsurance')+gv('budPhone');
+  const vari  = gv('budFood')+gv('budTransport')+gv('budKids')+gv('budOther');
+  const total = fixed + vari;
+  const sav   = gv('budSavings');
+  const bal   = inc - total;
+  const surv  = total>0&&bal<0&&sav>0 ? (sav/Math.abs(bal)).toFixed(1)+' '+t('mo') : bal>=0?'inf':'0';
+
+  document.getElementById('budFixedTotal').textContent = fmt(fixed);
+  document.getElementById('budVarTotal').textContent   = fmt(vari);
+  document.getElementById('budTotalExp').textContent   = fmt(total);
+  const bEl = document.getElementById('budBalance');
+  bEl.textContent = (bal>=0?'+':'')+fmt(bal);
+  bEl.style.color = bal>=0?'var(--success)':'var(--danger)';
+  document.getElementById('budSurvive').textContent = surv;
+
+  const cats=[
+    {l:t('bud_rent'),v:gv('budRent'),c:'#2563eb'},
+    {l:t('bud_loan'),v:gv('budLoan'),c:'#7c3aed'},
+    {l:t('bud_food'),v:gv('budFood'),c:'#059669'},
+    {l:t('bud_transport'),v:gv('budTransport'),c:'#d97706'},
+    {l:t('bud_insurance'),v:gv('budInsurance'),c:'#0891b2'},
+    {l:t('bud_kids'),v:gv('budKids'),c:'#f97316'},
+    {l:t('bud_phone'),v:gv('budPhone'),c:'#0284c7'},
+    {l:t('bud_other2'),v:gv('budOther'),c:'#94a3b8'}
+  ].filter(x=>x.v>0);
+  const maxV = Math.max(...cats.map(c=>c.v),1);
+  document.getElementById('budStructure').innerHTML = cats.length ? cats.map(c=>`
+    <div style="margin-bottom:7px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+        <span style="color:var(--muted);">${c.l}</span>
+        <span style="font-weight:700;font-family:'JetBrains Mono',monospace;">${fmt(c.v)}</span>
+      </div>
+      <div class="prog-wrap"><div class="prog-bar" style="width:${(c.v/maxV*100).toFixed(0)}%;background:${c.c};"></div></div>
+    </div>`).join('') : `<div style="color:var(--muted);font-size:12px;" data-i18n="bud_empty">Įveskite išlaidas</div>`;
+
+  const warns=[];
+  if(bal<0) warns.push({t:'d',m:t('warn_deficit')});
+  if(inc>0&&(gv('budRent')+gv('budLoan'))/inc>0.4) warns.push({t:'w',m:t('warn_housing')});
+  if(inc>0&&gv('budLoan')/inc>0.35) warns.push({t:'w',m:t('warn_loan')});
+  if(sav>0&&total>0&&sav/total<3) warns.push({t:'d',m:t('warn_savings')});
+  document.getElementById('budWarnings').innerHTML = warns.map(w=>`<div class="warn-item ${w.t}"><i class="fa-solid fa-triangle-exclamation"></i><span>${w.m}</span></div>`).join('');
+}
+
+// =========== SKATT 2026 ===========
+function calcSkatt(){
+  
+  const oldAnn = gv('skattOldAnnual');
+  const oldTax = gv('skattOldTax')||30;
+  const newAnn = gv('skattNewAnnual');
+  const ids=['skattBeforeVal','skattRecVal','skattOldMonthTax','skattNewMonthTax','skattMonthlySaving','skattAnnualSaving','skattOverpay'];
+  if(!oldAnn||!newAnn){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='--'; }); document.getElementById('skattAdvice').innerHTML=''; return; }
+
+  const newEffTax  = calcEffectiveTaxRate2026(newAnn);       // mathematical effective rate
+  const newRecRate = recommendedSkattekortRate(newAnn);      // effective + 2% safety buffer
+  const oldMonthTax = oldAnn/12 * oldTax/100;
+  const newMonthTax = newAnn/12 * newRecRate/100;            // use recommended (buffered) rate
+  const saving      = oldMonthTax - newMonthTax;
+  const annSaving   = saving * 12;
+  // Overpay risk: if they keep old skattekort rate on new (lower) income
+  const overpay = Math.max(0, (oldTax/100 - newRecRate/100) * newAnn);
+
+  document.getElementById('skattBeforeVal').textContent = oldTax.toFixed(1)+'%';
+  document.getElementById('skattRecVal').textContent    = newRecRate.toFixed(1)+'%';   // show buffered rate
+  document.getElementById('skattOldMonthTax').textContent = fmt(oldMonthTax);
+  document.getElementById('skattNewMonthTax').textContent = fmt(newMonthTax);
+  const sEl = document.getElementById('skattMonthlySaving');
+  sEl.textContent = (saving>0?'+':'')+fmt(saving);
+  sEl.className = 'rr-val '+(saving>0?'pos':'neg');
+  const aEl = document.getElementById('skattAnnualSaving');
+  aEl.textContent = (annSaving>0?'+':'')+fmt(annSaving);
+  aEl.className = 'rr-val '+(annSaving>0?'pos':'neg');
+  document.getElementById('skattOverpay').textContent = fmt(overpay);
+
+  // Show effective rate info alongside
+  const effInfo = `(${t('skatt_eff_rate')}: ${newEffTax.toFixed(1)}% + 2% ${t('skatt_buffer')})`;
+
+  const adv = document.getElementById('skattAdvice');
+  if(overpay > 1000){
+    adv.className='advisory danger';
+    adv.innerHTML=`🚨 <b>${t('skatt_overpay_warning')}</b> ${t('skatt_overpay_text_prefix')} <b>${fmt(overpay)}</b> ${t('skatt_overpay_text_suffix')} <b>${newRecRate.toFixed(1)}%</b> ${effInfo}. <a href="https://www.altinn.no" target="_blank" style="color:var(--accent)">altinn.no &rarr; Endre skattetrekk</a>`;
+  } else if(Math.abs(annSaving) > 200){
+    adv.className='advisory success';
+    adv.innerHTML=`✅ ${t('skatt_ok_prefix')} <b>${fmt(Math.abs(annSaving))}</b> ${t('skatt_ok_suffix')} <b>${newRecRate.toFixed(1)}%</b>. ${effInfo}`;
+  } else {
+    adv.className='advisory';
+    adv.innerHTML=`ℹ️ ${t('skatt_match')} ${effInfo}`;
+  }
+}
+
+// =========== TIMELINE ===========
+function buildTimeline(){
+  const annual  = gv('incomeAnnual');
+  const partner = gv('incomePartner');
+  const child   = gv('incomeChild');
+  const extra   = gv('incomeExtra');
+  const status  = document.getElementById('statusMain').value;
+  const ppct    = gv('permitPct')||100;
+  const tax     = gv('taxRate')||30;
+  const waitWks = status === 'active' ? 0 : (parseInt(document.getElementById('navWait').value)||0);
+  const totalExp= gv('expHousing')+gv('expFood')+gv('expTransport')+gv('expLoans')+
+                  gv('expKids')+gv('expInsurance')+gv('expPhone')+gv('expOther');
+  let sav = gv('savings');
+
+  if(!annual && !totalExp){
+    document.getElementById('timelineBody').innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px;">${t('tl_empty')}</td></tr>`;
+    return;
+  }
+
+  const basis = Math.min(annual, MAX_G);
+  let mainNet = 0;
+  if(status==='active') mainNet=(annual/12)*(1-tax/100);
+  else if(status==='unemployed') mainNet=(basis*DAG_RATE/12)*(1-tax/100);
+  else if(status==='permittering'){
+    const wr=(100-ppct)/100, lr=ppct/100;
+    mainNet=((annual*wr)+(basis*lr*DAG_RATE))/12*(1-tax/100);
+  }
+  const waitMo = Math.floor(waitWks/4.3);
+  const months = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Des'];
+  const now    = new Date();
+  let rows='', cur=sav;
+  const savArr=[], incArr=[], expArr=[];
+
+  for(let i=1;i<=12;i++){
+    const mName = months[(now.getMonth()+i-1)%12];
+    let moInc=0, mStat='', mStatClass='';
+    const nonNav = partner+child+extra;
+    if(i <= waitMo){
+      moInc = nonNav;
+      mStat = t('tl_waiting'); mStatClass='tag-orange';
+    } else if(i===1 && status!=='active'){
+      moInc = mainNet+nonNav;
+      mStat = t('tl_employer'); mStatClass='tag-green';
+    } else if(status==='active'){
+      moInc = mainNet+nonNav;
+      mStat = t('tl_normal'); mStatClass='tag-blue';
+    } else {
+      moInc = mainNet+nonNav;
+      mStat = t('tl_nav'); mStatClass='tag-blue';
+    }
+    const bal = moInc - totalExp;
+    cur = Math.max(0, cur+bal);
+    savArr.push(Math.round(cur));
+    incArr.push(Math.round(moInc));
+    expArr.push(Math.round(totalExp));
+    let eval_='', evalCls='';
+    if(cur===0&&bal<0){ eval_=t('tl_crit'); evalCls='tbl-neg'; }
+    else if(bal<0){ eval_=t('tl_warn'); evalCls='tbl-warn'; }
+    else { eval_=t('tl_ok'); evalCls='tbl-pos'; }
+    rows+=`<tr>
+      <td style="font-weight:600;color:var(--text);">${mName}</td>
+      <td><span class="tag ${mStatClass}">${mStat}</span></td>
+      <td class="${moInc>totalExp?'tbl-pos':''}">${fmt(moInc)}</td>
+      <td style="color:var(--muted);">${fmt(totalExp)}</td>
+      <td class="${bal>=0?'tbl-pos':'tbl-neg'}">${bal>=0?'+':''}${fmt(bal)}</td>
+      <td style="color:${cur<totalExp*2?'var(--warning)':'var(--text)'};">${fmt(cur)}</td>
+      <td class="${evalCls}">${eval_}</td>
+    </tr>`;
+  }
+  document.getElementById('timelineBody').innerHTML = rows;
+
+  const ctx = document.getElementById('timelineChart').getContext('2d');
+  if(tlChartInst) tlChartInst.destroy();
+  tlChartInst = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels: Array.from({length:12},(_,i)=>months[(now.getMonth()+i)%12]),
+      datasets:[
+        {label:t('chart_savings'),data:savArr,backgroundColor:savArr.map(v=>v>0?'rgba(37,99,235,0.7)':'rgba(220,38,38,0.5)'),borderRadius:4},
+        {label:t('chart_income'),data:incArr,type:'line',borderColor:'#059669',backgroundColor:'rgba(5,150,105,0)',tension:0.3,pointRadius:2,yAxisID:'y'},
+        {label:t('chart_expenses'),data:expArr,type:'line',borderColor:'#dc2626',backgroundColor:'rgba(220,38,38,0)',borderDash:[3,3],tension:0.3,pointRadius:2,yAxisID:'y'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,labels:{color:'#64748b',font:{size:11},boxWidth:20}},
+        tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#94a3b8',borderColor:'#334155',borderWidth:1}},
+      scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#94a3b8',font:{size:10},callback:v=>fmtN(v)}},
+              x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10}}}}}
+  });
+}
+
+// =========== TABS ===========
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.getElementById('tbtn-'+id).classList.add('active');
+  if(id==='timeline') buildTimeline();
+}
+
+// =========== SCENARIOS ===========
+function switchScen(s){
+  saveScen();
+  currentScen=s;
+  document.getElementById('sbA').classList.toggle('active',s==='A');
+  document.getElementById('sbB').classList.toggle('active',s==='B');
+  loadScen(s);
+}
+function saveScen(){
+  persistAll();
+}
+function loadScen(s){
+  const d=scenarios[s];
+  if(!d||!Object.keys(d).length) return;
+  Object.entries(d).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.value=v; });
+  recalc();
+}
+function resetAll(){
+  document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
+  sv('taxRate',30); sv('permitPct',100); sv('navWait',4);
+  sv('dagTax',30); sv('permPct',100); sv('permMonths',3); sv('permTax',30);
+  sv('empTax',30); sv('empDays',15); sv('empScenario','15');
+  document.querySelectorAll('input[id],select[id]').forEach(el=>{ el._userEdited=false; });
+  scenarios={A:{},B:{}};
+  try{ localStorage.removeItem('finansno_v2_data'); }catch(e){}
+  recalc();
+}
+function exportData(){
+  saveScen();
+  const blob=new Blob([JSON.stringify({scenarios,lang},null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='finansno_calc_2026.json'; a.click();
+}
+function importData(inp){
+  const r=new FileReader();
+  r.onload=e=>{ try{
+    const d=JSON.parse(e.target.result);
+    scenarios=d.scenarios||{A:{},B:{}};
+    if(d.lang){ document.getElementById('langSel').value=d.lang; lang=d.lang; applyTranslations(); }
+    loadScen('A');
+  }catch(x){} };
+  r.readAsText(inp.files[0]);
+}
+
+// =========== LANGUAGE ===========
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(el.tagName==='OPTION') el.text=t(k); else el.innerHTML=t(k);
+  });
+  const tabs=[['overview','tab_overview'],['dagpenger','tab_dagpenger'],['permittering','tab_permit'],
+              ['employer','tab_employer'],['budget','tab_budget'],['skatt','tab_skatt'],['timeline','tab_timeline']];
+  tabs.forEach(([id,key])=>{ const btn=document.getElementById('tbtn-'+id); if(btn) btn.querySelector('span[data-i18n]').textContent=t(key); });
+}
+function changeLang(){
+  lang=document.getElementById('langSel').value;
+  applyTranslations();
+  recalc();
+  persistAll(); // save language choice
+}
+
+// =========== TRANSLATIONS ===========
+const T = {
+lt:{
+  tab_overview:"Apžvalga",tab_dagpenger:"Dagpenger",tab_permit:"Permittering",
+  tab_employer:"Darbdavys",tab_budget:"Biudžetas",tab_skatt:"Mokesčiai",tab_timeline:"12 mėn.",
+  btn_reset:"Išvalyti",btn_home:"Pradžia",btn_export:"Eksportuoti",btn_import:"Importuoti",
+  main_source:"PAGRINDINIS",auto_synced:"🔗 Sinchronizuota",
+  card_income:"Pajamų šaltiniai",l_annual:"Metinės pajamos (Bruto)",
+  tip_annual:"Visos jūsų metinės pajamos iš darbdavio, prieš mokesčius (NOK). Automatiškai perduodama į kitus skaičiuotuvus.",
+  l_status:"Darbo statusas",tip_status:"Jūsų dabartinė darbo situacija. Keičia visus skaičiavimus.",
+  st_active:"Dirbu (pilnas etatas)",st_permit:"Permittering (laikinas atleidimas)",st_unemployed:"Bedarbis - gaunu Dagpenger (NAV)",
+  l_permit_pct:"Permittering procentas",tip_permit_pct:"Kiek procentų darbo laikinai atleista. 100% = visiškai, 50% = pusė etato.",
+  l_tax:"Mokesčių tarifas (skattekort)",tip_tax:"Jūsų dabartinis mokesčių procentas iš skattekort. Automatiškai perduodamas.",
+  sec_family:"Šeima ir papildomos pajamos",
+  l_partner:"Partnerio netto (mėn.)",tip_partner:"Sutuoktinio/partnerio pajamos į rankas per mėnesį.",
+  l_child:"Vaiko pinigai (Barnetrygd)",tip_child:"2026 m.: 2 012 NOK/mėn. kiekvienam vaikui (0-18 m.) nuo 2026-02-01.",
+  l_extra:"Papildomos pajamos (mėn., netto)",tip_extra:"Dalinis darbas, nuoma, individuali veikla (netto).",
+  card_expenses:"Mėnesinės išlaidos",exp_note:"Išlaidos automatiškai naudojamos Biudžeto ir 12 mėn. plano skaičiuoklėse.",
+  exp_housing:"Nuoma / Hipoteka",tip_exp_housing:"Mėnesinis nuomos arba hipotekos mokestis. Osle vidutinė nuoma ~12-18k NOK.",
+  exp_food:"Maistas",tip_exp_food:"Maisto produktai. Vienas žmogus ~3-5k, šeima ~7-12k NOK/mėn.",
+  exp_transport:"Transportas",tip_exp_transport:"Mėnesinis bilietas (~820-1050 NOK) arba automobilio išlaidos.",
+  exp_loans:"Paskolos / kreditas",tip_exp_loans:"Visos paskolos: forbrukslån, kreditinės kortelės, lizingas. Neturėtų viršyti 35% pajamų.",
+  exp_kids:"Vaikų išlaidos",tip_exp_kids:"Darželis 2026 m. maks. 3000 NOK/mėn., drabužiai, veiklos.",
+  exp_insurance:"Draudimai",tip_exp_ins:"Innboforsikring, sveikatos, gyvybės draudimai (~150-300 NOK/mėn.).",
+  exp_phone:"Telefonas / internetas",tip_exp_phone:"Mobilus ~200-600 NOK + namų internetas ~300-500 NOK/mėn.",
+  exp_other:"Kita",tip_exp_other:"Laisvalaikis, drabužiai, prenumeratos, neplanuotos išlaidos.",
+  card_reserves:"Rezervai",l_savings:"Santaupos iš viso",tip_savings:"Visos santaupos šiuo metu. Naudojama deficito padengimo trukmei skaičiuoti.",
+  l_nav_wait:"NAV laukimo laikas: ",l_weeks:"sav.",tip_wait:"2026 m.: paprastai 3-8 sav. prieš pirmąjį NAV mokėjimą.",nav_wait_note_active:"Netaikoma dirbant pilnu etatu – automatiškai 0.",
+  kpi_balance:"Mėnesio balansas",kpi_burn:"Deficitas/mėn.",kpi_survive:"Santaupų mėnesiai",
+  overview_title:"Strateginė apžvalga",your_net:"Jūsų netto (mėn.)",
+  l_monthly_gross:"Mėn. bruto:",l_monthly_tax:"Mėn. mokestis:",
+  l_daily:"Dienos pajamos:",l_weekly:"Savaitinės pajamos:",l_wait_cost:"NAV laukimo kaina:",
+  household_net:"Šeimos netto (mėn.)",l_partner_disp:"Partneris:",l_child_disp:"Vaiko pinigai:",l_extra_disp:"Papildoma:",
+  adv_enter:"Įveskite duomenis, kad gautumėte patarimą.",
+  income_loss_title:"Pajamų kritimo analizė",was_salary:"Buvęs netto",now_income:"Dabar netto",loss_diff:"Praradimas/mėn.",
+  income_ratio:"Pajamų išsaugojimas",chart_title:"12 mėnesių santaupų prognozė",
+  pill_stable:"STABILU",pill_erosion:"MAŽĖJA",pill_critical:"KRITINĖ",
+  adv_stable:"✅ <b>Stabilu.</b> Turite pajamų perteklių. Rekomenduojama kaupti rezervą (BSU).",
+  adv_erosion:"⚠️ <b>Deginate santaupas.</b> Santaupų užteks apie",adv_erosion2:"mėn.",
+  adv_critical:"🚨 <b>KRITINĖ SITUACIJA.</b> Rezervas < 3 mėn. Kreipkitės į NAV, keiskite skattekort, mažinkite išlaidas.",
+  warn_deficit:"Turite mėnesinį deficitą - išlaidos viršija pajamas.",
+  warn_loan:"Paskolos viršija 35% pajamų - finansinė rizika.",
+  warn_housing:"Būsto išlaidos viršija 40% pajamų.",
+  warn_savings:"Santaupų mažiau nei 3 mėn. išlaidoms!",
+  warn_tax:"Rekomenduojame keisti skattekort - galite permokėti mokesčius.",
+  mo:"mėn.",mo_start:"Pradžia",
+  loss_yearly_prefix:"Metiniai nuostoliai:",loss_yearly_suffix:"",
+  chart_savings:"Santaupos",chart_income:"Pajamos",chart_expenses:"Išlaidos",
+  // Dagpenger
+  dag_source_title:"📊 Iš kur imami duomenys?",
+  dag_source_text:"Metinės pajamos ir mokesčių tarifas automatiškai perkelti iš Apžvalgos. 2026 m. G = 130 160 NOK. Maks. bazė 6G = 780 960 NOK. Koeficientas 62,4%.",
+  dag_title:"Dagpenger (NAV) Kalkuliatorius",
+  dag_12m:"Metinės pajamos - 12 mėn. bazė",tip_dag_12m:"NAV naudoja paskutinių 12 mėn. pajamas arba 36 mėn. vidurkį - priklausomai nuo to, kuri didesnė.",
+  dag_36m:"Metinės pajamos - 36 mėn. vidurkis",tip_dag_36m:"36 mėn. vidurkis naudojamas jei didesnė suma nei 12 mėn. Palikite tuščią jei nežinote.",
+  dag_tax:"Mokesčių tarifas",tip_dag_tax:"Dagpenger apmokestinamas. Apsvarstykite pakeisti skattekort (žr. Mokesčių skaičiuotuvą).",
+  dag_conditions_title:"⚠️ Dagpenger sąlygos 2026 m.:",
+  dag_conditions:"• Min. pajamos paskutiniuose 12 mėn.: 3G (~390 480 NOK) ARBA 36 mėn. vidurkis\n• Dirbote Norvegijoje (ar ES/EEE)\n• Registruoti kaip darbo ieškantis NAV sistemoje\n• Negaunate pensijos ar kitų NAV išmokų",
+  dag_results:"Rezultatai",dag_basis:"Skaičiavimo bazė (max 6G):",dag_which_base:"Naudojama bazė:",
+  dag_annual_gross:"Metinė bruto išmoka (62.4%):",dag_monthly_gross:"Mėnesinis bruto:",
+  dag_monthly_net:"Mėnesinis NETTO (į rankas):",dag_daily:"Dienos netto (darbo diena):",dag_weekly:"Savaitinė netto:",
+  dag_12m_label:"12 mėn.",dag_36m_label:"36 mėn.",
+  dag_too_low:"Per mažos pajamos!",dag_too_low_text:"Jūsų pajamos gali neatitikti minimalaus dagpenger reikalavimo (3G = 390 480 NOK per 12 mėn.).",
+  dag_ratio_prefix:"Gaunate",dag_ratio_suffix:"nuo buvusio atlyginimo",dag_base_used:"Naudojama bazė",
+  // Permittering
+  perm_source_title:"📊 Iš kur imami duomenys?",
+  perm_source_text:"Mėnesinis atlyginimas ir mokesčių tarifas perkelti iš Apžvalgos. Permittering = laikinas atleidimas. Pirmas 15 d. moka darbdavys, vėliau - NAV.",
+  perm_title:"Permittering Kalkuliatorius",
+  perm_salary:"Mėnesinis atlyginimas (bruto)",tip_perm_salary:"Jūsų atlyginimas pagal sutartį, prieš mokesčius. Perkeltas iš Apžvalgos.",
+  perm_pct:"Permittering procentas",tip_perm_pct:"100% = visiškai nedirbate. 50% = pusė etato, pusę kompensuoja NAV.",
+  perm_tax:"Mokesčių tarifas",tip_perm_tax:"Perkeltas iš Apžvalgos. NAV daliai apsvarstykite atnaujinti skattekort.",
+  perm_months:"Planuojama trukmė",tip_perm_months:"Kiek mėnesių tikitės būti permittering. Maks. Dagpenger per permittering iki 52 sav.",
+  sfx_months:"mėn.",
+  perm_employer_period:"✅ Darbdavio laikotarpis (pirmos 15 darbo dienų)",
+  perm_daily_sal:"Dienos atlyginimas (bruto):",perm_employer_total:"Darbdavys sumoka (netto):",
+  perm_nav_period:"NAV laikotarpis (po 15 dienų)",
+  perm_nav_monthly:"NAV dalis (mėn., netto):",perm_work_part:"Darbo dalis, jei dalinis (netto):",
+  perm_total_monthly:"Viso per mėnesį (netto):",perm_avg:"Vidutinės pajamos laikotarpiu:",perm_total_loss:"Bendras praradimas:",
+  // Employer
+  emp_source_title:"📊 Kas yra Arbeidsgiverperiode?",
+  emp_source_text:"Arbeidsgiverperiode = darbdavio privalomai mokamas laikotarpis. Taikoma: 1) Permittering - 15 darbo dienų; 2) Liga - 16 kal. dienų. Per šį laikotarpį pajamos NESUMAŽĖJA.",
+  emp_title:"Darbdavio laikotarpis (Arbeidsgiverperiode)",
+  emp_monthly:"Mėnesinis atlyginimas (bruto)",tip_emp_monthly:"Jūsų atlyginimas pagal sutartį. Perkeltas iš Apžvalgos.",
+  emp_tax:"Mokesčių tarifas",tip_emp_tax:"Perkeltas iš Apžvalgos. Taikomas kaip įprastai.",
+  emp_scenario:"Situacija",tip_emp_scenario:"Pasirinkite: Permittering (15 darbo d.) arba Liga (16 kal. d.).",
+  emp_scen_permit:"Permittering (15 darbo dienų)",emp_scen_sick:"Liga / Sykmelding (16 kal. dienų)",emp_scen_custom:"Kitas skaičius dienų",
+  emp_days_custom:"Dienų skaičius",sfx_days:"d.",
+  emp_good_news:"✅ Gera žinia:",emp_good_news_text:"Per darbdavio laikotarpį pajamos NESUMAŽĖJA. Gaunate visą atlyginimą.",
+  emp_results:"Skaičiavimo rezultatai",emp_daily_bruto:"Dienos bruto:",emp_daily_netto:"Dienos netto:",
+  emp_period_bruto:"Laikotarpio bruto:",emp_period_netto:"Laikotarpio netto (į rankas):",
+  emp_remaining_days:"Likusios mėnesio darbo dienos:",emp_remaining_nav:"NAV mokės likusiam laikotarpiui (est.):",
+  // Budget
+  bud_source_title:"📊 Iš kur imami duomenys?",
+  bud_source_text:"Pajamos perkeltos iš Apžvalgos (šeimos netto). Išlaidos perkopijuotos iš Apžvalgos išlaidų. Galite keisti čia - Apžvalga nebus pakeista.",
+  bud_title:"Biudžeto ir Išgyvenimo Analizė",
+  bud_income:"Mėnesinės pajamos (netto, šeima)",tip_bud_income:"Visos šeimos pajamos į rankas. Perkelta iš Apžvalgos.",
+  bud_fixed:"🔒 Fiksuotos išlaidos",bud_variable:"📊 Kintamos išlaidos",
+  bud_rent:"Nuoma / hipoteka",tip_bud_rent:"Fiksuotas mėnesinis mokestis, kiekvieną mėnesį.",
+  bud_loan:"Paskolos įmokos",bud_insurance:"Draudimai",bud_phone:"Telefonas / internetas",
+  bud_food:"Maistas",bud_transport:"Transportas",bud_kids:"Vaikai / darželis",bud_other2:"Kita",
+  bud_savings_amt:"Santaupos",tip_bud_savings:"Deficito padengimo trukmei skaičiuoti.",
+  bud_summary:"Biudžeto suvestinė",bud_fixed_total:"Fiksuotos išlaidos:",bud_variable_total:"Kintamos išlaidos:",
+  bud_total_exp:"Visos išlaidos:",bud_balance_month:"Mėnesio balansas:",bud_survive_months:"Santaupų užteks:",
+  bud_structure:"Išlaidų struktūra",bud_empty:"Įveskite išlaidas",
+  // Skatt
+  skatt_source_title:"📊 Kaip veikia Skattekort 2026?",
+  skatt_source_text:"Pajamoms sumažėjus - būtina keisti skattekort. Per mažas tarifas = damokėsite metų gale! Skaičiuoklė naudoja 2026 m. oficialias lenteles.",
+  skatt_title:"Mokesčių Korekcija (Skattekort) 2026",
+  skatt_warning_title:"⚠️ SVARBU — Perskaitykite:",skatt_warning_text:"Skaičiuoklė teikia tik teorinę apytikslę reikšmę. Rekomenduojamas % pagrįstas supaprastintu modeliu. Tikslus mokestis priklauso nuo papildomų pajamų, feriepenger, dalinio metų darbo. Rekomenduojamas tarifas nėra garantija - metų gale galite likti skolingi restskatt. Patikrinkite skatteetaten.no prieš keičiant skattekort.",
+  skatt_old_annual:"Buvusios metinės pajamos (bruto)",tip_skatt_old:"Jūsų pajamos iš ankstesnio darbo. Perkeltos iš Apžvalgos.",
+  skatt_old_tax:"Dabartinis skattekort tarifas",tip_skatt_old_tax:"Procentas iš jūsų skattekort. Rasite Altinn.no arba skatteetaten.no.",
+  skatt_new_annual:"Naujos metinės pajamos (Dagpenger arba mažesnis atlyginimas)",tip_skatt_new:"Numatomos naujos metinės pajamos. Jei gausite dalį metų - susumuokite abi pajamų dalis.",
+  skatt_table_title:"📋 2026 m. mokesčių lentelė:",skatt_table_note:"+ Trygdeavgift 7,8%. Šaltinis: Skatteetaten 2026.",
+  skatt_before:"DABARTINIS",skatt_current_label:"jūsų skattekort %",skatt_recommended:"REKOMENDUOJAMA",skatt_monthly_tax:"mėn. mokestis",skatt_new_rate:"saugus min. tarifas",
+  skatt_old_monthly_tax:"Senas mėn. mokestis:",skatt_new_monthly_tax:"Naujas mėn. mokestis:",
+  skatt_monthly_saving:"Skirtumas per mėnesį:",skatt_annual_saving:"Skirtumas per metus:",
+  skatt_overpay_risk:"Permokos rizika (metinė):",
+  skatt_overpay_warning:"PERMOKOS RIZIKA!",
+  skatt_overpay_text_prefix:"Jei paliksite seną tarifą, per metus permokėsite apie",
+  skatt_overpay_text_suffix:"Rekomenduojamas naujas tarifas:",
+  skatt_ok_prefix:"Pakeitus skattekort taupysite apie",skatt_ok_suffix:"per metus. Naujas rekomenduojamas tarifas:",
+  skatt_match:"Jūsų mokesčių tarifas atitinka pajamų lygį.",skatt_eff_rate:"efektyvus tarifas",skatt_buffer:"apsauginis buferis",
+  // Timeline
+  tl_source_title:"📊 Iš kur imami šio plano duomenys?",
+  tl_source_text:"Visi duomenys iš Apžvalgos: pajamos (pagal statusą), išlaidos, santaupos, NAV laukimas. Keisti - grįžkite į Apžvalgą.",
+  tl_title:"12 Mėnesių Detalus Planas",
+  tl_month:"Mėnuo",tl_status:"Statusas",tl_income:"Pajamos",tl_expenses:"Išlaidos",
+  tl_balance:"Balansas",tl_savings:"Santaupos",tl_eval:"Vertinimas",tl_empty:"Įveskite duomenis Apžvalgos kortelėje",
+  tl_waiting:"NAV laukimas",tl_employer:"Darbdavys",tl_nav:"NAV",tl_normal:"Atlyginimas",
+  tl_ok:"✅ Gerai",tl_warn:"⚠️ Rizika",tl_crit:"🚨 Kritinė",
+  footer_desc:"Finansų planavimo platforma imigrantams Norvegijoje",
+  footer_disclaimer:"Informacinis įrankis. Skaičiavimai grindžiami NAV ir Skatteetaten 2026 m. duomenimis.",
+  footer_rights:"Visos teisės saugomos.",
+  dag_tag:"2026",
+},
+no:{
+  tab_overview:"Oversikt",tab_dagpenger:"Dagpenger",tab_permit:"Permittering",
+  tab_employer:"Arbeidsgiver",tab_budget:"Budsjett",tab_skatt:"Skatt",tab_timeline:"12 mnd.",
+  btn_reset:"Nullstill",btn_home:"Hjem",btn_export:"Eksporter",btn_import:"Importer",
+  main_source:"HOVED",auto_synced:"🔗 Synkronisert",
+  card_income:"Inntektskilder",l_annual:"Årlig Bruttoinntekt",
+  tip_annual:"Din totale årsinntekt fra arbeidsgiver, for skatt (NOK). Overfores automatisk til andre kalkulatorer.",
+  l_status:"Arbeidsstatus",tip_status:"Din nåværende arbeidssituasjon. Påvirker alle beregninger.",
+  st_active:"Jobber (fulltid)",st_permit:"Permittering (midlertidig oppsigelse)",st_unemployed:"Ledig - mottar Dagpenger (NAV)",
+  l_permit_pct:"Permitteringsprosent",tip_permit_pct:"Hvor mye av stillingen er permittert. 100% = fullt, 50% = halvtid.",
+  l_tax:"Skattesats (skattekort)",tip_tax:"Din nåværende skatteprosent fra skattekortet. Overfores automatisk.",
+  sec_family:"Familie og tilleggsinntekter",
+  l_partner:"Partners netto (mnd.)",tip_partner:"Ektefelle/partners lonn etter skatt per måned.",
+  l_child:"Barnetrygd",tip_child:"2026: 2 012 NOK/mnd. per barn (0-18 år) fra 1. feb 2026.",
+  l_extra:"Tilleggsinntekt (mnd., netto)",tip_extra:"Deltidsjobb, utleie, ENK-inntekter (netto).",
+  card_expenses:"Månedlige Utgifter",exp_note:"Utgifter overfores automatisk til Budsjett og 12-månedersplan.",
+  exp_housing:"Leie / Boliglån",tip_exp_housing:"Månedlig husleie eller boliglånsavdrag. Oslo snitt ~12-18k NOK.",
+  exp_food:"Mat",tip_exp_food:"Matvarer. En person ~3-5k, familie ~7-12k NOK/mnd.",
+  exp_transport:"Transport",tip_exp_transport:"Månedskort (~820-1050 NOK) eller bilutgifter.",
+  exp_loans:"Lån / Kreditt",tip_exp_loans:"Alle lån: forbrukslån, kredittkort, billeasing. Bor ikke overstige 35% av inntekt.",
+  exp_kids:"Barns utgifter",tip_exp_kids:"Barnehage 2026 maks 1 200 NOK/mnd., klær, aktiviteter.",
+  exp_insurance:"Forsikring",tip_exp_ins:"Innboforsikring, helseforsikring (~150-300 NOK/mnd.).",
+  exp_phone:"Telefon / internett",tip_exp_phone:"Mobil ~200-600 NOK + hjemme-internett ~300-500 NOK/mnd.",
+  exp_other:"Annet",tip_exp_other:"Fritid, klær, abonnementer, uforutsette utgifter.",
+  card_reserves:"Reserver",l_savings:"Totale sparepenger",tip_savings:"Dine nåværende sparepenger. Brukes til å beregne overlevelsestid.",
+  l_nav_wait:"NAV ventetid: ",l_weeks:"uker",tip_wait:"2026: Vanligvis 3-8 uker til forste NAV-utbetaling.",nav_wait_note_active:"Ikke relevant ved full jobb – settes automatisk til 0.",
+  kpi_balance:"Månedlig Balanse",kpi_burn:"Underskudd/mnd.",kpi_survive:"Spare-måneder",
+  overview_title:"Strategisk Oversikt",your_net:"Din netto (mnd.)",
+  l_monthly_gross:"Mnd. brutto:",l_monthly_tax:"Mnd. skatt:",
+  l_daily:"Daglig inntekt:",l_weekly:"Ukentlig inntekt:",l_wait_cost:"NAV ventetidskostnad:",
+  household_net:"Husholdning netto (mnd.)",l_partner_disp:"Partner:",l_child_disp:"Barnetrygd:",l_extra_disp:"Tillegg:",
+  adv_enter:"Skriv inn data for å få råd.",
+  income_loss_title:"Inntektstapsanalyse",was_salary:"Tidligere netto",now_income:"Nå netto",loss_diff:"Tap/mnd.",
+  income_ratio:"Inntektsbevaring",chart_title:"12-måneders sparekonto prognose",
+  pill_stable:"STABILT",pill_erosion:"NEDGANG",pill_critical:"KRITISK",
+  adv_stable:"✅ <b>Stabilt.</b> Du har overskudd. Bygg buffer (BSU).",
+  adv_erosion:"⚠️ <b>Bruker sparepenger.</b> Rekker ca.",adv_erosion2:"mnd.",
+  adv_critical:"🚨 <b>KRITISK.</b> Reserver < 3 mnd. Kontakt NAV og endre skattekort.",
+  warn_deficit:"Månedlig underskudd - utgifter overstiger inntekt.",
+  warn_loan:"Lån overstiger 35% av inntekt.",warn_housing:"Boutgifter overstiger 40% av inntekt.",
+  warn_savings:"Sparepenger < 3 måneder utgifter!",warn_tax:"Anbefaler å endre skattekort.",
+  mo:"mnd.",mo_start:"Start",loss_yearly_prefix:"Årlig tap:",loss_yearly_suffix:"",
+  chart_savings:"Sparing",chart_income:"Inntekt",chart_expenses:"Utgifter",
+  dag_source_title:"📊 Hvorfra hentes data?",dag_source_text:"Inntekt og skattesats overfores automatisk fra Oversikt. 2026: G = 130 160 NOK, Maks 6G = 780 960 NOK, sats 62,4%.",
+  dag_title:"Dagpenger (NAV) Kalkulator",
+  dag_12m:"Inntekt - siste 12 mnd.",tip_dag_12m:"NAV bruker siste 12 mnd. eller 36 mnd. snitt - den som er hoyest.",
+  dag_36m:"Inntekt - 36 mnd. snitt",tip_dag_36m:"36 mnd. snitt brukes hvis det er hoyere. La stå tomt hvis du ikke vet.",
+  dag_tax:"Skattesats",tip_dag_tax:"Dagpenger beskattes. Vurder å endre skattekortet.",
+  dag_conditions_title:"⚠️ Dagpenger-vilkår 2026:",
+  dag_conditions:"• Min. inntekt siste 12 mnd.: 3G (~390 480 NOK)\n• Jobbet i Norge (eller EØS)\n• Registrert arbeidssoker hos NAV\n• Mottar ikke pensjon el. andre NAV-ytelser",
+  dag_results:"Resultater",dag_basis:"Beregningsgrunnlag (maks 6G):",dag_which_base:"Brukt grunnlag:",
+  dag_annual_gross:"Årlig brutto (62,4%):",dag_monthly_gross:"Månedlig brutto:",
+  dag_monthly_net:"Månedlig NETTO (utbetalt):",dag_daily:"Daglig netto (arbeidsdag):",dag_weekly:"Ukentlig netto:",
+  dag_12m_label:"12 mnd.",dag_36m_label:"36 mnd.",
+  dag_too_low:"For lav inntekt!",dag_too_low_text:"Inntekten oppfyller kanskje ikke minstekravet for dagpenger (3G = 390 480 NOK).",
+  dag_ratio_prefix:"Du mottar",dag_ratio_suffix:"av tidligere lonn",dag_base_used:"Brukt grunnlag",
+  perm_source_title:"📊 Hvorfra hentes data?",perm_source_text:"Månedlig lonn og skattesats overfort fra Oversikt. Permittering = midlertidig oppsigelse. Arbeidsgiver betaler 15 dager, deretter NAV.",
+  perm_title:"Permitterings-kalkulator",
+  perm_salary:"Månedlig lonn (brutto)",tip_perm_salary:"Lonnen din per måned for skatt. Overfort fra Oversikt.",
+  perm_pct:"Permitteringsprosent",tip_perm_pct:"100% = fullt permittert. 50% = halvtid, halvt fra NAV.",
+  perm_tax:"Skattesats",tip_perm_tax:"Overfort fra Oversikt. Vurder å endre skattekortet for NAV-delen.",
+  perm_months:"Planlagt varighet",tip_perm_months:"Antall måneder du forventer å være permittert.",
+  sfx_months:"mnd.",
+  perm_employer_period:"✅ Arbeidsgiverperiode (forste 15 arbeidsdager)",
+  perm_daily_sal:"Dagslonn (brutto):",perm_employer_total:"Arbeidsgiver betaler (netto):",
+  perm_nav_period:"NAV-periode (etter 15 dager)",
+  perm_nav_monthly:"NAV-del (mnd., netto):",perm_work_part:"Arbeidsdel ved delvis (netto):",
+  perm_total_monthly:"Totalt per mnd (netto):",perm_avg:"Gjennomsnittlig inntekt:",perm_total_loss:"Totalt tap:",
+  emp_source_title:"📊 Hva er Arbeidsgiverperiode?",emp_source_text:"Periode arbeidsgiver MÅ betale full lonn: 1) Permittering - 15 arbeidsdager; 2) Sykmelding - 16 kalenderdager. Inntekten reduseres IKKE i denne perioden.",
+  emp_title:"Arbeidsgiverperiode",
+  emp_monthly:"Månedlig lonn (brutto)",tip_emp_monthly:"Lonnen din per kontrakt. Overfort fra Oversikt.",
+  emp_tax:"Skattesats",tip_emp_tax:"Overfort fra Oversikt. Beskattes normalt.",
+  emp_scenario:"Situasjon",tip_emp_scenario:"Velg: Permittering (15 arbeidsdager) eller Sykmelding (16 kalenderdager).",
+  emp_scen_permit:"Permittering (15 arbeidsdager)",emp_scen_sick:"Sykmelding (16 kalenderdager)",emp_scen_custom:"Annet antall dager",
+  emp_days_custom:"Antall dager",sfx_days:"d.",
+  emp_good_news:"✅ Godt nytt:",emp_good_news_text:"I arbeidsgiverperioden reduseres ikke inntekten. Du får full lonn.",
+  emp_results:"Beregningsresultater",emp_daily_bruto:"Dagsbrutto:",emp_daily_netto:"Dagsnetto:",
+  emp_period_bruto:"Periodebrutto:",emp_period_netto:"Periodenetto (utbetalt):",
+  emp_remaining_days:"Resterende arbeidsdager:",emp_remaining_nav:"NAV betaler restperioden (est.):",
+  bud_source_title:"📊 Hvorfra hentes data?",bud_source_text:"Inntekt overfores fra Oversikt (familiens netto). Utgifter kopieres fra Oversikt. Du kan endre her uten å påvirke Oversikt.",
+  bud_title:"Budsjett & Overlevelsesanalyse",
+  bud_income:"Månedlig inntekt (netto, familien)",tip_bud_income:"Familiens samlede nettoinntekt. Overfort fra Oversikt.",
+  bud_fixed:"🔒 Faste utgifter",bud_variable:"📊 Variable utgifter",
+  bud_rent:"Leie / boliglån",tip_bud_rent:"Fast månedlig betaling.",
+  bud_loan:"Låneavdrag",bud_insurance:"Forsikring",bud_phone:"Telefon / internett",
+  bud_food:"Mat",bud_transport:"Transport",bud_kids:"Barn / barnehage",bud_other2:"Annet",
+  bud_savings_amt:"Sparepenger",tip_bud_savings:"Brukes til å beregne overlevelsestid ved underskudd.",
+  bud_summary:"Budsjettsammendrag",bud_fixed_total:"Faste utgifter:",bud_variable_total:"Variable:",
+  bud_total_exp:"Totale utgifter:",bud_balance_month:"Månedlig balanse:",bud_survive_months:"Sparing rekker:",
+  bud_structure:"Utgiftsstruktur",bud_empty:"Skriv inn utgifter",
+  skatt_source_title:"📊 Hvordan fungerer Skattekort 2026?",
+  skatt_source_text:"Når inntekten reduseres - ENDRE skattekortet. For lav sats = du skylder skatt! Kalkulatoren bruker 2026-tabeller.",
+  skatt_title:"Skattekortkorreksjon 2026",
+  skatt_warning_title:"⚠️ VIKTIG — Les for du handler:",skatt_warning_text:"Kalkulatoren gir kun <b>teoretisk tilnaerming</b>. Anbefalt % basert pa forenklet modell. Faktisk skatt avhenger av tilleggsinntekter, feriepenger, delvis arsarbeid og NAV-regler. <b>Anbefalt sats er IKKE garanti</b> — du kan fremdeles skylde restskatt. Sjekk skatteetaten.no for du endrer skattekortet. Bruk kun som utgangspunkt.",
+  skatt_old_annual:"Gammel årsinntekt (brutto)",tip_skatt_old:"Din inntekt fra tidligere jobb. Overfort fra Oversikt.",
+  skatt_old_tax:"Nåværende skattesats",tip_skatt_old_tax:"Prosenten i skattekortet ditt. Finn det på Altinn.no.",
+  skatt_new_annual:"Ny årsinntekt (Dagpenger eller lavere lonn)",tip_skatt_new:"Forventet ny samlet inntekt. Kombiner perioder om nodvendig.",
+  skatt_table_title:"📋 2026 skattebraketter:",skatt_table_note:"+ Trygdeavgift 7,8%. Kilde: Skatteetaten 2026.",
+  skatt_before:"NÅVÆRENDE",skatt_current_label:"din skattekort %",skatt_recommended:"ANBEFALT",skatt_monthly_tax:"mnd. skatt",skatt_new_rate:"min. sikker sats",
+  skatt_old_monthly_tax:"Gammel mnd-skatt:",skatt_new_monthly_tax:"Ny mnd-skatt:",
+  skatt_monthly_saving:"Differanse per mnd:",skatt_annual_saving:"Differanse per år:",
+  skatt_overpay_risk:"Overbetalingsrisiko (årlig):",
+  skatt_overpay_warning:"OVERBETALINGSRISIKO!",
+  skatt_overpay_text_prefix:"Beholder du gammel sats, betaler du for mye med ca.",
+  skatt_overpay_text_suffix:"Anbefalt ny sats:",
+  skatt_ok_prefix:"Endrer du skattekortet sparer du ca.",skatt_ok_suffix:"per år. Anbefalt sats:",
+  skatt_match:"Skattesatsen din samsvarer med inntektsnivået.",skatt_eff_rate:"effektiv sats",skatt_buffer:"sikkerhetsbuffer",
+  tl_source_title:"📊 Hvorfra hentes plan-data?",tl_source_text:"Alt fra Oversikt: inntekt (etter status), utgifter, sparing, NAV-ventetid. Endre i Oversikt.",
+  tl_title:"12-Måneders Detaljert Plan",
+  tl_month:"Måned",tl_status:"Status",tl_income:"Inntekt",tl_expenses:"Utgifter",
+  tl_balance:"Balanse",tl_savings:"Sparing",tl_eval:"Vurdering",tl_empty:"Skriv inn data i Oversikt-kortet",
+  tl_waiting:"NAV venter",tl_employer:"Arbeidsgiver",tl_nav:"NAV",tl_normal:"Lonn",
+  tl_ok:"✅ OK",tl_warn:"⚠️ Risiko",tl_crit:"🚨 Kritisk",
+  footer_desc:"Finansiell planleggingsplattform for innvandrere i Norge",
+  footer_disclaimer:"Informasjonsverktoy. Beregninger basert på NAV og Skatteetaten 2026-data.",
+  footer_rights:"Alle rettigheter forbeholdt.",
+},
+en:{
+  tab_overview:"Overview",tab_dagpenger:"Dagpenger",tab_permit:"Permittering",
+  tab_employer:"Employer",tab_budget:"Budget",tab_skatt:"Tax",tab_timeline:"12 Mo.",
+  btn_reset:"Reset",btn_home:"Home",btn_export:"Export",btn_import:"Import",
+  main_source:"MAIN",auto_synced:"🔗 Synced",
+  card_income:"Income Sources",l_annual:"Annual Gross Income",
+  tip_annual:"Your total annual income from employer, before tax (NOK). Auto-transferred to other calculators.",
+  l_status:"Work Status",tip_status:"Your current work situation. Affects all calculations.",
+  st_active:"Working (full time)",st_permit:"Permittering (temporary layoff)",st_unemployed:"Unemployed - receiving Dagpenger (NAV)",
+  l_permit_pct:"Permittering %",tip_permit_pct:"How much of your position is laid off. 100% = full, 50% = half-time.",
+  l_tax:"Tax Rate (skattekort)",tip_tax:"Your current tax percentage from the tax card. Auto-transferred.",
+  sec_family:"Family & Extra Income",
+  l_partner:"Partner's net (monthly)",tip_partner:"Spouse/partner's take-home pay per month.",
+  l_child:"Child Benefit (Barnetrygd)",tip_child:"2026: 2 012 NOK/mo per child (all ages 0-18) from Feb 2026, 1310 NOK/mo 6-18 yrs.",
+  l_extra:"Extra income (monthly, net)",tip_extra:"Part-time work, rental, self-employment (net).",
+  card_expenses:"Monthly Expenses",exp_note:"Expenses auto-transferred to Budget and 12-month plan calculators.",
+  exp_housing:"Rent / Mortgage",tip_exp_housing:"Monthly rent or mortgage payment. Oslo avg ~12-18k NOK.",
+  exp_food:"Food",tip_exp_food:"Groceries. One person ~3-5k, family ~7-12k NOK/mo.",
+  exp_transport:"Transport",tip_exp_transport:"Monthly pass (~820-1050 NOK) or car expenses.",
+  exp_loans:"Loans / Credit",tip_exp_loans:"All loans: consumer, credit card, car lease. Should not exceed 35% of income.",
+  exp_kids:"Kids expenses",tip_exp_kids:"Kindergarten 2026 max 1 200 NOK/month, clothing, activities.",
+  exp_insurance:"Insurance",tip_exp_ins:"Home insurance, health insurance (~150-300 NOK/mo).",
+  exp_phone:"Phone / Internet",tip_exp_phone:"Mobile ~200-600 NOK + home internet ~300-500 NOK/mo.",
+  exp_other:"Other",tip_exp_other:"Leisure, clothing, subscriptions, unexpected expenses.",
+  card_reserves:"Reserves",l_savings:"Total Savings",tip_savings:"Current savings. Used to calculate survival time.",
+  l_nav_wait:"NAV Wait: ",l_weeks:"wks",tip_wait:"2026: Usually 3-8 weeks until first NAV payment.",nav_wait_note_active:"Not applicable when working full time — automatically set to 0.",
+  kpi_balance:"Monthly Balance",kpi_burn:"Deficit/mo",kpi_survive:"Savings Months",
+  overview_title:"Strategic Overview",your_net:"Your net (monthly)",
+  l_monthly_gross:"Monthly gross:",l_monthly_tax:"Monthly tax:",
+  l_daily:"Daily income:",l_weekly:"Weekly income:",l_wait_cost:"NAV wait cost:",
+  household_net:"Household net (monthly)",l_partner_disp:"Partner:",l_child_disp:"Child benefit:",l_extra_disp:"Extra:",
+  adv_enter:"Enter data to get advice.",
+  income_loss_title:"Income Loss Analysis",was_salary:"Previous net",now_income:"Current net",loss_diff:"Loss/month",
+  income_ratio:"Income retention",chart_title:"12-Month Savings Forecast",
+  pill_stable:"STABLE",pill_erosion:"DECLINING",pill_critical:"CRITICAL",
+  adv_stable:"✅ <b>Stable.</b> You have surplus. Build emergency fund (BSU).",
+  adv_erosion:"⚠️ <b>Spending savings.</b> Reserves last approx.",adv_erosion2:"months.",
+  adv_critical:"🚨 <b>CRITICAL.</b> Reserves < 3 months. Contact NAV and update tax card immediately.",
+  warn_deficit:"Monthly deficit - expenses exceed income.",
+  warn_loan:"Loans exceed 35% of income.",warn_housing:"Housing exceeds 40% of income.",
+  warn_savings:"Savings below 3 months of expenses!",warn_tax:"Recommend updating tax card.",
+  mo:"mo",mo_start:"Start",loss_yearly_prefix:"Annual loss:",loss_yearly_suffix:"",
+  chart_savings:"Savings",chart_income:"Income",chart_expenses:"Expenses",
+  dag_source_title:"📊 Where does the data come from?",dag_source_text:"Income and tax rate auto-transferred from Overview. 2026: G = 130,160 NOK, Max 6G = 780,960 NOK, rate 62.4%.",
+  dag_title:"Dagpenger (NAV) Calculator",
+  dag_12m:"Income - last 12 months",tip_dag_12m:"NAV uses last 12 months or 36-month average - whichever is higher.",
+  dag_36m:"Income - 36-month average",tip_dag_36m:"36-month average used if higher. Leave blank if unknown.",
+  dag_tax:"Tax rate",tip_dag_tax:"Dagpenger is taxable. Consider updating your tax card.",
+  dag_conditions_title:"⚠️ Dagpenger conditions 2026:",
+  dag_conditions:"• Min. income last 12 months: 3G (~390,480 NOK)\n• Worked in Norway (or EEA)\n• Registered job seeker at NAV\n• Not receiving pension or other NAV benefits",
+  dag_results:"Results",dag_basis:"Calculation base (max 6G):",dag_which_base:"Base used:",
+  dag_annual_gross:"Annual gross (62.4%):",dag_monthly_gross:"Monthly gross:",
+  dag_monthly_net:"Monthly NET (take-home):",dag_daily:"Daily net (working day):",dag_weekly:"Weekly net:",
+  dag_12m_label:"12 mo.",dag_36m_label:"36 mo.",
+  dag_too_low:"Income too low!",dag_too_low_text:"Your income may not meet the minimum dagpenger requirement (3G = 390,480 NOK in 12 months).",
+  dag_ratio_prefix:"You receive",dag_ratio_suffix:"of previous salary",dag_base_used:"Base used",
+  perm_source_title:"📊 Where does the data come from?",perm_source_text:"Monthly salary and tax rate transferred from Overview. Permittering = temporary layoff. Employer pays 15 days, then NAV.",
+  perm_title:"Permittering Calculator",
+  perm_salary:"Monthly salary (gross)",tip_perm_salary:"Your salary per month before tax. Transferred from Overview.",
+  perm_pct:"Permittering %",tip_perm_pct:"100% = fully laid off. 50% = half position, half from NAV.",
+  perm_tax:"Tax rate",tip_perm_tax:"Transferred from Overview. Consider updating tax card for NAV portion.",
+  perm_months:"Planned duration",tip_perm_months:"How many months you expect to be on permittering.",
+  sfx_months:"mo.",
+  perm_employer_period:"✅ Employer period (first 15 working days)",
+  perm_daily_sal:"Daily rate (gross):",perm_employer_total:"Employer pays (net):",
+  perm_nav_period:"NAV period (after 15 days)",
+  perm_nav_monthly:"NAV portion (monthly, net):",perm_work_part:"Work portion if partial (net):",
+  perm_total_monthly:"Total per month (net):",perm_avg:"Average income during period:",perm_total_loss:"Total loss:",
+  emp_source_title:"📊 What is Arbeidsgiverperiode?",emp_source_text:"Employer must pay full salary: 1) Permittering - 15 working days; 2) Sick leave - 16 calendar days. Income does NOT decrease in this period.",
+  emp_title:"Employer Period (Arbeidsgiverperiode)",
+  emp_monthly:"Monthly salary (gross)",tip_emp_monthly:"Your contract salary. Transferred from Overview.",
+  emp_tax:"Tax rate",tip_emp_tax:"Transferred from Overview. Applied as normal.",
+  emp_scenario:"Situation",tip_emp_scenario:"Choose: Permittering (15 working days) or Sick leave (16 calendar days).",
+  emp_scen_permit:"Permittering (15 working days)",emp_scen_sick:"Sick leave (16 calendar days)",emp_scen_custom:"Custom number of days",
+  emp_days_custom:"Number of days",sfx_days:"d.",
+  emp_good_news:"✅ Good news:",emp_good_news_text:"During employer period income does NOT decrease. Full salary paid.",
+  emp_results:"Calculation results",emp_daily_bruto:"Daily gross:",emp_daily_netto:"Daily net:",
+  emp_period_bruto:"Period gross:",emp_period_netto:"Period net (take-home):",
+  emp_remaining_days:"Remaining working days:",emp_remaining_nav:"NAV pays remainder (est.):",
+  bud_source_title:"📊 Where does the data come from?",bud_source_text:"Income from Overview (family net). Expenses copied from Overview. Change here without affecting Overview.",
+  bud_title:"Budget & Survival Analysis",
+  bud_income:"Monthly income (net, whole family)",tip_bud_income:"Family's total take-home income. Transferred from Overview.",
+  bud_fixed:"🔒 Fixed expenses",bud_variable:"📊 Variable expenses",
+  bud_rent:"Rent / Mortgage",tip_bud_rent:"Fixed monthly payment.",
+  bud_loan:"Loan payments",bud_insurance:"Insurance",bud_phone:"Phone / Internet",
+  bud_food:"Food",bud_transport:"Transport",bud_kids:"Kids / Kindergarten",bud_other2:"Other",
+  bud_savings_amt:"Savings",tip_bud_savings:"Used to calculate survival time at deficit.",
+  bud_summary:"Budget Summary",bud_fixed_total:"Fixed expenses:",bud_variable_total:"Variable:",
+  bud_total_exp:"Total expenses:",bud_balance_month:"Monthly balance:",bud_survive_months:"Savings last:",
+  bud_structure:"Expense structure",bud_empty:"Enter expenses",
+  skatt_source_title:"📊 How does Skattekort 2026 work?",skatt_source_text:"When income drops - CHANGE your tax card. Too low rate = you owe tax! Calculator uses 2026 official tables.",
+  skatt_title:"Tax Card Correction (Skattekort) 2026",
+  skatt_warning_title:"⚠️ IMPORTANT — Read before acting:",skatt_warning_text:"This calculator gives a <b>theoretical approximation only</b>. The recommended % is based on a simplified model. Actual tax depends on extra income, feriepenger, part-year work, and NAV rules. <b>The recommended rate is NOT a guarantee</b> — you may still owe restskatt at year end. Always verify at skatteetaten.no before changing skattekort. Use only as a starting point.",
+  skatt_old_annual:"Previous annual income (gross)",tip_skatt_old:"Your income from previous job. Transferred from Overview.",
+  skatt_old_tax:"Current tax rate",tip_skatt_old_tax:"Percentage in your tax card. Find at Altinn.no.",
+  skatt_new_annual:"New annual income (Dagpenger or lower salary)",tip_skatt_new:"Expected new total income. Combine periods if needed.",
+  skatt_table_title:"📋 2026 Norwegian tax brackets:",skatt_table_note:"+ Social security 7.8%. Source: Skatteetaten 2026.",
+  skatt_before:"CURRENT RATE",skatt_current_label:"your skattekort %",skatt_recommended:"RECOMMENDED",skatt_monthly_tax:"monthly tax",skatt_new_rate:"safe minimum rate",
+  skatt_old_monthly_tax:"Old monthly tax:",skatt_new_monthly_tax:"New monthly tax:",
+  skatt_monthly_saving:"Difference per month:",skatt_annual_saving:"Difference per year:",
+  skatt_overpay_risk:"Overpayment risk (annual):",
+  skatt_overpay_warning:"OVERPAYMENT RISK!",
+  skatt_overpay_text_prefix:"Keeping old rate, you'll overpay approx.",
+  skatt_overpay_text_suffix:"Recommended new rate:",
+  skatt_ok_prefix:"Changing tax card saves approx.",skatt_ok_suffix:"per year. Recommended rate:",
+  skatt_match:"Your tax rate matches your income level.",skatt_eff_rate:"effective rate",skatt_buffer:"safety buffer",
+  tl_source_title:"📊 Where does plan data come from?",tl_source_text:"All from Overview: income (by status), expenses, savings, NAV wait. Change in Overview tab.",
+  tl_title:"12-Month Detailed Plan",
+  tl_month:"Month",tl_status:"Status",tl_income:"Income",tl_expenses:"Expenses",
+  tl_balance:"Balance",tl_savings:"Savings",tl_eval:"Rating",tl_empty:"Enter data in Overview tab",
+  tl_waiting:"NAV waiting",tl_employer:"Employer",tl_nav:"NAV",tl_normal:"Salary",
+  tl_ok:"✅ Good",tl_warn:"⚠️ Risk",tl_crit:"🚨 Critical",
+  footer_desc:"Financial planning platform for immigrants in Norway",
+  footer_disclaimer:"Informational tool. Calculations based on NAV and Skatteetaten 2026 data.",
+  footer_rights:"All rights reserved.",
+},
+pl:{
+  tab_overview:"Przegląd",tab_dagpenger:"Dagpenger",tab_permit:"Permittering",
+  tab_employer:"Pracodawca",tab_budget:"Budżet",tab_skatt:"Podatek",tab_timeline:"12 Mies.",
+  btn_reset:"Resetuj",btn_home:"Strona główna",btn_export:"Eksport",btn_import:"Import",
+  main_source:"GŁÓWNE",auto_synced:"🔗 Zsynchronizowane",
+  card_income:"Źródła Dochodu",l_annual:"Roczny Dochód Brutto",
+  tip_annual:"Całkowity roczny dochód od pracodawcy, przed opodatkowaniem (NOK). Przesyłany automatycznie do innych kalkulatorów.",
+  l_status:"Status Pracy",tip_status:"Twoja aktualna sytuacja zawodowa. Wpływa na wszystkie obliczenia.",
+  st_active:"Pracuję (pełny etat)",st_permit:"Permittering (zwolnienie tymczasowe)",st_unemployed:"Bezrobotny - otrzymuję Dagpenger (NAV)",
+  l_permit_pct:"Procent permitteringu",tip_permit_pct:"Ile procent stanowiska jest objęte permitteringiem. 100% = pełne.",
+  l_tax:"Stawka podatkowa (skattekort)",tip_tax:"Twój obecny procent podatkowy ze skattekort. Przesyłany automatycznie.",
+  sec_family:"Rodzina i dodatkowe dochody",
+  l_partner:"Netto partnera (mies.)",tip_partner:"Miesięczna wypłata na rękę partnera/małżonka.",
+  l_child:"Zasiłek na dziecko (Barnetrygd)",tip_child:"2026: 2 012 NOK/mies. na dziecko (0-18 lat) od Feb 2026, 1310 NOK/mies. 6-18 lat.",
+  l_extra:"Dodatkowy dochód (mies., netto)",tip_extra:"Praca dorywcza, wynajem, samozatrudnienie (netto).",
+  card_expenses:"Miesięczne Wydatki",exp_note:"Wydatki automatycznie przesyłane do Budżetu i planu 12-miesięcznego.",
+  exp_housing:"Czynsz / Hipoteka",tip_exp_housing:"Miesięczny czynsz lub rata kredytu hipotecznego.",
+  exp_food:"Jedzenie",tip_exp_food:"Artykuły spożywcze. Jedna osoba ~3-5k, rodzina ~7-12k NOK/mies.",
+  exp_transport:"Transport",tip_exp_transport:"Miesięczny bilet (~820-1050 NOK) lub koszty samochodu.",
+  exp_loans:"Kredyty / Pożyczki",tip_exp_loans:"Wszystkie kredyty. Nie powinny przekraczać 35% dochodu.",
+  exp_kids:"Wydatki na dzieci",tip_exp_kids:"Przedszkole 2026 maks 1 200 NOK/mies., ubrania, zajęcia.",
+  exp_insurance:"Ubezpieczenie",tip_exp_ins:"Ubezpieczenie mieszkania, zdrowotne (~150-300 NOK/mies.).",
+  exp_phone:"Telefon / Internet",tip_exp_phone:"Telefon ~200-600 NOK + internet ~300-500 NOK/mies.",
+  exp_other:"Inne",tip_exp_other:"Rozrywka, ubrania, subskrypcje, nieprzewidziane.",
+  card_reserves:"Rezerwy",l_savings:"Łączne Oszczędności",tip_savings:"Obecne oszczędności. Używane do obliczenia czasu przetrwania.",
+  l_nav_wait:"Czas Oczekiwania NAV: ",l_weeks:"tyg.",tip_wait:"2026: Zwykle 3-8 tygodni do pierwszej wypłaty NAV.",nav_wait_note_active:"Nie dotyczy pracy na pełen etat – automatycznie 0.",
+  kpi_balance:"Miesięczne Saldo",kpi_burn:"Deficyt/mies.",kpi_survive:"Miesiące Oszczędności",
+  overview_title:"Przegląd Strategiczny",your_net:"Twoje netto (mies.)",
+  l_monthly_gross:"Mies. brutto:",l_monthly_tax:"Mies. podatek:",
+  l_daily:"Dzienny dochód:",l_weekly:"Tygodniowy dochód:",l_wait_cost:"Koszt oczekiwania NAV:",
+  household_net:"Dochód domowy (mies.)",l_partner_disp:"Partner:",l_child_disp:"Zasiłek:",l_extra_disp:"Dodatkowy:",
+  adv_enter:"Wprowadź dane, aby uzyskać poradę.",
+  income_loss_title:"Analiza Utraty Dochodu",was_salary:"Poprzednie netto",now_income:"Obecne netto",loss_diff:"Strata/mies.",
+  income_ratio:"Zachowanie dochodu",chart_title:"12-Miesięczna Prognoza Oszczędności",
+  pill_stable:"STABILNIE",pill_erosion:"SPADEK",pill_critical:"KRYTYCZNIE",
+  adv_stable:"✅ <b>Stabilnie.</b> Masz nadwyżkę. Buduj rezerwę awaryjną.",
+  adv_erosion:"⚠️ <b>Używasz oszczędności.</b> Starczą na ok.",adv_erosion2:"mies.",
+  adv_critical:"🚨 <b>KRYTYCZNIE.</b> Rezerwy < 3 mies. Skontaktuj się z NAV i zmień skattekort.",
+  warn_deficit:"Miesięczny deficyt - wydatki przekraczają dochody.",
+  warn_loan:"Kredyty przekraczają 35% dochodu.",warn_housing:"Mieszkanie przekracza 40% dochodu.",
+  warn_savings:"Oszczędności poniżej 3 miesięcy wydatków!",warn_tax:"Zalecamy zmianę skattekort.",
+  mo:"mies.",mo_start:"Start",loss_yearly_prefix:"Roczna strata:",loss_yearly_suffix:"",
+  chart_savings:"Oszczędności",chart_income:"Dochód",chart_expenses:"Wydatki",
+  dag_source_title:"📊 Skąd pochodzą dane?",dag_source_text:"Dochód i stawka podatkowa przeniesione automatycznie z Przeglądu. 2026: G = 130 160 NOK, maks 6G = 780 960 NOK, stawka 62,4%.",
+  dag_title:"Kalkulator Dagpenger (NAV)",dag_12m:"Dochód - ostatnie 12 mies.",tip_dag_12m:"NAV używa ostatnich 12 mies. lub średniej 36-miesięcznej - wyższą.",
+  dag_36m:"Dochód - średnia 36 mies.",tip_dag_36m:"36-miesięczna średnia jeśli wyższa. Zostaw puste jeśli nie wiesz.",
+  dag_tax:"Stawka podatkowa",tip_dag_tax:"Dagpenger podlega opodatkowaniu. Rozważ zmianę skattekort.",
+  dag_conditions_title:"⚠️ Warunki dagpenger 2026:",
+  dag_conditions:"• Min. dochód 12 mies.: 3G (~390 480 NOK)\n• Pracowałeś w Norwegii\n• Zarejestrowany jako szukający pracy w NAV\n• Nie otrzymujesz innych świadczeń NAV",
+  dag_results:"Wyniki",dag_basis:"Podstawa obliczenia (maks 6G):",dag_which_base:"Użyta podstawa:",
+  dag_annual_gross:"Roczne brutto (62,4%):",dag_monthly_gross:"Miesięczne brutto:",
+  dag_monthly_net:"Miesięczne NETTO (na rękę):",dag_daily:"Dzienne netto (dzień roboczy):",dag_weekly:"Tygodniowe netto:",
+  dag_12m_label:"12 mies.",dag_36m_label:"36 mies.",
+  dag_too_low:"Dochód za niski!",dag_too_low_text:"Twój dochód może nie spełniać minimum dagpenger (3G = 390 480 NOK za 12 mies.).",
+  dag_ratio_prefix:"Otrzymujesz",dag_ratio_suffix:"poprzedniej pensji",dag_base_used:"Użyta podstawa",
+  perm_source_title:"📊 Skąd dane?",perm_source_text:"Miesięczna pensja i stawka podatkowa przeniesione z Przeglądu. Pracodawca płaci 15 dni, potem NAV.",
+  perm_title:"Kalkulator Permitteringu",
+  perm_salary:"Miesięczna pensja (brutto)",tip_perm_salary:"Pensja przed opodatkowaniem. Przeniesiona z Przeglądu.",
+  perm_pct:"Procent permitteringu",tip_perm_pct:"100% = pełne zwolnienie. 50% = pół etatu, połowę pokrywa NAV.",
+  perm_tax:"Stawka podatkowa",tip_perm_tax:"Przeniesiona z Przeglądu.",
+  perm_months:"Planowany czas trwania",tip_perm_months:"Ile miesięcy planujesz być na permitteringu.",
+  sfx_months:"mies.",
+  perm_employer_period:"✅ Okres pracodawcy (pierwsze 15 dni roboczych)",
+  perm_daily_sal:"Dzienna płaca (brutto):",perm_employer_total:"Pracodawca wypłaci (netto):",
+  perm_nav_period:"Okres NAV (po 15 dniach)",
+  perm_nav_monthly:"Część NAV (mies., netto):",perm_work_part:"Część pracy (netto):",
+  perm_total_monthly:"Łącznie miesięcznie (netto):",perm_avg:"Średni dochód:",perm_total_loss:"Całkowita strata:",
+  emp_source_title:"📊 Co to jest Arbeidsgiverperiode?",emp_source_text:"Pracodawca musi płacić pełną pensję: 1) Permittering - 15 dni roboczych; 2) Choroba - 16 dni kalendarzowych. Dochód NIE zmniejsza się w tym okresie.",
+  emp_title:"Okres Pracodawcy (Arbeidsgiverperiode)",
+  emp_monthly:"Miesięczna pensja (brutto)",tip_emp_monthly:"Pensja z umowy. Przeniesiona z Przeglądu.",
+  emp_tax:"Stawka podatkowa",tip_emp_tax:"Przeniesiona z Przeglądu.",
+  emp_scenario:"Sytuacja",tip_emp_scenario:"Wybierz: Permittering (15 dni rob.) lub Choroba (16 dni kal.).",
+  emp_scen_permit:"Permittering (15 dni roboczych)",emp_scen_sick:"Choroba (16 dni kalendarzowych)",emp_scen_custom:"Inna liczba dni",
+  emp_days_custom:"Liczba dni",sfx_days:"d.",
+  emp_good_news:"✅ Dobra wiadomość:",emp_good_news_text:"W okresie pracodawcy dochód NIE zmniejsza się. Pełna pensja.",
+  emp_results:"Wyniki obliczeń",emp_daily_bruto:"Dzienne brutto:",emp_daily_netto:"Dzienne netto:",
+  emp_period_bruto:"Brutto okresu:",emp_period_netto:"Netto okresu (na rękę):",
+  emp_remaining_days:"Pozostałe dni robocze:",emp_remaining_nav:"NAV wypłaci resztę (szac.):",
+  bud_source_title:"📊 Skąd dane?",bud_source_text:"Dochód z Przeglądu (netto rodziny). Wydatki skopiowane z Przeglądu. Możesz zmieniać tu bez wpływu na Przegląd.",
+  bud_title:"Analiza Budżetu i Przetrwania",
+  bud_income:"Miesięczny dochód (netto, rodzina)",tip_bud_income:"Łączny dochód na rękę. Przeniesiony z Przeglądu.",
+  bud_fixed:"🔒 Stałe wydatki",bud_variable:"📊 Zmienne wydatki",
+  bud_rent:"Czynsz / hipoteka",tip_bud_rent:"Stała miesięczna płatność.",
+  bud_loan:"Raty kredytów",bud_insurance:"Ubezpieczenie",bud_phone:"Telefon / internet",
+  bud_food:"Jedzenie",bud_transport:"Transport",bud_kids:"Dzieci / przedszkole",bud_other2:"Inne",
+  bud_savings_amt:"Oszczędności",tip_bud_savings:"Do obliczenia czasu przetrwania przy deficycie.",
+  bud_summary:"Podsumowanie Budżetu",bud_fixed_total:"Stałe:",bud_variable_total:"Zmienne:",
+  bud_total_exp:"Łączne wydatki:",bud_balance_month:"Saldo miesięczne:",bud_survive_months:"Oszczędności starczą:",
+  bud_structure:"Struktura wydatków",bud_empty:"Wprowadź wydatki",
+  skatt_source_title:"📊 Jak działa Skattekort 2026?",skatt_source_text:"Gdy dochód spada - ZMIEŃ skattekort. Za niska stawka = dopłacisz! Kalkulator używa tabel 2026.",
+  skatt_title:"Korekta Skattekort 2026",
+  skatt_warning_title:"⚠️ WAŻNE — Przeczytaj:",skatt_warning_text:"Kalkulator daje jedynie <b>przyblizenie teoretyczne</b>. Zalecany % oparty na uproszczonym modelu. Podatek zalezy od dochodow dodatkowych, feriepenger, roku czesciowego. <b>Zalecana stawka NIE jest gwarancja</b> — mozesz byc winien restskatt. Sprawdz skatteetaten.no przed zmiana skattekort. Uzywaj jako punkt wyjscia.",
+  skatt_old_annual:"Poprzedni roczny dochód (brutto)",tip_skatt_old:"Twój dochód z poprzedniej pracy. Przeniesiony z Przeglądu.",
+  skatt_old_tax:"Obecna stawka podatkowa",tip_skatt_old_tax:"Procent w skattekorcie. Znajdziesz na Altinn.no.",
+  skatt_new_annual:"Nowy roczny dochód (Dagpenger lub niższa pensja)",tip_skatt_new:"Oczekiwany nowy łączny dochód. Połącz okresy jeśli potrzeba.",
+  skatt_table_title:"📋 Norweskie progi podatkowe 2026:",skatt_table_note:"+ Ubezpieczenie społeczne 7,8%. Źródło: Skatteetaten 2026.",
+  skatt_before:"OBECNA",skatt_current_label:"twój skattekort %",skatt_recommended:"ZALECANA",skatt_monthly_tax:"mies. podatek",skatt_new_rate:"min. bezpieczna",
+  skatt_old_monthly_tax:"Stary podatek mies.:",skatt_new_monthly_tax:"Nowy podatek mies.:",
+  skatt_monthly_saving:"Różnica miesięcznie:",skatt_annual_saving:"Różnica rocznie:",
+  skatt_overpay_risk:"Ryzyko przepłaty (roczne):",
+  skatt_overpay_warning:"RYZYKO PRZEPŁATY!",
+  skatt_overpay_text_prefix:"Zostawiając starą stawkę, przepłacisz ok.",
+  skatt_overpay_text_suffix:"Zalecana nowa stawka:",
+  skatt_ok_prefix:"Zmieniając skattekort oszczędzisz ok.",skatt_ok_suffix:"rocznie. Zalecana stawka:",
+  skatt_match:"Twoja stawka podatkowa odpowiada poziomowi dochodu.",skatt_eff_rate:"stawka efektywna",skatt_buffer:"bufor bezpieczenstwa",
+  tl_source_title:"📊 Skąd dane planu?",tl_source_text:"Wszystko z Przeglądu: dochód (wg statusu), wydatki, oszczędności, oczekiwanie NAV. Zmieniaj w Przeglądzie.",
+  tl_title:"Szczegółowy Plan 12-Miesięczny",
+  tl_month:"Miesiąc",tl_status:"Status",tl_income:"Dochód",tl_expenses:"Wydatki",
+  tl_balance:"Saldo",tl_savings:"Oszczędności",tl_eval:"Ocena",tl_empty:"Wprowadź dane w Przeglądzie",
+  tl_waiting:"Oczekiwanie NAV",tl_employer:"Pracodawca",tl_nav:"NAV",tl_normal:"Pensja",
+  tl_ok:"✅ OK",tl_warn:"⚠️ Ryzyko",tl_crit:"🚨 Krytycznie",
+  footer_desc:"Platforma planowania finansowego dla imigrantów w Norwegii",
+  footer_disclaimer:"Narzędzie informacyjne. Obliczenia na podstawie danych NAV i Skatteetaten 2026.",
+  footer_rights:"Wszelkie prawa zastrzeżone.",
+},
+ru:{
+  tab_overview:"Обзор",tab_dagpenger:"Dagpenger",tab_permit:"Пермиттеринг",
+  tab_employer:"Работодатель",tab_budget:"Бюджет",tab_skatt:"Налоги",tab_timeline:"12 Мес.",
+  btn_reset:"Сбросить",btn_home:"Главная",btn_export:"Экспорт",btn_import:"Импорт",
+  main_source:"ОСНОВНОЕ",auto_synced:"🔗 Синхронизировано",
+  card_income:"Источники Дохода",l_annual:"Годовой Доход Брутто",
+  tip_annual:"Ваш общий годовой доход от работодателя, до налогов (NOK). Автоматически передаётся в другие калькуляторы.",
+  l_status:"Статус Работы",tip_status:"Ваша текущая рабочая ситуация. Влияет на все расчёты.",
+  st_active:"Работаю (полная занятость)",st_permit:"Пермиттеринг (временное увольнение)",st_unemployed:"Безработный - получаю Dagpenger (NAV)",
+  l_permit_pct:"Процент пермиттеринга",tip_permit_pct:"Какая часть должности временно уволена. 100% = полная, 50% = полставки.",
+  l_tax:"Налоговая ставка (skattekort)",tip_tax:"Ваш текущий налоговый процент из skattekort. Передаётся автоматически.",
+  sec_family:"Семья и дополнительные доходы",
+  l_partner:"Нетто партнёра (мес.)",tip_partner:"Ежемесячная зарплата на руки супруга/партнёра.",
+  l_child:"Детское пособие (Barnetrygd)",tip_child:"2026: 2 012 NOK/мес. на ребёнка (0-18 лет) с фев 2026, 1310 NOK/мес. 6-18 лет.",
+  l_extra:"Дополнительный доход (мес., нетто)",tip_extra:"Подработка, аренда, самозанятость (нетто).",
+  card_expenses:"Ежемесячные Расходы",exp_note:"Расходы автоматически передаются в Бюджет и план на 12 месяцев.",
+  exp_housing:"Аренда / Ипотека",tip_exp_housing:"Ежемесячная аренда или ипотечный платёж. Осло ср. ~12-18k NOK.",
+  exp_food:"Еда",tip_exp_food:"Продукты. Один человек ~3-5k, семья ~7-12k NOK/мес.",
+  exp_transport:"Транспорт",tip_exp_transport:"Месячный билет (~820-1050 NOK) или расходы на авто.",
+  exp_loans:"Кредиты / Займы",tip_exp_loans:"Все кредиты. Не должны превышать 35% дохода.",
+  exp_kids:"Расходы на детей",tip_exp_kids:"Детский сад 2026 макс 1 200 NOK/мес., одежда, занятия.",
+  exp_insurance:"Страхование",tip_exp_ins:"Страхование жилья, здоровья (~150-300 NOK/мес.).",
+  exp_phone:"Телефон / Интернет",tip_exp_phone:"Мобильный ~200-600 NOK + домашний интернет ~300-500 NOK/мес.",
+  exp_other:"Прочее",tip_exp_other:"Досуг, одежда, подписки, непредвиденные расходы.",
+  card_reserves:"Резервы",l_savings:"Всего Сбережений",tip_savings:"Текущие сбережения. Используется для расчёта времени выживания.",
+  l_nav_wait:"Ожидание NAV: ",l_weeks:"нед.",tip_wait:"2026: Обычно 3-8 недель до первой выплаты NAV.",nav_wait_note_active:"Не применяется при полной занятости – автоматически 0.",
+  kpi_balance:"Месячный Баланс",kpi_burn:"Дефицит/мес.",kpi_survive:"Месяцы Сбережений",
+  overview_title:"Стратегический Обзор",your_net:"Ваше нетто (мес.)",
+  l_monthly_gross:"Мес. брутто:",l_monthly_tax:"Мес. налог:",
+  l_daily:"Дневной доход:",l_weekly:"Недельный доход:",l_wait_cost:"Стоимость ожидания NAV:",
+  household_net:"Семейное нетто (мес.)",l_partner_disp:"Партнёр:",l_child_disp:"Пособие:",l_extra_disp:"Доп.:",
+  adv_enter:"Введите данные для получения совета.",
+  income_loss_title:"Анализ Потери Дохода",was_salary:"Прежнее нетто",now_income:"Текущее нетто",loss_diff:"Потеря/мес.",
+  income_ratio:"Сохранение дохода",chart_title:"12-Месячный Прогноз Сбережений",
+  pill_stable:"СТАБИЛЬНО",pill_erosion:"СНИЖЕНИЕ",pill_critical:"КРИТИЧНО",
+  adv_stable:"✅ <b>Стабильно.</b> Есть излишек. Формируйте резервный фонд.",
+  adv_erosion:"⚠️ <b>Тратите сбережения.</b> Хватит примерно на",adv_erosion2:"мес.",
+  adv_critical:"🚨 <b>КРИТИЧНО.</b> Резервы < 3 мес. Обратитесь в NAV и измените skattekort.",
+  warn_deficit:"Ежемесячный дефицит - расходы превышают доходы.",
+  warn_loan:"Кредиты превышают 35% дохода.",warn_housing:"Жильё превышает 40% дохода.",
+  warn_savings:"Сбережения ниже 3 месяцев расходов!",warn_tax:"Рекомендуем изменить skattekort.",
+  mo:"мес.",mo_start:"Старт",loss_yearly_prefix:"Годовые потери:",loss_yearly_suffix:"",
+  chart_savings:"Сбережения",chart_income:"Доход",chart_expenses:"Расходы",
+  dag_source_title:"📊 Откуда данные?",dag_source_text:"Доход и налоговая ставка переданы из Обзора. 2026: G = 130 160 NOK, макс 6G = 780 960 NOK, ставка 62,4%.",
+  dag_title:"Калькулятор Dagpenger (NAV)",dag_12m:"Доход - последние 12 мес.",tip_dag_12m:"NAV использует последние 12 мес. или среднее 36 мес. - большее.",
+  dag_36m:"Доход - среднее 36 мес.",tip_dag_36m:"36-месячное среднее если выше. Оставьте пустым если не знаете.",
+  dag_tax:"Налоговая ставка",tip_dag_tax:"Dagpenger облагается налогом. Рассмотрите изменение skattekort.",
+  dag_conditions_title:"⚠️ Условия dagpenger 2026:",
+  dag_conditions:"• Мин. доход за 12 мес.: 3G (~390 480 NOK)\n• Работали в Норвегии\n• Зарегистрированы как ищущий работу в NAV\n• Не получаете пенсию или другие выплаты NAV",
+  dag_results:"Результаты",dag_basis:"База расчёта (макс 6G):",dag_which_base:"Используемая база:",
+  dag_annual_gross:"Годовое брутто (62,4%):",dag_monthly_gross:"Месячное брутто:",
+  dag_monthly_net:"Месячное НЕТТО (на руки):",dag_daily:"Дневное нетто (рабочий день):",dag_weekly:"Недельное нетто:",
+  dag_12m_label:"12 мес.",dag_36m_label:"36 мес.",
+  dag_too_low:"Доход слишком мал!",dag_too_low_text:"Ваш доход может не соответствовать минимуму dagpenger (3G = 390 480 NOK за 12 мес.).",
+  dag_ratio_prefix:"Вы получаете",dag_ratio_suffix:"от прежней зарплаты",dag_base_used:"Используемая база",
+  perm_source_title:"📊 Откуда данные?",perm_source_text:"Ежемесячная зарплата и ставка переданы из Обзора. Работодатель платит 15 дней, затем NAV.",
+  perm_title:"Калькулятор Пермиттеринга",
+  perm_salary:"Месячная зарплата (брутто)",tip_perm_salary:"Зарплата до налогов. Передана из Обзора.",
+  perm_pct:"Процент пермиттеринга",tip_perm_pct:"100% = полное увольнение. 50% = полставки, половину покрывает NAV.",
+  perm_tax:"Налоговая ставка",tip_perm_tax:"Передана из Обзора. Рассмотрите изменение skattekort.",
+  perm_months:"Планируемая длительность",tip_perm_months:"Сколько месяцев планируете быть в пермиттеринге.",
+  sfx_months:"мес.",
+  perm_employer_period:"✅ Период работодателя (первые 15 рабочих дней)",
+  perm_daily_sal:"Дневная ставка (брутто):",perm_employer_total:"Работодатель выплатит (нетто):",
+  perm_nav_period:"Период NAV (после 15 дней)",
+  perm_nav_monthly:"Часть NAV (мес., нетто):",perm_work_part:"Рабочая часть (нетто):",
+  perm_total_monthly:"Итого в месяц (нетто):",perm_avg:"Средний доход за период:",perm_total_loss:"Общие потери:",
+  emp_source_title:"📊 Что такое Arbeidsgiverperiode?",emp_source_text:"Работодатель обязан платить полную зарплату: 1) Пермиттеринг - 15 рабочих дней; 2) Болезнь - 16 календарных дней. Доход НЕ уменьшается.",
+  emp_title:"Период Работодателя (Arbeidsgiverperiode)",
+  emp_monthly:"Месячная зарплата (брутто)",tip_emp_monthly:"Зарплата по контракту. Передана из Обзора.",
+  emp_tax:"Налоговая ставка",tip_emp_tax:"Передана из Обзора.",
+  emp_scenario:"Ситуация",tip_emp_scenario:"Выберите: Пермиттеринг (15 раб. дн.) или Болезнь (16 кал. дн.).",
+  emp_scen_permit:"Пермиттеринг (15 рабочих дней)",emp_scen_sick:"Болезнь (16 календарных дней)",emp_scen_custom:"Другое количество дней",
+  emp_days_custom:"Количество дней",sfx_days:"д.",
+  emp_good_news:"✅ Хорошая новость:",emp_good_news_text:"В период работодателя доход НЕ уменьшается. Полная зарплата.",
+  emp_results:"Результаты расчётов",emp_daily_bruto:"Дневное брутто:",emp_daily_netto:"Дневное нетто:",
+  emp_period_bruto:"Брутто периода:",emp_period_netto:"Нетто периода (на руки):",
+  emp_remaining_days:"Оставшиеся рабочие дни:",emp_remaining_nav:"NAV выплатит остаток (ориент.):",
+  bud_source_title:"📊 Откуда данные?",bud_source_text:"Доход из Обзора (семейное нетто). Расходы скопированы из Обзора. Можно изменять здесь без влияния на Обзор.",
+  bud_title:"Анализ Бюджета и Выживания",
+  bud_income:"Месячный доход (нетто, семья)",tip_bud_income:"Совокупный доход на руки. Передан из Обзора.",
+  bud_fixed:"🔒 Фиксированные расходы",bud_variable:"📊 Переменные расходы",
+  bud_rent:"Аренда / Ипотека",tip_bud_rent:"Фиксированный ежемесячный платёж.",
+  bud_loan:"Платежи по кредитам",bud_insurance:"Страхование",bud_phone:"Телефон / Интернет",
+  bud_food:"Еда",bud_transport:"Транспорт",bud_kids:"Дети / Садик",bud_other2:"Прочее",
+  bud_savings_amt:"Сбережения",tip_bud_savings:"Для расчёта времени пережидания дефицита.",
+  bud_summary:"Сводка Бюджета",bud_fixed_total:"Фиксированные:",bud_variable_total:"Переменные:",
+  bud_total_exp:"Всего расходов:",bud_balance_month:"Месячный баланс:",bud_survive_months:"Сбережений хватит:",
+  bud_structure:"Структура расходов",bud_empty:"Введите расходы",
+  skatt_source_title:"📊 Как работает Skattekort 2026?",skatt_source_text:"При снижении дохода - ИЗМЕНИТЕ skattekort. Низкая ставка = доплатите! Калькулятор использует таблицы 2026.",
+  skatt_title:"Коррекция Налогового Листа (Skattekort) 2026",
+  skatt_warning_title:"⚠️ ВАЖНО — Прочитайте:",skatt_warning_text:"Этот калькулятор даёт только <b>теоретическое приближение</b>. Рекомендуемый % основан на упрощённой модели. Фактический налог зависит от доп. доходов, feriepenger, неполного года работы. <b>Рекомендуемая ставка НЕ гарантия</b> — вы можете быть должны restskatt в конце года. Всегда проверяйте skatteetaten.no перед изменением skattekort. Используйте только как отправную точку.",
+  skatt_old_annual:"Прежний годовой доход (брутто)",tip_skatt_old:"Ваш доход от прежней работы. Передан из Обзора.",
+  skatt_old_tax:"Текущая налоговая ставка",tip_skatt_old_tax:"Процент в skattekort. Найдите на Altinn.no.",
+  skatt_new_annual:"Новый годовой доход (Dagpenger или более низкая зарплата)",tip_skatt_new:"Ожидаемый новый суммарный доход. Объедините периоды если нужно.",
+  skatt_table_title:"📋 Налоговые скобки Норвегии 2026:",skatt_table_note:"+ Социальный взнос 7,8%. Источник: Skatteetaten 2026.",
+  skatt_before:"ТЕКУЩАЯ",skatt_current_label:"ваш skattekort %",skatt_recommended:"РЕКОМЕНДУЕТСЯ",skatt_monthly_tax:"мес. налог",skatt_new_rate:"мин. безопасная",
+  skatt_old_monthly_tax:"Старый мес. налог:",skatt_new_monthly_tax:"Новый мес. налог:",
+  skatt_monthly_saving:"Разница в месяц:",skatt_annual_saving:"Разница в год:",
+  skatt_overpay_risk:"Риск переплаты (годовой):",
+  skatt_overpay_warning:"РИСК ПЕРЕПЛАТЫ!",
+  skatt_overpay_text_prefix:"Сохраняя старую ставку, переплатите ок.",
+  skatt_overpay_text_suffix:"Рекомендуемая новая ставка:",
+  skatt_ok_prefix:"Сменив skattekort сэкономите ок.",skatt_ok_suffix:"в год. Рекомендуемая ставка:",
+  skatt_match:"Ваша налоговая ставка соответствует уровню дохода.",skatt_eff_rate:"эффективная ставка",skatt_buffer:"буфер безопасности",
+  tl_source_title:"📊 Откуда данные плана?",tl_source_text:"Всё из Обзора: доход (по статусу), расходы, сбережения, ожидание NAV. Изменяйте в Обзоре.",
+  tl_title:"Подробный план на 12 месяцев",
+  tl_month:"Месяц",tl_status:"Статус",tl_income:"Доход",tl_expenses:"Расходы",
+  tl_balance:"Баланс",tl_savings:"Сбережения",tl_eval:"Оценка",tl_empty:"Введите данные в Обзоре",
+  tl_waiting:"Ожидание NAV",tl_employer:"Работодатель",tl_nav:"NAV",tl_normal:"Зарплата",
+  tl_ok:"✅ Хорошо",tl_warn:"⚠️ Риск",tl_crit:"🚨 Критично",
+  footer_desc:"Финансовая платформа для иммигрантов в Норвегии",
+  footer_disclaimer:"Информационный инструмент. Расчёты на основе данных NAV и Skatteetaten 2026.",
+  footer_rights:"Все права защищены.",
+}
+};
+
+// =========== INIT ===========
+(function init(){
+  // 1. Load saved data from localStorage
+  let savedLang = null;
+  try{
+    const raw = localStorage.getItem('finansno_v2_data');
+    if(raw){
+      const saved = JSON.parse(raw);
+      if(saved.scenarios) scenarios = saved.scenarios;
+      if(saved.lang) savedLang = saved.lang;
+    }
+    // backward compat with old key
+    const oldRaw = localStorage.getItem('finansno_v2_scenarios');
+    if(oldRaw && !raw){
+      const old = JSON.parse(oldRaw);
+      if(old) scenarios = old;
+    }
+  }catch(e){}
+
+  // 2. Set language (restored or default EN)
+  lang = savedLang || 'en';
+  const langEl = document.getElementById('langSel');
+  if(langEl) langEl.value = lang;
+
+  // 3. All inputs start as non-user-edited
+  document.querySelectorAll('input[id],select[id]').forEach(el=>{ el._userEdited = false; });
+
+  // 4. Restore saved field values into DOM BEFORE recalc
+  const d = scenarios[currentScen];
+  if(d && Object.keys(d).length){
+    Object.entries(d).forEach(([id, v])=>{
+      const el = document.getElementById(id);
+      if(el) el.value = v;
+    });
+    // Mark sub-module fields that have saved values as user-edited
+    // so syncToModules won't overwrite them
+    const subFields = [
+      'dag12m','dag36m','dagTax',
+      'permSalary','permPct','permTax','permMonths',
+      'empMonthly','empTax','empDays',
+      'skattOldAnnual','skattOldTax','skattNewAnnual',
+      'budIncome','budRent','budLoan','budFood','budTransport',
+      'budInsurance','budPhone','budKids','budOther','budSavings'
+    ];
+    subFields.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el && el.value !== '' && el.value !== '0') el._userEdited = true;
+    });
+  }
+
+  // 5. Attach input listeners — mark as user-edited when manually changed
+  const overridable = [
+    'dag12m','dag36m','dagTax',
+    'permSalary','permPct','permTax','permMonths',
+    'empMonthly','empTax','empDays',
+    'skattOldAnnual','skattOldTax','skattNewAnnual',
+    'budIncome','budRent','budLoan','budFood','budTransport',
+    'budInsurance','budPhone','budKids','budOther','budSavings'
+  ];
+  overridable.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){
+        el.addEventListener('input',  ()=>{ el._userEdited = true; });
+        el.addEventListener('change', ()=>{ el._userEdited = true; });
+      }
+  });
+
+  // 6. Auto-save on any input change (debounced)
+  let saveTimer = null;
+  document.addEventListener('input', ()=>{
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{ persistAll(); }, 400);
+  });
+  document.addEventListener('change', ()=>{
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{ persistAll(); }, 400);
+  });
+
+  // 7. Apply translations and calculate
+  applyTranslations();
+  setTimeout(()=>{ recalc(); }, 100);
+})();
+
+// Save everything to localStorage (called on input change + manually)
+function persistAll(){
+  const d = {};
+  document.querySelectorAll('input[id],select[id]').forEach(el=>{
+    if(el.id) d[el.id] = el.value;
+  });
+  scenarios[currentScen] = d;
+  try{
+    localStorage.setItem('finansno_v2_data', JSON.stringify({
+      scenarios,
+      lang,
+      currentScen
+    }));
+  }catch(e){}
+}
+</script>
+</body>
+</html>

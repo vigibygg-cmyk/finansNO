@@ -30,7 +30,7 @@
         .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .logo-sub { font-size: 12px; color: var(--muted); }
         
-        .nav-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+        .nav-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; flex-wrap: nowrap; }
         .nav-links { display: flex; gap: 20px; }
         .nav-link { color: var(--text); font-weight: 500; white-space: nowrap; }
         .nav-link:hover, .nav-link.active { color: var(--primary); }
@@ -87,7 +87,7 @@
         .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
         .bottom-bar { border-top: 1px solid #2d3748; padding-top: 20px; text-align: center; margin-top: 40px; font-size: 12px; }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             .nav-links.active { display: flex; }
             .hamburger { display: block; }
@@ -147,7 +147,7 @@
                 <p class="hero-sub" data-i18n="hero_sub">Profesionalūs įrankiai, padedantys suprasti Norvegijos sistemą, skaičiuoti mokesčius ir rašyti oficialius laiškus.</p>
                 <div class="hero-ctas">
                     <a href="#tools" class="btn-primary" data-i18n="hero_cta1">🧰 Žiūrėti įrankius →</a>
-                    <a href="Finansai_NO.html" class="btn-outline" data-i18n="hero_cta2">💰 Finansai NO</a>
+                    <a href="FinansNO_Calc.html" class="btn-outline" data-i18n="hero_cta2">💰 FinansNO Calc</a>
                 </div>
             </div>
         </div>
@@ -161,15 +161,15 @@
             </div>
 
             <div class="grid-container">
-                <!-- 1. Finansai NO -->
+                <!-- 1. FinansNO Calc -->
                 <div class="tool-card">
                     <div class="card-header">
                         <span class="card-icon">💰</span>
-                        <span class="badge top">TOP ⭐</span>
+                        <span class="badge new" data-i18n="badge_new">NAUJA ✨</span>
                     </div>
-                    <h3 data-i18n="tool_1_title">Finansai NO</h3>
+                    <h3 data-i18n="tool_1_title">FinansNO Calc</h3>
                     <p data-i18n="tool_1_desc">Detali finansų analizė: NAV išmokos, permittering, mokesčių kortelės optimizavimas ir šeimos biudžeto planavimas.</p>
-                    <a href="Finansai_NO.html" class="btn-card" data-i18n="btn_open">Atidaryti →</a>
+                    <a href="FinansNO_Calc.html" class="btn-card" data-i18n="btn_open">Atidaryti →</a>
                 </div>
 
                 <!-- 2. KonkursKalk -->
@@ -218,19 +218,19 @@
         </div>
     </section>
 
-    <!-- Spotlight: Finansai NO -->
+    <!-- Spotlight: FinansNO Calc -->
     <section class="spotlight">
         <div class="container spot-inner">
             <div class="spot-text">
                 <span class="spot-badge" data-i18n="spot_badge">⚡ NAUJIENA</span>
-                <h2 data-i18n="spot_title">Finansai NO — Jūsų Saugumui</h2>
+                <h2 data-i18n="spot_title">FinansNO Calc — Jūsų Saugumui</h2>
                 <p data-i18n="spot_desc">Nežinote, ar išgyvensite gavę permittering? Mūsų nauja platforma leidžia simuliuoti įvairius scenarijus.</p>
                 <ul style="margin-bottom:30px;">
                     <li data-i18n="spot_li_1">✅ 12 mėnesių finansinė prognozė</li>
                     <li data-i18n="spot_li_2">✅ NAV išmokų ir mokesčių skaičiavimas</li>
                     <li data-i18n="spot_li_3">✅ "Burn Rate" analizė - kiek liko santaupų</li>
                 </ul>
-                <a href="Finansai_NO.html" class="btn-accent" data-i18n="spot_cta">💰 Išbandyti Finansai NO →</a>
+                <a href="FinansNO_Calc.html" class="btn-accent" data-i18n="spot_cta">💰 Išbandyti FinansNO Calc →</a>
             </div>
             <div class="spot-mockup">
                 <!-- Simple CSS representation of the chart -->
@@ -277,7 +277,7 @@
             </div>
             <div>
                 <h4 data-i18n="nav_tools">Verktøy</h4>
-                <a href="Finansai_NO.html" style="display:block; color:#a0aec0; margin-bottom:5px;">Finansai NO</a>
+                <a href="FinansNO_Calc.html" style="display:block; color:#a0aec0; margin-bottom:5px;">FinansNO Calc</a>
                 <a href="KonkursKalk.html" style="display:block; color:#a0aec0; margin-bottom:5px;">KonkursKalk</a>
                 <a href="Ai_VyGa.html" style="display:block; color:#a0aec0;">AiVyGa</a>
             </div>
@@ -295,73 +295,73 @@
         const T = {
             no: { 
                 nav_home: "Hjem", nav_tools: "Verktøy", nav_about: "Om oss", nav_contact: "Kontakt",
-                hero_label: "🏗 Verktøy for innvandrere i Norge", hero_title: "Økonomi. Juss. AI Hjelp.", hero_sub: "Profesjonelle verktøy for å forstå det norske systemet, beregne skatt og skrive brev.", hero_cta1: "🧰 Se verktøy →", hero_cta2: "💰 Finansai NO",
+                hero_label: "🏗 Verktøy for innvandrere i Norge", hero_title: "Økonomi. Juss. AI Hjelp.", hero_sub: "Profesjonelle verktøy for å forstå det norske systemet, beregne skatt og skrive brev.", hero_cta1: "🧰 Se verktøy →", hero_cta2: "💰 FinansNO Calc",
                 grid_title: "🧰 Våre Verktøy", grid_sub: "Laget for å løse reelle problemer",
-                tool_1_title: "Finansai NO", tool_1_desc: "Detaljert økonomisk analyse: NAV-ytelser, permittering, skatt og budsjett.",
+                tool_1_title: "FinansNO Calc", tool_1_desc: "Detaljert økonomisk analyse: NAV-ytelser, permittering, skatt og budsjett.",
                 tool_2_title: "KonkursKalk Pro", tool_2_desc: "Lønnsgaranti-kalkulator. Hva har du krav på ved konkurs?",
                 tool_3_title: "AiVyGa Assistent", tool_3_desc: "Din AI-skribent. Hjelp med CV, brev og oversettelser.",
                 btn_open: "Åpne →", footer_brand: "Smarte verktøy for Norge.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 supp_title: "☕ Støtt prosjektet", supp_desc: "Verktøyene er gratis. Du kan støtte videreutvikling ved å spandere en kaffe.", supp_note: "Takk for din støtte!",
                 feat_title: "Hvorfor ProCalcs?", feat_1_title: "🧠 Tilpasset Innvandrere", feat_1_desc: "Vi forstår utfordringene: språk, byråkrati og usikkerhet.",
                 feat_2_title: "🔒 Privat og Sikkert", feat_2_desc: "Ingen data sendes til servere. Alt skjer lokalt.", feat_3_title: "🌍 4 Språk", feat_3_desc: "Systemet fungerer på norsk, litauisk, polsk og engelsk.",
-                spot_badge: "⚡ NYHET", spot_title: "Finansai NO — Din Trygghet", spot_desc: "Usikker på permittering? Simuler scenarier og se din økonomiske fremtid.",
-                spot_li_1: "✅ 12-måneders prognose", spot_li_2: "✅ NAV-beregninger", spot_li_3: "✅ Burn Rate analyse", spot_cta: "💰 Prøv Finansai NO →", badge_new: "NYHET ✨"
+                spot_badge: "⚡ NYHET", spot_title: "FinansNO Calc — Din Trygghet", spot_desc: "Usikker på permittering? Simuler scenarier og se din økonomiske fremtid.",
+                spot_li_1: "✅ 12-måneders prognose", spot_li_2: "✅ NAV-beregninger", spot_li_3: "✅ Burn Rate analyse", spot_cta: "💰 Prøv FinansNO Calc →", badge_new: "NYHET ✨"
             },
             en: { 
                 nav_home: "Home", nav_tools: "Tools", nav_about: "About", nav_contact: "Contact",
                 hero_label: "🏗 Essential Tools for Immigrants", hero_title: "Finance. Law. AI Help.", hero_sub: "Professional tools to navigate the Norwegian system, calculate tax, and write official letters.",
                 grid_title: "🧰 Our Tools", grid_sub: "Solving real problems",
-                tool_1_title: "Finansai NO", tool_1_desc: "Detailed finance analysis: NAV benefits, layoffs, tax cards, and budget planning.",
+                tool_1_title: "FinansNO Calc", tool_1_desc: "Detailed finance analysis: NAV benefits, layoffs, tax cards, and budget planning.",
                 tool_2_title: "KonkursKalk Pro", tool_2_desc: "Wage guarantee calculator. What are you owed in bankruptcy?",
                 tool_3_title: "AiVyGa Assistant", tool_3_desc: "Your AI writer. Help with CVs, letters, and translations.",
                 btn_open: "Open →", footer_brand: "Smart tools for Norway.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 supp_title: "☕ Support the project", supp_desc: "These tools are free. Support development by buying a coffee.", supp_note: "Thank you for your support!",
                 feat_title: "Why ProCalcs?", feat_1_title: "🧠 For Immigrants", feat_1_desc: "We understand the challenges: language, bureaucracy, and uncertainty.",
                 feat_2_title: "🔒 Private & Secure", feat_2_desc: "No data sent to servers. Everything is local.", feat_3_title: "🌍 4 Languages", feat_3_desc: "Works in Norwegian, Lithuanian, Polish, and English.",
-                spot_badge: "⚡ NEW", spot_title: "Finansai NO — Your Safety", spot_desc: "Worried about layoffs? Simulate scenarios and see your financial future.",
-                spot_li_1: "✅ 12-month forecast", spot_li_2: "✅ NAV calculations", spot_li_3: "✅ Burn Rate analysis", spot_cta: "💰 Try Finansai NO →", badge_new: "NEW ✨"
+                spot_badge: "⚡ NEW", spot_title: "FinansNO Calc — Your Safety", spot_desc: "Worried about layoffs? Simulate scenarios and see your financial future.",
+                spot_li_1: "✅ 12-month forecast", spot_li_2: "✅ NAV calculations", spot_li_3: "✅ Burn Rate analysis", spot_cta: "💰 Try FinansNO Calc →", badge_new: "NEW ✨"
             },
             lt: { 
                 nav_home: "Pradžia", nav_tools: "Įrankiai", nav_about: "Apie mus", nav_contact: "Kontaktai",
                 hero_label: "🏗 Svarbiausi įrankiai imigrantams", hero_title: "Finansai. Teisė. AI Pagalba.", hero_sub: "Profesionalūs įrankiai, padedantys suprasti Norvegijos sistemą, skaičiuoti mokesčius ir rašyti oficialius laiškus.",
                 grid_title: "🧰 Mūsų Įrankiai", grid_sub: "Sukurta spręsti realias problemas",
-                tool_1_title: "Finansai NO", tool_1_desc: "Detali finansų analizė: NAV išmokos, permittering, mokesčių ir šeimos biudžeto planavimas.",
+                tool_1_title: "FinansNO Calc", tool_1_desc: "Detali finansų analizė: NAV išmokos, permittering, mokesčiai ir šeimos biudžeto planavimas.",
                 tool_2_title: "KonkursKalk Pro", tool_2_desc: "Lønnsgaranti skaičiuoklė. Kiek jums priklauso bankroto atveju?",
                 tool_3_title: "AiVyGa Asistentas", tool_3_desc: "Jūsų AI rašytojas. Pagalba su CV, laiškais ir vertimais.",
                 btn_open: "Atidaryti →", footer_brand: "Išmanūs įrankiai Norvegijai.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 supp_title: "☕ Paremkite projektą", supp_desc: "Įrankiai nemokami. Paremkite tolesnį kūrimą nupirkdami kavos.", supp_note: "Ačiū už jūsų paramą!",
                 feat_title: "Kodėl ProCalcs?", feat_1_title: "🧠 Pritaikyta Imigrantams", feat_1_desc: "Mes suprantame problemas: kalbos barjerą, biurokratiją ir nežinomybę.",
                 feat_2_title: "🔒 Privatu ir Saugu", feat_2_desc: "Jokie duomenys nesiunčiami į serverius. Visi skaičiavimai vyksta jūsų telefone.", feat_3_title: "🌍 4 Kalbos", feat_3_desc: "Veikia Norvegų, Lietuvių, Lenkų ir Anglų kalbomis.",
-                spot_badge: "⚡ NAUJIENA", spot_title: "Finansai NO — Jūsų Saugumui", spot_desc: "Nežinote dėl permittering? Simuliuokite scenarijus ir matykite ateitį.",
-                spot_li_1: "✅ 12 mėn. prognozė", spot_li_2: "✅ NAV skaičiavimai", spot_li_3: "✅ Santaupų analizė", spot_cta: "💰 Išbandyti Finansai NO →", badge_new: "NAUJA ✨"
+                spot_badge: "⚡ NAUJIENA", spot_title: "FinansNO Calc — Jūsų Saugumui", spot_desc: "Nežinote dėl permittering? Simuliuokite scenarijus ir matykite ateitį.",
+                spot_li_1: "✅ 12 mėn. prognozė", spot_li_2: "✅ NAV skaičiavimai", spot_li_3: "✅ Santaupų analizė", spot_cta: "💰 Išbandyti FinansNO Calc →", badge_new: "NAUJA ✨"
             },
             pl: { 
                 nav_home: "Główna", nav_tools: "Narzędzia", nav_about: "O nas", nav_contact: "Kontakt",
                 hero_label: "🏗 Narzędzia dla imigrantów", hero_title: "Finanse. Prawo. Pomoc AI.", hero_sub: "Profesjonalne narzędzia do zrozumienia systemu norweskiego, podatków i pism urzędowych.",
                 grid_title: "🧰 Nasze Narzędzia", grid_sub: "Rozwiązujemy prawdziwe problemy",
-                tool_1_title: "Finansai NO", tool_1_desc: "Szczegółowa analiza finansowa: zasiłki NAV, permittering, podatki i budżet.",
+                tool_1_title: "FinansNO Calc", tool_1_desc: "Szczegółowa analiza finansowa: zasiłki NAV, permittering, podatki i budżet.",
                 tool_2_title: "KonkursKalk Pro", tool_2_desc: "Kalkulator gwarancji płac. Ile należy Ci się w przypadku bankructwa?",
                 tool_3_title: "Asystent AiVyGa", tool_3_desc: "Twój pisarz AI. Pomoc z CV, listami i tłumaczeniami.",
                 btn_open: "Otwórz →", footer_brand: "Inteligentne narzędzia dla Norwegii.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 supp_title: "☕ Wesprzyj projekt", supp_desc: "Narzędzia są darmowe. Wesprzyj rozwój, stawiając kawę.", supp_note: "Dziękujemy za wsparcie!",
                 feat_title: "Dlaczego ProCalcs?", feat_1_title: "🧠 Dla Imigrantów", feat_1_desc: "Rozumiemy wyzwania: język, biurokrację i niepewność.",
                 feat_2_title: "🔒 Prywatne i Bezpieczne", feat_2_desc: "Brak danych na serwerach. Wszystko lokalnie.", feat_3_title: "🌍 4 Języki", feat_3_desc: "Działa po norwesku, litewsku, polsku i angielsku.",
-                spot_badge: "⚡ NOWOŚĆ", spot_title: "Finansai NO — Twoje Bezpieczeństwo", spot_desc: "Martwisz się o permittering? Symuluj scenariusze finansowe.",
-                spot_li_1: "✅ Prognoza 12-mies.", spot_li_2: "✅ Obliczenia NAV", spot_li_3: "✅ Analiza oszczędności", spot_cta: "💰 Wypróbuj Finansai NO →", badge_new: "NOWOŚĆ ✨"
+                spot_badge: "⚡ NOWOŚĆ", spot_title: "FinansNO Calc — Twoje Bezpieczeństwo", spot_desc: "Martwisz się o permittering? Symuluj scenariusze finansowe.",
+                spot_li_1: "✅ Prognoza 12-mies.", spot_li_2: "✅ Obliczenia NAV", spot_li_3: "✅ Analiza oszczędności", spot_cta: "💰 Wypróbuj FinansNO Calc →", badge_new: "NOWOŚĆ ✨"
             },
             ru: { 
                 nav_home: "Главная", nav_tools: "Инструменты", nav_about: "О нас", nav_contact: "Контакт",
                 hero_label: "🏗 Инструменты для иммигрантов", hero_title: "Финансы. Право. ИИ.", hero_sub: "Проф. инструменты для понимания системы Норвегии, налогов и писем.",
                 grid_title: "🧰 Инструменты", grid_sub: "Решение реальных проблем",
-                tool_1_title: "Finansai NO", tool_1_desc: "Детальный фин. анализ: пособия NAV, увольнения, налоги и бюджет.",
+                tool_1_title: "FinansNO Calc", tool_1_desc: "Детальный фин. анализ: пособия NAV, увольнения, налоги и бюджет.",
                 tool_2_title: "KonkursKalk Pro", tool_2_desc: "Калькулятор гарантии зарплаты. Сколько вам должны при банкротстве?",
                 tool_3_title: "Ассистент AiVyGa", tool_3_desc: "Ваш ИИ-писатель. Помощь с резюме, письмами и переводами.",
                 btn_open: "Открыть →", footer_brand: "Умные инструменты для Норвегии.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 supp_title: "☕ Поддержать", supp_desc: "Бесплатно. Поддержите разработку кофе.", supp_note: "Спасибо за поддержку!",
                 feat_title: "Почему ProCalcs?", feat_1_title: "🧠 Для Иммигрантов", feat_1_desc: "Мы понимаем проблемы: язык, бюрократия, неизвестность.",
                 feat_2_title: "🔒 Приватно", feat_2_desc: "Никаких данных на серверах. Все локально.", feat_3_title: "🌍 4 Языка", feat_3_desc: "Работает на норвежском, литовском, польском и английском.",
-                spot_badge: "⚡ НОВИНКА", spot_title: "Finansai NO — Безопасность", spot_desc: "Беспокоитесь об увольнении? Симулируйте сценарии.",
-                spot_li_1: "✅ Прогноз 12 мес.", spot_li_2: "✅ Расчеты NAV", spot_li_3: "✅ Анализ сбережений", spot_cta: "💰 Попробовать Finansai NO →", badge_new: "НОВИНКА ✨"
+                spot_badge: "⚡ НОВИНКА", spot_title: "FinansNO Calc — Безопасность", spot_desc: "Беспокоитесь об увольнении? Симулируйте сценарии.",
+                spot_li_1: "✅ Прогноз 12 мес.", spot_li_2: "✅ Расчеты NAV", spot_li_3: "✅ Анализ сбережений", spot_cta: "💰 Попробовать FinansNO Calc →", badge_new: "НОВИНКА ✨"
             }
         };
 

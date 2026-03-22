@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Tool V1 by Vytautas G.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Lora:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Libre+Baskerville:wght@400;700&display=swap');
+
+        :root {
+            --sidebar-bg: #1e293b;
+            --main-bg: #ffffff;
+            --accent: #2563eb;
+            --main-text-color: #1e293b;
+            --sidebar-text-color: #ffffff;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            background: #cbd5e1; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-family: 'Inter', sans-serif;
+        }
+
+        .no-print {
+            width: 210mm;
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 5px; }
+        .control-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+
+        select, input[type="color"] {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #f8fafc;
+        }
+
+        .cv-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: var(--main-bg);
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            color: var(--main-text-color);
+            font-family: var(--font-family);
+        }
+
+        .sidebar { background: var(--sidebar-bg); padding: 30px 25px; color: var(--sidebar-text-color); }
+        .main-content { padding: 40px 50px; }
+
+        input, textarea, select.editable-select {
+            width: 100%; border: 1px solid transparent; background: transparent;
+            padding: 4px; font-size: 14px; color: inherit; font-family: inherit;
+        }
+
+        input:hover, textarea:hover { background: rgba(0,0,0,0.03); }
+        input:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--accent); }
+
+        .name-input { font-size: 32px !important; font-weight: 800; }
+        .title-input { font-size: 15px !important; color: var(--accent); font-weight: 600; }
+
+        h2 {
+            font-size: 13px; font-weight: 700; text-transform: uppercase;
+            border-bottom: 2px solid var(--accent); padding-bottom: 5px; margin: 25px 0 15px 0;
+        }
+
+        .sidebar h2 { border-bottom-color: rgba(255,255,255,0.3); }
+
+        .contact-item { margin-bottom: 12px; }
+        .contact-item label { font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; display: block; }
+
+        .dynamic-item { margin-bottom: 20px; position: relative; }
+        .item-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: baseline; }
+        .item-header { font-weight: 700; font-size: 15px; }
+        .item-date { font-size: 11px; opacity: 0.7; }
+        .item-sub { color: var(--accent); font-weight: 600; font-size: 13px; }
+
+        /* Pataisytas select matomumas */
+        .editable-select {
+            background-color: rgba(255,255,255,0.1) !important;
+            color: inherit !important;
+            border-radius: 4px;
+        }
+        .editable-select option {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+        }
+
+        .photo-area {
+            width: 160px; height: 180px; background: rgba(0,0,0,0.1);
+            border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px;
+            cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            position: relative; margin-bottom: 10px;
+        }
+        .photo-area img { position: absolute; width: 100%; }
+
+        .btn-add {
+            color: var(--accent); background: none; border: 1.5px dashed var(--accent);
+            padding: 6px; border-radius: 6px; font-size: 11px; font-weight: 700;
+            cursor: pointer; margin-top: 10px; width: 100%; text-transform: uppercase;
+        }
+
+        .btn-remove { position: absolute; right: -30px; top: 5px; color: #ef4444; border: none; background: none; cursor: pointer; }
+
+        .actions-bar { margin-left: auto; display: flex; gap: 10px; }
+
+        @media print {
+            .no-print, .btn-add, .btn-remove, .photo-controls { display: none !important; }
+            body { padding: 0; }
+            .cv-page { box-shadow: none; }
+        }
+    </style>
+</head>
+<body oninput="saveToLocal()">
+
+<div class="no-print">
+    <div class="control-group">
+        <label>Interface Language</label>
+        <select id="langSelect" onchange="changeLanguage()">
+            <option value="lt">Lietuvių</option>
+            <option value="en">English</option>
+            <option value="no">Norsk</option>
+            <option value="ru">Русский</option>
+            <option value="pl">Polski</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Font Style</label>
+        <select id="fontSelect" onchange="updateStyles()">
+            <option value="'Inter', sans-serif">Inter (Modern)</option>
+            <option value="'Outfit', sans-serif">Outfit (Geometric)</option>
+            <option value="'Lora', serif">Lora (Elegant)</option>
+            <option value="'JetBrains Mono', monospace">JetBrains (Technical)</option>
+            <option value="'Libre Baskerville', serif">Baskerville (Academic)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Sidebar Background</label>
+        <select id="sidebarBgSelect" onchange="updateStyles()">
+            <option value="#1e293b">Midnight Slate</option>
+            <option value="#0f172a">Obsidian Black</option>
+            <option value="#991b1b">Crimson Red</option>
+            <option value="#1e40af">Deep Azure</option>
+            <option value="#065f46">Forest Green</option>
+            <option value="#a16207">Golden Mustard</option>
+            <option value="#4c1d95">Royal Purple</option>
+            <option value="#164e63">Teal Ocean</option>
+            <option value="#f8fafc">Cloud White</option>
+            <option value="#3f3f46">Concrete Grey</option>
+            <option value="#431407">Burnt Sienna</option>
+            <option value="#020617">Void Blue</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Accent</label>
+        <input type="color" id="accentColor" value="#2563eb" oninput="updateStyles()">
+    </div>
+
+    <div class="control-group">
+        <label>Text Color</label>
+        <input type="color" id="textColor" value="#1e293b" oninput="updateStyles()">
+    </div>
+
+    <div class="actions-bar">
+        <button id="btn-save-ui" onclick="downloadHTML()" style="background: #059669; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 700;">SAVE AS HTML</button>
+        <button id="btn-print-ui" onclick="window.print()" style="background: #1e293b; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 700;">PRINT / PDF</button>
+    </div>
+</div>
+
+<div class="cv-page" id="cv">
+    <aside class="sidebar">
+        <div class="photo-area" onclick="document.getElementById('photoInp').click()">
+            <img id="photoPreview" style="display:none;">
+            <span id="photoTxt">Nuotrauka</span>
+            <input type="file" id="photoInp" hidden onchange="handlePhoto(this)">
+        </div>
+        <div class="photo-controls" id="photoCtrls" style="display:none; margin-bottom: 15px;">
+            <input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="1" oninput="updatePhotoStyle()">
+            <input type="range" id="shiftRange" min="-100" max="100" step="1" value="0" oninput="updatePhotoStyle()">
+        </div>
+
+        <div class="contact-item">
+            <label id="lbl-phone">Telefonas</label>
+            <input type="text" id="cv-phone" placeholder="+370 ...">
+        </div>
+        <div class="contact-item">
+            <label id="lbl-email">El. Paštas</label>
+            <input type="text" id="cv-email" placeholder="el.pastas@pavyzdys.lt">
+        </div>
+        <div class="contact-item">
+            <label id="lbl-address">Adresas</label>
+            <textarea id="cv-address" rows="2" placeholder="Gatvė, Miestas" oninput="autoHeight(this)"></textarea>
+        </div>
+
+        <h2 id="sec-driving">Vairuotojo pažymėjimas</h2>
+        <input type="text" id="cv-driving" placeholder="Kategorijos">
+
+        <h2 id="sec-skills">Įgūdžiai</h2>
+        <textarea id="cv-skills" rows="6" oninput="autoHeight(this)"></textarea>
+
+        <h2 id="sec-languages">Kalbos</h2>
+        <div id="lang-list"></div>
+        <button class="btn-add" id="btn-add-lang" onclick="addLang()">+ Pridėti</button>
+    </aside>
+
+    <main class="main-content">
+        <div class="name-header">
+            <input type="text" class="name-input" id="cv-name" placeholder="VARDAS PAVARDĖ">
+            <input type="text" class="title-input" id="cv-title" placeholder="PAREIGOS">
+        </div>
+
+        <h2 id="sec-about">Apie mane</h2>
+        <textarea id="cv-about" rows="3" oninput="autoHeight(this)"></textarea>
+
+        <h2 id="sec-experience">Darbo patirtis</h2>
+        <div id="exp-list"></div>
+        <button class="btn-add" id="btn-add-exp" onclick="addItem('exp-list')">+ Pridėti</button>
+
+        <h2 id="sec-education">Išsilavinimas</h2>
+        <div id="edu-list"></div>
+        <button class="btn-add" id="btn-add-edu" onclick="addItem('edu-list')">+ Pridėti</button>
+
+        <h2 id="sec-courses">Kursai</h2>
+        <div id="course-list"></div>
+        <button class="btn-add" id="btn-add-course" onclick="addItem('course-list')">+ Pridėti</button>
+
+        <h2 id="sec-interests">Interesai</h2>
+        <textarea id="cv-interests" rows="2" oninput="autoHeight(this)"></textarea>
+    </main>
+</div>
+
+<script>
+    const translations = {
+        lt: {
+            phone: "Telefonas", phone_ph: "+370 ...", email: "El. Paštas", email_ph: "el.pastas@pavyzdys.lt", 
+            address: "Adresas", addr_ph: "Gatvė, Miestas", driving: "Vairuotojo pažymėjimas", driving_ph: "Kategorijos",
+            skills: "Įgūdžiai", languages: "Kalbos", about: "Apie mane", experience: "Darbo patirtis", 
+            education: "Išsilavinimas", courses: "Kursai", interests: "Interesai",
+            pos: "Pareigos", comp: "Įmonė", date: "Data", desc: "Aprašymas...", 
+            deg: "Specialybė", inst: "Įstaiga", course: "Kursas", native: "Gimtoji", 
+            add_exp: "+ Pridėti patirtį", add_edu: "+ Pridėti išsilavinimą", add_course: "+ Pridėti kursą", add_lang: "+ Pridėti kalbą",
+            name_ph: "VARDAS PAVARDĖ", title_ph: "PAREIGOS", photo_txt: "Nuotrauka", lang_ph: "Kalba"
+        },
+        en: {
+            phone: "Phone", phone_ph: "+44 ...", email: "Email", email_ph: "name@example.com", 
+            address: "Address", addr_ph: "Street, City", driving: "Driving License", driving_ph: "Categories",
+            skills: "Skills", languages: "Languages", about: "About Me", experience: "Work Experience", 
+            education: "Education", courses: "Courses", interests: "Interests",
+            pos: "Position", comp: "Company", date: "Date", desc: "Description...", 
+            deg: "Degree", inst: "Institution", course: "Course Name", native: "Native", 
+            add_exp: "+ Add Experience", add_edu: "+ Add Education", add_course: "+ Add Course", add_lang: "+ Add Language",
+            name_ph: "FULL NAME", title_ph: "POSITION", photo_txt: "Add Photo", lang_ph: "Language"
+        },
+        no: {
+            phone: "Telefon", phone_ph: "+47 ...", email: "E-post", email_ph: "navn@eksempel.no", 
+            address: "Adresse", addr_ph: "Gate, By", driving: "Førerkort", driving_ph: "Kategorier",
+            skills: "Ferdigheter", languages: "Språk", about: "Om meg", experience: "Arbeidserfaring", 
+            education: "Utdanning", courses: "Kurs", interests: "Interesser",
+            pos: "Stilling", comp: "Firma", date: "Dato", desc: "Beskrivelse...", 
+            deg: "Grad", inst: "Institusjon", course: "Kursnavn", native: "Morsmål", 
+            add_exp: "+ Legg til erfaring", add_edu: "+ Legg til utdanning", add_course: "+ Legg til kurs", add_lang: "+ Legg til språk",
+            name_ph: "FULLT NAVN", title_ph: "YRKESTITTEL", photo_txt: "Legg til bilde", lang_ph: "Språk"
+        },
+        ru: {
+            phone: "Телефон", phone_ph: "+00 ...", email: "Эл. почта", email_ph: "имя@пример.com", 
+            address: "Адрес", addr_ph: "Улица, Город", driving: "Вод. удостоверение", driving_ph: "Категории",
+            skills: "Навыки", languages: "Языки", about: "Обо мне", experience: "Опыт работы", 
+            education: "Образование", courses: "Курсы", interests: "Interests",
+            pos: "Должность", comp: "Компания", date: "Дата", desc: "Описание...", 
+            deg: "Специальность", inst: "Учреждение", course: "Курс", native: "Родной", 
+            add_exp: "+ Добавить опыт", add_edu: "+ Добавить образование", add_course: "+ Добавить курс", add_lang: "+ Добавить язык",
+            name_ph: "ИМЯ ФАМИЛИЯ", title_ph: "ДОЛЖНОСТЬ", photo_txt: "Фото", lang_ph: "Язык"
+        },
+        pl: {
+            phone: "Telefon", phone_ph: "+48 ...", email: "E-mail", email_ph: "imię@przykład.pl", 
+            address: "Adres", addr_ph: "Ulica, Miasto", driving: "Prawo jazdy", driving_ph: "Kategorie",
+            skills: "Umiejętności", languages: "Języki", about: "O mnie", experience: "Doświadczenie", 
+            education: "Edukacja", courses: "Kursy", interests: "Zainteresowania",
+            pos: "Stanowisko", comp: "Firma", date: "Data", desc: "Opis...", 
+            deg: "Stopień", inst: "Instytucja", course: "Kurs", native: "Ojczysty", 
+            add_exp: "+ Dodaj doświadczenie", add_edu: "+ Dodaj edukację", add_course: "+ Dodaj kurs", add_lang: "+ Dodaj język",
+            name_ph: "IMIĘ NAZWISKO", title_ph: "STANOWISKO", photo_txt: "Zdjęcie", lang_ph: "Język"
+        }
+    };
+
+    function updateStyles() {
+        const root = document.documentElement;
+        const sidebarBg = document.getElementById('sidebarBgSelect').value;
+        const accent = document.getElementById('accentColor').value;
+        const text = document.getElementById('textColor').value;
+        const font = document.getElementById('fontSelect').value;
+
+        root.style.setProperty('--sidebar-bg', sidebarBg);
+        root.style.setProperty('--accent', accent);
+        root.style.setProperty('--main-text-color', text);
+        root.style.setProperty('--font-family', font);
+
+        const isDark = isColorDark(sidebarBg);
+        root.style.setProperty('--sidebar-text-color', isDark ? '#ffffff' : '#1e293b');
+        saveToLocal();
+    }
+
+    function isColorDark(color) {
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        return ((r * 299 + g * 587 + b * 114) / 1000) < 160;
+    }
+
+    function autoHeight(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+
+    function handlePhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.getElementById('photoPreview');
+                img.src = e.target.result; img.style.display = 'block';
+                document.getElementById('photoTxt').style.display = 'none';
+                document.getElementById('photoCtrls').style.display = 'block';
+                saveToLocal();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function updatePhotoStyle() {
+        const zoom = document.getElementById('zoomRange').value;
+        const shift = document.getElementById('shiftRange').value;
+        document.getElementById('photoPreview').style.transform = `scale(${zoom}) translateY(${shift}px)`;
+        saveToLocal();
+    }
+
+    function changeLanguage() {
+        const lang = document.getElementById('langSelect').value;
+        const t = translations[lang] || translations.en;
+
+        document.getElementById('lbl-phone').innerText = t.phone;
+        document.getElementById('cv-phone').placeholder = t.phone_ph;
+        
+        document.getElementById('lbl-email').innerText = t.email;
+        document.getElementById('cv-email').placeholder = t.email_ph;
+        
+        document.getElementById('lbl-address').innerText = t.address;
+        document.getElementById('cv-address').placeholder = t.addr_ph;
+
+        document.getElementById('sec-driving').innerText = t.driving;
+        document.getElementById('cv-driving').placeholder = t.driving_ph;
+
+        document.getElementById('sec-skills').innerText = t.skills;
+        document.getElementById('sec-languages').innerText = t.languages;
+        document.getElementById('sec-about').innerText = t.about;
+        document.getElementById('sec-experience').innerText = t.experience;
+        document.getElementById('sec-education').innerText = t.education;
+        document.getElementById('sec-courses').innerText = t.courses;
+        document.getElementById('sec-interests').innerText = t.interests;
+
+        document.getElementById('btn-add-exp').innerText = t.add_exp;
+        document.getElementById('btn-add-edu').innerText = t.add_edu;
+        document.getElementById('btn-add-course').innerText = t.add_course;
+        document.getElementById('btn-add-lang').innerText = t.add_lang;
+
+        document.getElementById('cv-name').placeholder = t.name_ph;
+        document.getElementById('cv-title').placeholder = t.title_ph;
+        document.getElementById('photoTxt').innerText = t.photo_txt;
+
+        // Atnaujinti esamų elementų placeholder'ius sąrašuose
+        document.querySelectorAll('.dynamic-item').forEach(item => {
+            const parent = item.parentElement.id;
+            const h = item.querySelector('.item-header');
+            const s = item.querySelector('.item-sub');
+            const d = item.querySelector('.item-date');
+            const txt = item.querySelector('textarea');
+
+            if (parent === 'exp-list') { h.placeholder = t.pos; s.placeholder = t.comp; d.placeholder = t.date; if(txt) txt.placeholder = t.desc; }
+            if (parent === 'edu-list') { h.placeholder = t.deg; s.placeholder = t.inst; d.placeholder = t.date; }
+            if (parent === 'course-list') { h.placeholder = t.course; s.placeholder = t.inst; d.placeholder = t.date; }
+        });
+
+        // Atnaujinti kalbų pasirinkimų tekstus
+        document.querySelectorAll('#lang-list > div').forEach(div => {
+            const select = div.querySelector('select');
+            const input = div.querySelector('input');
+            input.placeholder = t.lang_ph;
+            
+            // Atnaujiname pirmo varianto (Gimtoji) tekstą
+            select.options[0].text = t.native;
+        });
+
+        saveToLocal();
+    }
+
+    function addItem(listId, data = null) {
+        const container = document.getElementById(listId);
+        const t = translations[document.getElementById('langSelect').value] || translations.en;
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        
+        let p = {};
+        if(listId === 'exp-list') p = { h: t.pos, s: t.comp, d: t.date, tx: t.desc };
+        else if(listId === 'edu-list') p = { h: t.deg, s: t.inst, d: t.date };
+        else p = { h: t.course, s: t.inst, d: t.date };
+
+        div.innerHTML = `
+            <button class="btn-remove" onclick="this.parentElement.remove(); saveToLocal();">✕</button>
+            <div class="item-row">
+                <input type="text" class="item-header" placeholder="${p.h}" value="${data?.h || ''}">
+                <input type="text" class="item-date" placeholder="${p.d}" value="${data?.d || ''}">
+            </div>
+            <input type="text" class="item-sub" placeholder="${p.s}" value="${data?.s || ''}">
+            ${listId === 'exp-list' ? `<textarea rows="2" placeholder="${p.tx}" oninput="autoHeight(this)">${data?.desc || ''}</textarea>` : ''}
+        `;
+        container.appendChild(div);
+        if(div.querySelector('textarea')) autoHeight(div.querySelector('textarea'));
+        saveToLocal();
+    }
+
+    function addLang(data = null) {
+        const t = translations[document.getElementById('langSelect').value] || translations.en;
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex; gap:5px; margin-bottom:8px; position:relative;';
+        div.innerHTML = `
+            <input type="text" placeholder="${t.lang_ph}" style="flex:1" value="${data?.n || ''}">
+            <select class="editable-select" style="width: 100px; font-size: 11px;">
+                <option value="Native" ${data?.v === 'Native' ? 'selected' : ''}>${t.native}</option>
+                <option value="C2" ${data?.v === 'C2' ? 'selected' : ''}>C2</option>
+                <option value="C1" ${data?.v === 'C1' ? 'selected' : ''}>C1</option>
+                <option value="B2" ${data?.v === 'B2' ? 'selected' : ''}>B2</option>
+                <option value="B1" ${data?.v === 'B1' ? 'selected' : ''}>B1</option>
+                <option value="A2" ${data?.v === 'A2' ? 'selected' : ''}>A2</option>
+                <option value="A1" ${data?.v === 'A1' ? 'selected' : ''}>A1</option>
+            </select>
+            <button onclick="this.parentElement.remove(); saveToLocal();" style="color:red; border:none; background:none; cursor:pointer;">✕</button>
+        `;
+        document.getElementById('lang-list').appendChild(div);
+        saveToLocal();
+    }
+
+    function saveToLocal() {
+        const data = {
+            name: document.getElementById('cv-name').value,
+            title: document.getElementById('cv-title').value,
+            phone: document.getElementById('cv-phone').value,
+            email: document.getElementById('cv-email').value,
+            address: document.getElementById('cv-address').value,
+            about: document.getElementById('cv-about').value,
+            driving: document.getElementById('cv-driving').value,
+            skills: document.getElementById('cv-skills').value,
+            interests: document.getElementById('cv-interests').value,
+            photo: document.getElementById('photoPreview').src,
+            zoom: document.getElementById('zoomRange').value,
+            shift: document.getElementById('shiftRange').value,
+            lang: document.getElementById('langSelect').value,
+            font: document.getElementById('fontSelect').value,
+            sidebar: document.getElementById('sidebarBgSelect').value,
+            accent: document.getElementById('accentColor').value,
+            textColor: document.getElementById('textColor').value,
+            exp: Array.from(document.getElementById('exp-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value,
+                desc: c.querySelector('textarea')?.value
+            })),
+            edu: Array.from(document.getElementById('edu-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value
+            })),
+            courses: Array.from(document.getElementById('course-list').children).map(c => ({
+                h: c.querySelectorAll('input')[0].value,
+                d: c.querySelectorAll('input')[1].value,
+                s: c.querySelectorAll('input')[2].value
+            })),
+            langs: Array.from(document.getElementById('lang-list').children).map(c => ({
+                n: c.querySelector('input').value,
+                v: c.querySelector('select').value
+            }))
+        };
+        localStorage.setItem('cv_pro_v3', JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+        const saved = localStorage.getItem('cv_pro_v3');
+        if (!saved) { addItem('exp-list'); addItem('edu-list'); addItem('course-list'); addLang(); return; }
+        const d = JSON.parse(saved);
+        
+        document.getElementById('cv-name').value = d.name || '';
+        document.getElementById('cv-title').value = d.title || '';
+        document.getElementById('cv-phone').value = d.phone || '';
+        document.getElementById('cv-email').value = d.email || '';
+        document.getElementById('cv-address').value = d.address || '';
+        document.getElementById('cv-about').value = d.about || '';
+        document.getElementById('cv-driving').value = d.driving || '';
+        document.getElementById('cv-skills').value = d.skills || '';
+        document.getElementById('cv-interests').value = d.interests || '';
+
+        if (d.photo && d.photo.startsWith('data:')) {
+            const img = document.getElementById('photoPreview');
+            img.src = d.photo; img.style.display = 'block';
+            document.getElementById('photoTxt').style.display = 'none';
+            document.getElementById('photoCtrls').style.display = 'block';
+        }
+
+        document.getElementById('langSelect').value = d.lang || 'lt';
+        document.getElementById('fontSelect').value = d.font || "'Inter', sans-serif";
+        document.getElementById('sidebarBgSelect').value = d.sidebar || '#1e293b';
+        document.getElementById('accentColor').value = d.accent || '#2563eb';
+        document.getElementById('textColor').value = d.textColor || '#1e293b';
+
+        d.exp?.forEach(i => addItem('exp-list', i));
+        d.edu?.forEach(i => addItem('edu-list', i));
+        d.courses?.forEach(i => addItem('course-list', i));
+        d.langs?.forEach(i => addLang(i));
+
+        changeLanguage();
+        updateStyles();
+    }
+
+    function downloadHTML() {
+        saveToLocal();
+        const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `CV_${document.getElementById('cv-name').value || 'User'}.html`;
+        a.click();
+    }
+
+    window.onload = loadFromLocal;
+</script>
+</body>
+</html> 

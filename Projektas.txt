@@ -1,0 +1,293 @@
+🧠 PROJEKTO ESMĖ 
+
+Tai yra **finansinės realybės platforma imigrantams Norvegijoje**, kuri leidžia žmogui:
+
+* suprasti kiek jis gaus iš NAV
+* pamatyti kiek praras pajamų
+* įvertinti ar išgyvens
+* optimizuoti mokesčius
+* planuoti sprendimus (darbas, išlaidos, pokyčiai)
+
+👉 Svarbiausia: ne “skaičiuoklės”, o **sprendimų priėmimo įrankis**
+
+---
+
+# 🧩 SISTEMOS STRUKTŪRA
+
+Platforma susideda iš modulių:
+
+1. **Dagpenger (NAV išmokos)**
+2. **Permittering (laikinas atleidimas)**
+3. **Darbdavio laikotarpis**
+4. **Pajamų kritimo analizė**
+5. **Išgyvenimo (biudžeto) analizė**
+6. **Mokesčių korekcija (Skatt)**
+7. **Papildomi scenarijai (optional)**
+
+Visi moduliai:
+
+* dalinasi duomenimis tarpusavyje
+* atnaujinami realiu laiku
+* veikia kaip viena sistema
+
+---
+
+# 🔧 1. DAGPENGER (NAV) KALKULIATORIUS
+
+## 🎯 Tikslas
+
+Parodyti, kiek žmogus gaus nedarbo išmokos (dagpenger).
+
+## 📥 Įvedami duomenys
+
+* metinės pajamos (12 mėn.)
+* arba pajamos per 36 mėn.
+* dabartinis mokesčių procentas
+
+## ⚙️ Skaičiavimas
+
+* pasirenkama didesnė reikšmė:
+
+  * paskutinių 12 mėn.
+  * arba 36 mėn. vidurkis
+* taikoma riba (iki ~6G)
+* taikomas koeficientas (~62.4%)
+* paskirstoma:
+
+  * į dienas
+  * į mėnesį
+* pritaikomi mokesčiai
+
+## 📤 Rezultatas
+
+* bruto mėnesio išmoka
+* netto (į rankas)
+* dienos išmoka
+* savaitinė išmoka
+
+## ➕ Papildoma vertė vartotojui
+
+* gali suprasti realias pajamas be darbo
+* gali planuoti išlaidas iš anksto
+
+---
+
+# 🔄 2. PERMITTERING KALKULIATORIUS
+
+## 🎯 Tikslas
+
+Parodyti, kaip keičiasi pajamos, kai žmogus yra laikinai atleistas.
+
+## 📥 Įvedami duomenys
+
+* dabartinis atlyginimas
+* permittering procentas (pvz. 100% arba 50%)
+* laikotarpis
+
+## ⚙️ Skaičiavimo logika
+
+* pirmos dienos → darbdavio laikotarpis
+* po to → pereinama į dagpenger
+* jei dalinis permittering:
+
+  * dalis atlyginimo iš darbdavio
+  * dalis iš NAV
+
+## 📤 Rezultatas
+
+* pirmo mėnesio pajamos
+* vėlesnių mėnesių pajamos
+* vidutinės pajamos per laikotarpį
+
+## ➕ Papildoma vertė
+
+* aiškiai parodo “pajamų šoką”
+* leidžia planuoti laikotarpį
+
+---
+
+# 🏢 3. DARBDAVIO LAIKOTARPIS
+
+## 🎯 Tikslas
+
+Parodyti, kiek darbdavys sumokės pirmomis dienomis.
+
+## 📥 Įvedami duomenys
+
+* mėnesinis atlyginimas
+
+## ⚙️ Skaičiavimas
+
+* konvertuojama į dienos atlyginimą
+* dauginama iš nustatyto dienų skaičiaus (~15)
+
+## 📤 Rezultatas
+
+* suma, kurią sumoka darbdavys
+* laikotarpio trukmė
+
+## ➕ Vertė
+
+* vartotojas supranta, kad pradžioje pajamos nesumažėja iš karto
+
+---
+
+# 📉 4. PAJAMŲ KRITIMO ANALIZĖ
+
+## 🎯 Tikslas
+
+Parodyti, kiek žmogus praranda pajamų.
+
+## 📥 Duomenys
+
+* buvęs atlyginimas
+* naujos pajamos (dagpenger)
+
+## ⚙️ Skaičiavimas
+
+* skirtumas eurais / kronomis
+* procentinis kritimas
+
+## 📤 Rezultatas
+
+* kiek prarandama per mėnesį
+* kiek per metus
+* procentinis pokytis
+
+## ➕ Vertė
+
+* padeda suprasti realią situaciją
+* padeda priimti sprendimus
+
+---
+
+# 🏠 5. IŠGYVENIMO (BIUDŽETO) KALKULIATORIUS
+
+## 🎯 Tikslas
+
+Atsakyti į klausimą: **ar žmogus išgyvens finansiškai**
+
+## 📥 Įvedami duomenys
+
+* pajamos (automatiškai iš dagpenger)
+* išlaidos:
+
+  * nuoma / paskola
+  * maistas
+  * transportas
+  * skolos
+  * kitos
+* santaupos
+
+## ⚙️ Skaičiavimas
+
+* mėnesio balansas (pajamos – išlaidos)
+* jei minusas:
+
+  * kiek mėnesių užteks santaupų
+
+## 📤 Rezultatas
+
+* perteklius arba deficitas
+* “kiek mėnesių liko”
+* įspėjimai
+
+## ➕ Vertė
+
+* realus gyvenimo planavimas
+* labai stiprus emocinis efektas
+
+---
+
+# 💸 6. MOKESČIŲ KOREKCIJA (SKATT)
+
+## 🎯 Tikslas
+
+Padėti žmogui nepermokėti mokesčių.
+
+## 📥 Įvedami duomenys
+
+* senos pajamos
+* naujos pajamos
+* dabartiniai mokesčiai
+
+## ⚙️ Skaičiavimas
+
+* palyginamas senas ir naujas apmokestinimas
+* apskaičiuojamas rekomenduojamas mokestis
+
+## 📤 Rezultatas
+
+* kiek žmogus permoka / nedamoka
+* rekomendacija keisti mokesčius
+
+## ➕ Vertė
+
+* realūs pinigai grįžta žmogui
+* labai praktiška funkcija
+
+---
+
+# 🔗 7. MODULIŲ SĄVEIKA
+
+Svarbiausia dalis — visi moduliai sujungti:
+
+* Dagpenger → naudojamas visur
+* Pajamų kritimas → remiasi dagpenger
+* Išgyvenimas → remiasi dagpenger + išlaidomis
+* Mokesčiai → remiasi dagpenger
+
+👉 vienas input → keičia visą sistemą
+
+---
+
+# 🎯 8. VARTOTOJO PATIRTIS
+
+Vartotojas gali:
+
+* įvesti savo pajamas
+* matyti realius pokyčius
+* keisti scenarijus:
+
+  * padidinti išlaidas
+  * sumažinti pajamas
+  * keisti mokesčius
+* matyti:
+
+  * kas bus po 1 mėn.
+  * kas bus po 6 mėn.
+
+---
+
+# 🚀 9. PAPILDOMOS FUNKCIJOS 
+
+Galima pridėti:
+
+### ✔ scenarijų palyginimas
+
+* darbas vs nedarbas
+
+### ✔ šeimos režimas
+
+* 2 pajamos
+
+### ✔ dalinis darbas
+
+* dagpenger + atlyginimas
+
+### ✔ rekomendacijos
+
+* “reikia mažinti išlaidas”
+* “reikia keisti mokesčius”
+
+---
+
+# ⚠️ 10. SVARBIAUSIA ĮŽVALGA
+
+Šis produktas nėra apie:
+
+* skaičius
+* formulės
+
+👉 Jis yra apie:
+**“ar žmogus finansiškai išgyvens Norvegijoje”** 

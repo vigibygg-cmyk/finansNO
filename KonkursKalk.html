@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO & META -->
+    <title>KonkursKalk Pro - Lønnsgaranti Kalkulator (NAV)</title>
+    <meta name="description" content="Gratis kalkulator for utregning av lønnsgaranti (NAV) ved konkurs. Beregn utestående lønn, feriepenger og oppsigelsestid enkelt og nøyaktig.">
+    <meta name="keywords" content="konkurs, lønnsgaranti, nav, lønnskrav, konkursbo, feriepenger, oppsigelse, kalkulator, beregning">
+    <meta name="author" content="Vytautas Giedraitis">
+    <meta name="robots" content="index, follow">
+    
+    <!-- OPEN GRAPH / SOCIAL -->
+    <meta property="og:title" content="KonkursKalk Pro - Lønnsgaranti Kalkulator">
+    <meta property="og:description" content="Hjelpeverktøy for å beregne og fylle ut lønnskrav til NAV ved konkurs. Støtter flere språk.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="no_NO">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --bg-page: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-page); 
+            color: #1e293b;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* MODERN INPUT FIELDS */
+        .input-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .modern-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 6px;
+            margin-left: 2px;
+        }
+
+        .modern-input {
+            width: 100%;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #0f172a;
+            transition: all 0.2s ease;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .modern-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .modern-input:focus {
+            background-color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* TOOLTIP / INFO BOX */
+        .info-btn {
+            color: #3b82f6;
+            cursor: pointer;
+            padding: 4px;
+            margin: -4px;
+            transition: transform 0.2s;
+        }
+        .info-btn:active { transform: scale(0.9); }
+        
+        .info-content {
+            display: none;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .info-content.active { display: block; animation: slideDown 0.2s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* SECTION HEADERS */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        /* BUTTONS */
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 16px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .btn-icon {
+            padding: 10px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            transition: background 0.2s;
+        }
+        .btn-icon:hover { background: #f1f5f9; }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background: white; font-size: 11pt; color: black; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .card { box-shadow: none; border: none; padding: 0; margin: 0; }
+            @page { margin: 1.5cm; size: A4; }
+            .print-break { page-break-inside: avoid; }
+        }
+        .print-only { display: none; }
+
+        /* UTILS */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-tax { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-free { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
+
+        /* Suggestions */
+        .suggestions {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 8px; z-index: 50;
+            max-height: 200px; overflow-y: auto;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .suggestion-item { padding: 10px; cursor: pointer; font-size: 0.9rem; }
+        .suggestion-item:hover { background: #f1f5f9; }
+    </style>
+</head>
+<body class="pb-48">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-200 px-4 py-3 flex justify-between items-center no-print shadow-sm">
+        <div>
+            <!-- TITLE FIXED (NO TRANSLATION) -->
+            <h1 class="text-lg font-bold text-slate-800">KonkursKalk <span class="text-blue-600">Pro</span></h1>
+            <p class="text-[10px] text-gray-500">by Vytautas Giedraitis</p>
+        </div>
+        <div class="flex gap-2 items-center">
+            <!-- Language Selector -->
+            <select id="langSelect" onchange="changeLang(this.value)" class="bg-gray-100 text-xs font-bold py-2 px-2 rounded border border-gray-200 outline-none">
+                <option value="no">🇳🇴 NO</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="lt">🇱🇹 LT</option>
+                <option value="pl">🇵🇱 PL</option>
+                <option value="ru">🇷🇺 RU</option>
+            </select>
+
+            <button onclick="document.getElementById('importFile').click()" class="btn-icon" title="Import">
+                <i data-lucide="upload" class="w-5 h-5"></i>
+            </button>
+            <button onclick="exportData()" class="btn-icon" title="Export">
+                <i data-lucide="download" class="w-5 h-5"></i>
+            </button>
+            <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(this)">
+        </div>
+    </header>
+
+    <div class="max-w-xl mx-auto mt-20 px-4 no-print">
+
+        <!-- 1. PERSONAL DETAILS & TAX -->
+        <div class="card">
+            <div class="section-header">
+                <i data-lucide="user" class="w-5 h-5 text-blue-500"></i>
+                <h2 class="section-title" data-i18n="secPersonal">Personalia & Skatt</h2>
+            </div>
+            
+            <div class="grid-2">
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblFname">Fornavn <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-fn')"></i></label>
+                    <div id="i-fn" class="info-content" data-i18n="infFname">Ditt juridiske fornavn (som i passet).</div>
+                    <input type="text" id="firstName" class="modern-input" placeholder="Ola">
+                </div>
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblLname">Etternavn <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-ln')"></i></label>
+                    <div id="i-ln" class="info-content" data-i18n="infLname">Ditt etternavn.</div>
+                    <input type="text" id="lastName" class="modern-input" placeholder="Nordmann">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblDob">Fødselsdato <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-dob')"></i></label>
+                    <div id="i-dob" class="info-content" data-i18n="infDob">Brukes for å identifisere deg i søknaden.</div>
+                    <input type="date" id="dob" class="modern-input text-gray-500">
+                </div>
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblTax">Skattetrekk % <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-tax')"></i></label>
+                    <div id="i-tax" class="info-content" data-i18n="infTax">Prosenten du skatter (Tabelltrekk eller prosent). Dette brukes KUN for å gi deg en pekepinn på hva du får utbetalt ("Netto"). NAV bruker skattekortet ditt automatisk.</div>
+                    <div class="relative">
+                        <input type="number" id="taxPercent" class="modern-input font-bold text-blue-600" placeholder="34">
+                        <span class="absolute right-4 top-3.5 text-gray-400 font-bold">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="modern-label" data-i18n="lblAddr">Adresse <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-addr')"></i></label>
+                <div id="i-addr" class="info-content" data-i18n="infAddr">Din nåværende bostedsadresse.</div>
+                <input type="text" id="address" class="modern-input" placeholder="Gateveien 1, 0101 Oslo">
+            </div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblPhone">Telefon</label>
+                    <input type="tel" id="phone" class="modern-input" placeholder="123 45 678">
+                </div>
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblEmail">E-post</label>
+                    <input type="email" id="email" class="modern-input" placeholder="ola@mail.no">
+                </div>
+            </div>
+        </div>
+
+        <!-- 1.1 COMPANY SEARCH -->
+        <div class="card bg-blue-50 border-blue-100">
+            <div class="section-header">
+                <i data-lucide="building-2" class="w-5 h-5 text-blue-600"></i>
+                <h2 class="section-title text-blue-900" data-i18n="secEmployer">Arbeidsgiver (Konkursbo)</h2>
+            </div>
+            <div class="input-group">
+                <label class="modern-label text-blue-800" data-i18n="lblSearchComp">Søk Firma / Org.nr <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-brreg')"></i></label>
+                <div id="i-brreg" class="info-content" data-i18n="infSearchComp">Begynn å skrive firmanavnet, så henter vi opplysninger direkte fra Brønnøysundregistrene.</div>
+                <div class="relative">
+                    <input type="text" id="companySearch" class="modern-input border-blue-200" placeholder="..." oninput="searchCompany(this.value)">
+                    <div id="companySuggestions" class="suggestions hidden"></div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label class="modern-label text-blue-800" data-i18n="lblCompName">Firmanavn</label>
+                    <input type="text" id="companyName" class="modern-input bg-white" placeholder="-">
+                </div>
+                <div class="input-group">
+                    <label class="modern-label text-blue-800" data-i18n="lblOrgNr">Org. Nummer</label>
+                    <input type="text" id="companyOrg" class="modern-input bg-white" placeholder="-">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. BANKRUPTCY & DATES -->
+        <div class="card border-l-4 border-l-red-500">
+            <div class="section-header">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+                <h2 class="section-title" data-i18n="secBankrupt">Konkurs & Perioder</h2>
+            </div>
+            
+            <div class="input-group">
+                <label class="modern-label text-red-600" data-i18n="lblBankDate">Konkursåpningsdato <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-bd')"></i></label>
+                <div id="i-bd" class="info-content bg-red-50 text-red-900 border-red-200" data-i18n="infBankDate">
+                    Datoen tingretten åpnet konkursen. Dette er "Skjæringstidspunktet". Oppsigelsestiden (lønn fra NAV) starter normalt fra denne datoen.
+                </div>
+                <input type="date" id="bankruptcyDate" class="modern-input font-bold border-red-200 bg-red-50">
+            </div>
+
+            <!-- Pre-Bankruptcy Period Definition -->
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4">
+                <h3 class="text-xs font-bold text-blue-800 uppercase mb-3 flex items-center gap-2">
+                    <span data-i18n="lblPrePeriod">Utestående Lønnsperiode</span>
+                    <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-pre-period')"></i>
+                </h3>
+                <div id="i-pre-period" class="info-content bg-white text-blue-900 border-blue-200" data-i18n="infPrePeriod">
+                    Dette gjelder perioden du jobbet FØR konkursen, men ikke fikk betalt for. Vanligvis er dette måneden før konkursåpning.
+                </div>
+                <div class="grid-2">
+                    <div class="input-group mb-0">
+                        <label class="modern-label" data-i18n="lblFrom">Fra dato</label>
+                        <input type="date" id="preDateStart" class="modern-input text-sm">
+                    </div>
+                    <div class="input-group mb-0">
+                        <label class="modern-label" data-i18n="lblTo">Til dato</label>
+                        <input type="date" id="preDateEnd" class="modern-input text-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SALARY & ALLOWANCES -->
+        <div class="card">
+            <div class="section-header">
+                <i data-lucide="briefcase" class="w-5 h-5 text-indigo-500"></i>
+                <h2 class="section-title" data-i18n="secSalary">Lønn & Tillegg</h2>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblRate">Timelønn (kr) <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-rate')"></i></label>
+                    <div id="i-rate" class="info-content" data-i18n="infRate">Din faste timelønn ifølge kontrakt.</div>
+                    <input type="number" id="hourlyRate" class="modern-input font-bold" placeholder="250">
+                </div>
+                <div class="input-group">
+                    <label class="modern-label" data-i18n="lblPos">Stillings % <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-pos')"></i></label>
+                    <div id="i-pos" class="info-content" data-i18n="infPos">Din stillingsprosent. Brukes til å beregne timer i oppsigelsestiden automatisk.</div>
+                    <input type="number" id="positionPercent" class="modern-input" placeholder="100">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="modern-label" data-i18n="lblFpRate">Feriepengesats <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-fpr')"></i></label>
+                <div id="i-fpr" class="info-content" data-i18n="infFpRate">Vanligvis 10,2% eller 12% (hvis tariff). Står på lønnsslippen.</div>
+                <div class="relative">
+                    <select id="holidayRate" class="modern-input modern-select">
+                        <option value="0.102">10,2% (Standard)</option>
+                        <option value="0.12" selected>12,0% (Tariff)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ALLOWANCES LIST -->
+            <div class="mt-6 pt-4 border-t border-dashed border-gray-200">
+                <label class="modern-label mb-2" data-i18n="lblAllowances">Faste Tillegg & Utlegg <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-all')"></i></label>
+                <div id="i-all" class="info-content" data-i18n="infAllowances">
+                    <b>Lønn/Arb:</b> Skattepliktig, feriepengegrunnlag (Verktøy, Bas, Smuss).<br>
+                    <b>Utlegg:</b> Skattefritt (Reise, Telefon, Bompenger).
+                </div>
+
+                <div id="allowanceList" class="space-y-3 mb-4"></div>
+
+                <button onclick="addAllowance()" class="w-full py-3 rounded-xl border-2 border-dashed border-gray-200 text-blue-600 font-bold hover:bg-blue-50 transition-all flex justify-center items-center gap-2 uppercase text-xs tracking-wider">
+                    <i data-lucide="plus" class="w-4 h-4"></i> <span data-i18n="btnAddAllow">Legg til krav</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. HOURS & CLAIMS -->
+        <div class="card">
+            <div class="section-header">
+                <i data-lucide="calculator" class="w-5 h-5 text-emerald-500"></i>
+                <h2 class="section-title" data-i18n="secClaims">Kravinnsending</h2>
+            </div>
+
+            <!-- Period A: Pre-Bankruptcy -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold text-gray-600 uppercase" data-i18n="secClaimA">A. Før Konkurs (Utestående)</h3>
+                    <span id="label-pre-dates" class="text-[10px] bg-white px-2 py-1 rounded border border-gray-200 text-gray-500">-</span>
+                </div>
+                
+                <!-- Detailed Days Input -->
+                <div class="bg-white p-3 rounded border border-gray-200 mb-3">
+                    <label class="modern-label mb-2 text-blue-600" data-i18n="lblCalcHours">Beregning av timer <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-days')"></i></label>
+                    <div id="i-days" class="info-content" data-i18n="infCalcHours">
+                        <b>Arbeidsdager:</b> Antall dager du faktisk jobbet.<br>
+                        <b>Røde dager:</b> Helligdager i uken hvor du hadde fri men skal ha lønn.
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-gray-400" data-i18n="lblWorkDays">Arbeidsdager</span>
+                            <input type="number" id="manualDays" class="modern-input text-sm" placeholder="0">
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-red-400" data-i18n="lblRedDays">Røde dager</span>
+                            <input type="number" id="manualRedDays" class="modern-input text-sm text-red-600" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="input-group mb-0">
+                        <label class="modern-label"><span data-i18n="lblTotalHours">Totalt Timer</span> <span class="text-xs text-gray-400 font-normal">(Auto)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-h1')"></i></label>
+                        <div id="i-h1" class="info-content" data-i18n="infTotalHours">Automatisk beregnet: (Arbeidsdager + Røde dager) × 7.5 timer. Du kan endre manuelt.</div>
+                        <input type="number" id="hoursBefore" class="modern-input font-bold" placeholder="0">
+                    </div>
+                    <div class="input-group mb-0">
+                        <label class="modern-label"><span data-i18n="lblTravelDays">Dager (Reise)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-d1')"></i></label>
+                        <div id="i-d1" class="info-content" data-i18n="infTravelDays">Antall dager du var på reise i perioden.</div>
+                        <input type="number" id="daysBefore" class="modern-input" placeholder="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Period B: Notice Period -->
+            <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold text-orange-800 uppercase" data-i18n="secClaimB">B. Oppsigelsestid (1 mnd)</h3>
+                    <span id="label-post-dates" class="text-[10px] bg-white px-2 py-1 rounded border border-orange-100 text-orange-600">-</span>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="input-group mb-0">
+                        <label class="modern-label"><span data-i18n="lblHours">Timer (Normal)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-autoh')"></i></label>
+                        <div id="i-autoh" class="info-content" data-i18n="infAutoH">Automatisk beregnet timer for 1 måned fra konkursdatoen.</div>
+                        <input type="number" id="hoursAfter" class="modern-input font-bold text-orange-900" placeholder="0">
+                    </div>
+                    <div class="input-group mb-0">
+                        <label class="modern-label"><span data-i18n="lblTravelDays">Dager (Reise)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-d2')"></i></label>
+                        <div id="i-d2" class="info-content" data-i18n="infTravelB">Normalt 0 i oppsigelsestiden.</div>
+                        <input type="number" id="daysAfter" class="modern-input" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-orange-200">
+                    <label class="modern-label text-orange-800"><span data-i18n="lblDeduct">Fradrag (Inntekt/NAV)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-ded')"></i></label>
+                    <div id="i-ded" class="info-content" data-i18n="infDeduct">Annen inntekt eller NAV dagpenger mottatt i oppsigelsestiden.</div>
+                    <input type="number" id="deduction" class="modern-input text-red-600 border-orange-200 bg-white" placeholder="- kr">
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. FERIEPENGER & NAV -->
+        <div class="card">
+            <div class="section-header">
+                <i data-lucide="piggy-bank" class="w-5 h-5 text-purple-500"></i>
+                <h2 class="section-title" data-i18n="secFp">Feriepenger & Pensjon</h2>
+            </div>
+
+            <!-- FP Last Year -->
+            <div class="input-group pb-4 border-b border-gray-100">
+                <label class="modern-label"><span data-i18n="lblFpLast">Opptjent i fjor</span> <span class="text-red-500 font-bold ml-1">(IKKE UTBETALT)</span> <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-fp1')"></i></label>
+                <div id="i-fp1" class="info-content border-l-4 border-red-400 pl-3" data-i18n="infFpLast">
+                    <b>VIKTIG:</b> Fylles KUN ut dersom du <b>ikke</b> har fått utbetalt feriepenger fra i fjor.
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <input type="date" id="fpLastStart" class="modern-input text-xs">
+                    <input type="date" id="fpLastEnd" class="modern-input text-xs">
+                </div>
+                <input type="number" id="fpLastYear" class="modern-input font-bold" placeholder="0">
+            </div>
+
+            <!-- FP This Year -->
+            <div class="input-group pt-4">
+                <label class="modern-label" data-i18n="lblFpThis">Opptjent i år (Hittil) <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-fp2')"></i></label>
+                <div id="i-fp2" class="info-content" data-i18n="infFpThis">
+                    Feriepenger tjent opp fra 1. januar i år, frem til din siste lønnsslipp.
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <input type="date" id="fpThisStart" class="modern-input text-xs">
+                    <input type="date" id="fpThisEnd" class="modern-input text-xs">
+                </div>
+                <input type="number" id="fpThisYear" class="modern-input font-bold" placeholder="0">
+            </div>
+
+            <div class="p-3 bg-blue-50 rounded border border-blue-100 text-xs text-blue-800 mt-4 mb-4">
+                <div class="flex gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <div data-i18n="infFpAuto">
+                        <b>Auto-beregning:</b>
+                        <br>Feriepenger for "Utestående Lønn" og "Oppsigelsestid" beregnes automatisk.
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group mt-6 pt-4 border-t border-gray-100">
+                <label class="modern-label" data-i18n="lblPension">Manglende Pensjon (OTP) <i data-lucide="info" class="w-4 h-4 info-btn" onclick="toggleInfo('i-otp')"></i></label>
+                <div id="i-otp" class="info-content" data-i18n="infPension">
+                    Beløp trukket fra lønn men ikke innbetalt til pensjon.
+                </div>
+                <input type="number" id="missingPension" class="modern-input" placeholder="0">
+            </div>
+        </div>
+
+        <!-- 6. LIVE PREVIEW -->
+        <div class="mb-20">
+            <h3 class="text-sm font-bold text-gray-400 uppercase mb-2 pl-2" data-i18n="lblPreview">Forhåndsvisning (NAV Skjema)</h3>
+            <div class="bg-white border border-gray-200 rounded-lg p-4 text-sm shadow-inner overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-xs text-gray-400 border-b border-gray-100">
+                            <th class="py-2 font-medium" data-i18n="thDesc">Beskrivelse</th>
+                            <th class="py-2 font-medium" data-i18n="thPeriod">Periode</th>
+                            <th class="py-2 font-medium text-right" data-i18n="thAmount">Beløp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewTable" class="divide-y divide-gray-50 text-gray-700">
+                        <!-- Filled by JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="font-bold text-slate-900 border-t border-gray-200">
+                            <td class="py-3" data-i18n="thTotal">TOTALT KRAV</td>
+                            <td></td>
+                            <td class="py-3 text-right" id="previewTotal">0 kr</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FIXED BOTTOM BAR -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-8 z-40 no-print shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <div class="max-w-xl mx-auto flex flex-col gap-2">
+            
+            <!-- Net Estimate -->
+            <div class="flex justify-between items-center bg-green-50 px-3 py-2 rounded text-xs text-green-800 border border-green-100">
+                <span data-i18n="lblNetEst">Est. utbetalt (Netto):</span>
+                <span class="font-bold" id="displayNet">0 kr</span>
+            </div>
+
+            <div class="flex gap-4 items-center">
+                <div class="flex-grow">
+                    <div class="text-[10px] font-bold text-gray-400 uppercase" data-i18n="lblTotalGross">Totalt Brutto</div>
+                    <div class="text-2xl font-black text-slate-900 leading-none" id="displayTotal">0 kr</div>
+                </div>
+                <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                    <i data-lucide="printer" class="w-5 h-5"></i>
+                    <span class="hidden sm:inline" data-i18n="btnPdf">Generer PDF</span>
+                </button>
+            </div>
+            
+            <div class="text-[8px] text-gray-400 text-center mt-1 no-print">
+                &copy; 2026 KonkursKalk by Vytautas Giedraitis. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PRINT TEMPLATE (NAV MATCH) ==================== -->
+    <div class="print-only max-w-[210mm] mx-auto">
+        
+        <!-- Header -->
+        <div class="border-b-2 border-slate-900 pb-4 mb-8">
+            <h1 class="text-3xl font-bold text-slate-900">Lønnskrav til konkursboet</h1>
+            <p class="text-sm text-slate-500 mt-1">Hjelpeverktøy utviklet av Vytautas Giedraitis for utfylling av NAV-skjema</p>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="grid grid-cols-2 gap-8 mb-8 text-sm">
+            <div>
+                <h3 class="font-bold text-slate-900 border-b border-gray-200 pb-1 mb-2">Arbeidstaker</h3>
+                <div id="p-personalia" class="space-y-1"></div>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-900 border-b border-gray-200 pb-1 mb-2">Konkursbo / Arbeidsgiver</h3>
+                <div class="grid grid-cols-[100px_1fr] gap-1">
+                    <span class="text-gray-500">Selskap:</span> <span class="font-bold" id="p-comp-name">-</span>
+                    <span class="text-gray-500">Org.nr:</span> <span class="font-mono" id="p-comp-org">-</span>
+                    <span class="text-gray-500 mt-2">Konkursdato:</span> <span class="font-mono mt-2" id="p-bank-date">-</span>
+                    <span class="text-gray-500">Oppsigelse:</span> <span class="font-mono" id="p-notice-dates">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Table -->
+        <h3 class="font-bold text-slate-900 mb-2">Spesifisering av krav</h3>
+        <table class="w-full text-sm mb-6 border-collapse">
+            <thead>
+                <tr class="bg-gray-100 text-gray-600 text-xs uppercase text-left border-y border-gray-300">
+                    <th class="py-2 px-2 w-16">#</th>
+                    <th class="py-2 px-2">Type krav / Beskrivelse</th>
+                    <th class="py-2 px-2 w-48">Periode</th>
+                    <th class="py-2 px-2 text-right w-32">Brutto beløp</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody" class="divide-y divide-gray-200">
+                <!-- JS -->
+            </tbody>
+            <tfoot>
+                <tr class="border-t-2 border-black font-bold text-base">
+                    <td colspan="3" class="py-3 px-2 text-right">TOTALT KRAV (Brutto)</td>
+                    <td class="py-3 px-2 text-right" id="p-total-sum">0 kr</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Estimate Footer & Disclaimer -->
+        <div class="bg-gray-50 border border-gray-200 p-4 mb-8 text-xs text-gray-600 rounded">
+            <h4 class="font-bold uppercase mb-1">Privat beregning (Orientering)</h4>
+            <div class="flex justify-between max-w-sm">
+                <span>Estimert utbetalt (Netto etter skatt):</span>
+                <span class="font-bold text-slate-900" id="p-netto">0 kr</span>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200 text-[10px] text-gray-500 text-justify">
+                <p class="font-bold uppercase text-gray-700 mb-1">ANSVARSFRASKRIVELSE (Disclaimer)</p>
+                <p>
+                    Denne rapporten er et <b>uoffisielt hjelpemiddel</b> generert av "KonkursKalk" for å bistå med utfylling av NAVs Lønnsgarantisøknad. 
+                    Dokumentet er kun ment som en kladd/oversikt for egenkontroll. Brukeren er selv fullt ut ansvarlig for at alle opplysninger som sendes til NAV og konkursboet er korrekte. 
+                    Utvikleren av dette verktøyet tar intet ansvar for eventuelle feilberegninger, mangler eller avslag på søknad. 
+                    Vennligst kontroller alle tall mot dine lønnsslipper og arbeidskontrakt før innsending.
+                </p>
+                <p class="mt-1 font-bold">&copy; 2026 KonkursKalk by Vytautas Giedraitis. All rights reserved.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- TRANSLATIONS ---
+        const T = {
+            no: {
+                // ... same keys, just removed appTitle if strictly hardcoded, 
+                // but keeping object structure for safety.
+                appTitle: "KonkursKalk", // Fallback if JS updates
+                secPersonal: "Personalia & Skatt",
+                lblFname: "Fornavn", infFname: "Ditt juridiske fornavn.",
+                lblLname: "Etternavn", infLname: "Ditt etternavn.",
+                lblDob: "Fødselsdato", infDob: "Brukes for identifikasjon.",
+                lblTax: "Skattetrekk %", infTax: "Brukes kun for estimat.",
+                lblAddr: "Adresse", infAddr: "Din bostedsadresse.",
+                lblPhone: "Telefon", lblEmail: "E-post",
+                secEmployer: "Arbeidsgiver (Konkursbo)",
+                lblSearchComp: "Søk Firma / Org.nr", infSearchComp: "Henter data fra Brønnøysund.",
+                lblCompName: "Firmanavn", lblOrgNr: "Org. Nummer",
+                secBankrupt: "Konkurs & Perioder",
+                lblBankDate: "Konkursåpningsdato", infBankDate: "Starten på NAV-dekning.",
+                lblPrePeriod: "Utestående Lønnsperiode", infPrePeriod: "Tid jobbet før konkurs uten lønn.",
+                lblFrom: "Fra dato", lblTo: "Til dato",
+                secSalary: "Lønn & Tillegg",
+                lblRate: "Timelønn (kr)", infRate: "Brutto timelønn.",
+                lblPos: "Stillings %", infPos: "Brukes for beregning.",
+                lblFpRate: "Feriepengesats", infFpRate: "10.2% eller 12%.",
+                lblAllowances: "Faste Tillegg & Utlegg", infAllowances: "Legg til tillegg/utlegg.",
+                btnAddAllow: "Legg til krav",
+                secClaims: "Kravinnsending",
+                secClaimA: "A. Før Konkurs (Utestående)",
+                lblCalcHours: "Beregning av timer", infCalcHours: "Hjelp til å telle timer.",
+                lblWorkDays: "Arbeidsdager", lblRedDays: "Røde dager",
+                lblTotalHours: "Totalt Timer", infTotalHours: "Auto-beregnet sum.",
+                lblTravelDays: "Dager (Reise)", infTravelDays: "Reisedager i perioden.",
+                secClaimB: "B. Oppsigelsestid (1 mnd)",
+                lblHours: "Timer (Normal)", infAutoH: "Auto for 1 mnd.",
+                infTravelB: "Normalt 0.",
+                lblDeduct: "Fradrag (Inntekt/NAV)", infDeduct: "Lønn/Dagpenger mottatt.",
+                secFp: "Feriepenger & Pensjon",
+                lblFpLast: "Opptjent i fjor", infFpLast: "Kun hvis IKKE utbetalt.",
+                lblFpThis: "Opptjent i år (Hittil)", infFpThis: "Fra 1. jan til slutt.",
+                infFpAuto: "<b>Auto:</b> FP for periode A og B beregnes automatisk.",
+                lblPension: "Manglende Pensjon (OTP)", infPension: "Trukket men ikke innbetalt.",
+                lblPreview: "Forhåndsvisning",
+                thDesc: "Beskrivelse", thPeriod: "Periode", thAmount: "Beløp", thTotal: "TOTALT KRAV",
+                lblNetEst: "Est. utbetalt (Netto):", lblTotalGross: "Totalt Brutto",
+                btnPdf: "Generer PDF"
+            },
+            en: {
+                appTitle: "KonkursKalk",
+                secPersonal: "Personal & Tax",
+                lblFname: "First Name", infFname: "Your legal first name.",
+                lblLname: "Last Name", infLname: "Your last name.",
+                lblDob: "Date of Birth", infDob: "Used for identification.",
+                lblTax: "Tax Deduction %", infTax: "Used for estimate only.",
+                lblAddr: "Address", infAddr: "Your current address.",
+                lblPhone: "Phone", lblEmail: "Email",
+                secEmployer: "Employer (Bankruptcy Estate)",
+                lblSearchComp: "Search Company", infSearchComp: "Fetches data from Brønnøysund.",
+                lblCompName: "Company Name", lblOrgNr: "Org. Number",
+                secBankrupt: "Bankruptcy & Periods",
+                lblBankDate: "Bankruptcy Date", infBankDate: "Start of NAV coverage.",
+                lblPrePeriod: "Outstanding Wage Period", infPrePeriod: "Time worked before bankruptcy without pay.",
+                lblFrom: "From", lblTo: "To",
+                secSalary: "Salary & Allowances",
+                lblRate: "Hourly Rate", infRate: "Gross hourly wage.",
+                lblPos: "Position %", infPos: "Used for calculation.",
+                lblFpRate: "Holiday Pay Rate", infFpRate: "10.2% or 12%.",
+                lblAllowances: "Allowances & Expenses", infAllowances: "Add extras/expenses.",
+                btnAddAllow: "Add Claim",
+                secClaims: "Claims Submission",
+                secClaimA: "A. Before Bankruptcy",
+                lblCalcHours: "Hour Calculation", infCalcHours: "Help counting hours.",
+                lblWorkDays: "Work Days", lblRedDays: "Public Holidays",
+                lblTotalHours: "Total Hours", infTotalHours: "Auto-calculated sum.",
+                lblTravelDays: "Days (Travel)", infTravelDays: "Travel days in period.",
+                secClaimB: "B. Notice Period (1 month)",
+                lblHours: "Hours (Normal)", infAutoH: "Auto for 1 month.",
+                infTravelB: "Normally 0.",
+                lblDeduct: "Deduction (Income/NAV)", infDeduct: "Salary/Benefits received.",
+                secFp: "Holiday Pay & Pension",
+                lblFpLast: "Earned Last Year", infFpLast: "Only if NOT paid.",
+                lblFpThis: "Earned This Year", infFpThis: "Jan 1st to end.",
+                infFpAuto: "<b>Auto:</b> FP for period A and B is auto-calculated.",
+                lblPension: "Missing Pension (OTP)", infPension: "Deducted but not paid.",
+                lblPreview: "Preview",
+                thDesc: "Description", thPeriod: "Period", thAmount: "Amount", thTotal: "TOTAL CLAIM",
+                lblNetEst: "Est. Payout (Net):", lblTotalGross: "Total Gross",
+                btnPdf: "Generate PDF"
+            },
+            lt: {
+                appTitle: "KonkursKalk",
+                secPersonal: "Asmens duomenys ir mokesčiai",
+                lblFname: "Vardas", infFname: "Jūsų oficialus vardas.",
+                lblLname: "Pavardė", infLname: "Jūsų pavardė.",
+                lblDob: "Gimimo data", infDob: "Naudojama identifikacijai.",
+                lblTax: "Mokesčių %", infTax: "Naudojama tik apytiksliam skaičiavimui.",
+                lblAddr: "Adresas", infAddr: "Jūsų gyvenamoji vieta.",
+                lblPhone: "Telefonas", lblEmail: "El. paštas",
+                secEmployer: "Darbdavys (Bankroto administratorius)",
+                lblSearchComp: "Ieškoti įmonės", infSearchComp: "Duomenys iš Brønnøysund registro.",
+                lblCompName: "Įmonės pavadinimas", lblOrgNr: "Įmonės kodas",
+                secBankrupt: "Bankrotas ir laikotarpiai",
+                lblBankDate: "Bankroto data", infBankDate: "NAV padengimo pradžia.",
+                lblPrePeriod: "Neišmokėtos algos periodas", infPrePeriod: "Laikas dirbtas prieš bankrotą be algos.",
+                lblFrom: "Nuo", lblTo: "Iki",
+                secSalary: "Alga ir priedai",
+                lblRate: "Valandinis (kr)", infRate: "Brutto valandinis.",
+                lblPos: "Etato %", infPos: "Naudojama skaičiavimams.",
+                lblFpRate: "Atostoginių %", infFpRate: "10.2% arba 12%.",
+                lblAllowances: "Priedai ir išlaidos", infAllowances: "Pridėti priedus/išlaidas.",
+                btnAddAllow: "Pridėti",
+                secClaims: "Reikalavimai",
+                secClaimA: "A. Prieš Bankrotą",
+                lblCalcHours: "Valandų skaičiuoklė", infCalcHours: "Pagalba skaičiuojant.",
+                lblWorkDays: "Darbo dienos", lblRedDays: "Šventinės d.",
+                lblTotalHours: "Viso valandų", infTotalHours: "Auto sumavimas.",
+                lblTravelDays: "Dienos (Kelionės)", infTravelDays: "Komandiruotės dienos.",
+                secClaimB: "B. Oppsigelse (1 mėn)",
+                lblHours: "Valandos", infAutoH: "Auto 1 mėnesiui.",
+                infTravelB: "Paprastai 0.",
+                lblDeduct: "Atskaitoma (Pajamos/NAV)", infDeduct: "Gauta alga ar pašalpos.",
+                secFp: "Atostoginiai ir Pensija",
+                lblFpLast: "Pernai metai", infFpLast: "Tik jei NEIŠMOKĖTA.",
+                lblFpThis: "Šie metai", infFpThis: "Nuo sausio 1 d.",
+                infFpAuto: "<b>Auto:</b> A ir B periodų atostoginiai skaičiuojami automatiškai.",
+                lblPension: "Dingusi Pensija (OTP)", infPension: "Nuskaičiuota, bet nepervesta.",
+                lblPreview: "Peržiūra",
+                thDesc: "Aprašymas", thPeriod: "Periodas", thAmount: "Suma", thTotal: "VISO",
+                lblNetEst: "Est. į rankas (Netto):", lblTotalGross: "Viso Brutto",
+                btnPdf: "Generuoti PDF"
+            },
+            pl: {
+                appTitle: "KonkursKalk",
+                secPersonal: "Dane osobowe i podatki",
+                lblFname: "Imię", infFname: "Twoje imię.",
+                lblLname: "Nazwisko", infLname: "Twoje nazwisko.",
+                lblDob: "Data urodzenia", infDob: "Do identyfikacji.",
+                lblTax: "Podatek %", infTax: "Tylko do szacunków.",
+                lblAddr: "Adres", infAddr: "Twój obecny adres.",
+                lblPhone: "Telefon", lblEmail: "E-mail",
+                secEmployer: "Pracodawca",
+                lblSearchComp: "Szukaj firmy", infSearchComp: "Dane z rejestru.",
+                lblCompName: "Nazwa firmy", lblOrgNr: "Numer org.",
+                secBankrupt: "Bankructwo i okresy",
+                lblBankDate: "Data bankructwa", infBankDate: "Start gwarancji NAV.",
+                lblPrePeriod: "Zaległy okres", infPrePeriod: "Praca bez wypłaty przed bankructwem.",
+                lblFrom: "Od", lblTo: "Do",
+                secSalary: "Płaca i dodatki",
+                lblRate: "Stawka (kr)", infRate: "Brutto na godzinę.",
+                lblPos: "Etat %", infPos: "Do obliczeń.",
+                lblFpRate: "Stawka urlopowa", infFpRate: "10.2% lub 12%.",
+                lblAllowances: "Dodatki i wydatki", infAllowances: "Dodaj pozycje.",
+                btnAddAllow: "Dodaj",
+                secClaims: "Roszczenia",
+                secClaimA: "A. Przed bankructwem",
+                lblCalcHours: "Licznik godzin", infCalcHours: "Pomoc w liczeniu.",
+                lblWorkDays: "Dni robocze", lblRedDays: "Święta",
+                lblTotalHours: "Suma godzin", infTotalHours: "Auto suma.",
+                lblTravelDays: "Dni (Podróż)", infTravelDays: "Dni w delegacji.",
+                secClaimB: "B. Wypowiedzenie (1 msc)",
+                lblHours: "Godziny", infAutoH: "Auto za 1 msc.",
+                infTravelB: "Zwykle 0.",
+                lblDeduct: "Potrącenia", infDeduct: "Inne dochody/NAV.",
+                secFp: "Urlopowe i Emerytura",
+                lblFpLast: "Zeszły rok", infFpLast: "Tylko jeśli NIE zapłacono.",
+                lblFpThis: "Ten rok", infFpThis: "Od 1 stycznia.",
+                infFpAuto: "<b>Auto:</b> Urlopowe za A i B liczone autom.",
+                lblPension: "Brakująca emerytura", infPension: "Potrącona, niewpłacona.",
+                lblPreview: "Podgląd",
+                thDesc: "Opis", thPeriod: "Okres", thAmount: "Kwota", thTotal: "RAZEM",
+                lblNetEst: "Est. wypłata (Netto):", lblTotalGross: "Razem Brutto",
+                btnPdf: "Generuj PDF"
+            },
+            ru: {
+                appTitle: "KonkursKalk",
+                secPersonal: "Личные данные и налог",
+                lblFname: "Имя", infFname: "Юридическое имя.",
+                lblLname: "Фамилия", infLname: "Ваша фамилия.",
+                lblDob: "Дата рождения", infDob: "Для идентификации.",
+                lblTax: "Налог %", infTax: "Только для оценки.",
+                lblAddr: "Адрес", infAddr: "Текущий адрес.",
+                lblPhone: "Телефон", lblEmail: "Email",
+                secEmployer: "Работодатель",
+                lblSearchComp: "Поиск фирмы", infSearchComp: "Данные из реестра.",
+                lblCompName: "Название", lblOrgNr: "Рег. номер",
+                secBankrupt: "Банкротство и Периоды",
+                lblBankDate: "Дата банкротства", infBankDate: "Начало выплат NAV.",
+                lblPrePeriod: "Период задолженности", infPrePeriod: "Работа без оплаты до банкротства.",
+                lblFrom: "С", lblTo: "По",
+                secSalary: "Зарплата и надбавки",
+                lblRate: "Ставка (кр)", infRate: "Брутто в час.",
+                lblPos: "Ставка %", infPos: "Для расчетов.",
+                lblFpRate: "Отпускные %", infFpRate: "10.2% или 12%.",
+                lblAllowances: "Надбавки и расходы", infAllowances: "Добавить.",
+                btnAddAllow: "Добавить",
+                secClaims: "Требования",
+                secClaimA: "A. До банкротства",
+                lblCalcHours: "Расчет часов", infCalcHours: "Помощь в подсчете.",
+                lblWorkDays: "Рабочие дни", lblRedDays: "Праздники",
+                lblTotalHours: "Всего часов", infTotalHours: "Авто расчет.",
+                lblTravelDays: "Дни (Команд.)", infTravelDays: "Дни в поездке.",
+                secClaimB: "B. Увольнение (1 мес)",
+                lblHours: "Часы", infAutoH: "Авто за 1 мес.",
+                infTravelB: "Обычно 0.",
+                lblDeduct: "Вычеты", infDeduct: "Другой доход/NAV.",
+                secFp: "Отпускные и Пенсия",
+                lblFpLast: "За прошлый год", infFpLast: "Только если НЕ выплачено.",
+                lblFpThis: "За этот год", infFpThis: "С 1 января.",
+                infFpAuto: "<b>Авто:</b> Отпускные за A и B считаются авто.",
+                lblPension: "Пенсия (OTP)", infPension: "Удержана, но не внесена.",
+                lblPreview: "Предпросмотр",
+                thDesc: "Описание", thPeriod: "Период", thAmount: "Сумма", thTotal: "ИТОГО",
+                lblNetEst: "Прим. на руки (Нетто):", lblTotalGross: "Всего Брутто",
+                btnPdf: "Создать PDF"
+            }
+        };
+
+        // --- STATE & CONFIG ---
+        const DB_KEY = 'konkurs_pro_v5_6_data'; 
+        let state = {
+            lang: 'no',
+            inputs: {},
+            allowances: [
+                { id: 1, name: "Verktøy", val: 1.85, unit: "hour", cat: "labor" }, 
+                { id: 2, name: "Reise/Diett", val: 0, unit: "day", cat: "expense" }
+            ]
+        };
+
+        const getEl = (id) => document.getElementById(id);
+        const formatKr = (n) => n.toLocaleString('no-NO', { style: 'currency', currency: 'NOK', maximumFractionDigits: 0 });
+        const formatDate = (s) => (s && typeof s === 'string') ? s.split('-').reverse().join('.') : '';
+        const num = (v) => parseFloat(v) || 0;
+
+        // --- INIT ---
+        function init() {
+            try {
+                const stored = localStorage.getItem(DB_KEY);
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if(parsed && parsed.inputs) state = { ...state, ...parsed };
+                        if(state.lang) {
+                            getEl('langSelect').value = state.lang;
+                            updateLangUI();
+                        }
+                    } catch (e) {}
+                }
+
+                document.querySelectorAll('input, select').forEach(el => {
+                    if(el.id && el.id !== 'langSelect' && state.inputs[el.id] !== undefined) el.value = state.inputs[el.id];
+                });
+
+                // Defaults
+                if(!state.inputs.fpLastStart) {
+                    const y = new Date().getFullYear() - 1;
+                    getEl('fpLastStart').value = `${y}-01-01`;
+                    getEl('fpLastEnd').value = `${y}-12-31`;
+                }
+                if(!state.inputs.fpThisStart) {
+                    const y = new Date().getFullYear();
+                    getEl('fpThisStart').value = `${y}-01-01`;
+                }
+
+                // Listeners
+                ['bankruptcyDate', 'positionPercent'].forEach(id => getEl(id)?.addEventListener('change', autoCalcNotice));
+                ['preDateStart'].forEach(id => getEl(id)?.addEventListener('change', autoSetPreEnd));
+                
+                // Days Listeners
+                ['manualDays', 'manualRedDays'].forEach(id => {
+                     getEl(id)?.addEventListener('input', (e) => {
+                         state.inputs[e.target.id] = e.target.value;
+                         autoCalcHoursBefore();
+                     });
+                });
+
+                document.querySelectorAll('input, select').forEach(el => {
+                    if(el.id && el.id !== 'manualDays' && el.id !== 'manualRedDays' && el.id !== 'companySearch' && el.id !== 'langSelect') {
+                        el.addEventListener('input', (e) => {
+                            state.inputs[e.target.id] = e.target.value;
+                            save();
+                            try { calc(); } catch(err) {}
+                        });
+                    }
+                });
+
+                renderAllowances();
+                calc();
+            } catch (err) { alert("Refresh page"); }
+        }
+
+        function save() {
+            localStorage.setItem(DB_KEY, JSON.stringify(state));
+            const ind = getEl('save-indicator');
+            if(ind) { ind.style.opacity = '1'; setTimeout(() => ind.style.opacity = '0', 1000); }
+        }
+
+        function toggleInfo(id) {
+            document.querySelectorAll('.info-content.active').forEach(el => { if(el.id !== id) el.classList.remove('active'); });
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('active');
+        }
+
+        // --- LANGUAGE ---
+        function changeLang(lang) {
+            state.lang = lang;
+            save();
+            updateLangUI();
+        }
+
+        function updateLangUI() {
+            const dict = T[state.lang] || T.no;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                // IMPORTANT: Do NOT translate the title "KonkursKalk"
+                if(key !== 'appTitle' && dict[key]) el.innerHTML = dict[key];
+            });
+        }
+
+        // --- COMPANY SEARCH ---
+        let searchTimeout;
+        function searchCompany(query) {
+            clearTimeout(searchTimeout);
+            const sug = getEl('companySuggestions');
+            if(query.length < 3) { sug.classList.add('hidden'); return; }
+            
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`https://data.brreg.no/enhetsregisteret/api/enheter?navn=${query}&size=5`);
+                    const data = await res.json();
+                    sug.innerHTML = '';
+                    if(data._embedded && data._embedded.enheter) {
+                        sug.classList.remove('hidden');
+                        data._embedded.enheter.forEach(comp => {
+                            const div = document.createElement('div');
+                            div.className = 'suggestion-item';
+                            div.innerHTML = `<b>${comp.navn}</b> <span class="text-gray-500 text-xs">(${comp.organisasjonsnummer})</span>`;
+                            div.onclick = () => selectCompany(comp);
+                            sug.appendChild(div);
+                        });
+                    } else {
+                        sug.classList.add('hidden');
+                    }
+                } catch(e) { console.error(e); }
+            }, 300);
+        }
+
+        function selectCompany(comp) {
+            getEl('companyName').value = comp.navn;
+            getEl('companyOrg').value = comp.organisasjonsnummer;
+            state.inputs['companyName'] = comp.navn;
+            state.inputs['companyOrg'] = comp.organisasjonsnummer;
+            getEl('companySuggestions').classList.add('hidden');
+            getEl('companySearch').value = '';
+            save();
+            calc();
+        }
+
+        // --- LOGIC ---
+        function autoSetPreEnd() {
+            const s = getEl('preDateStart').value;
+            if(s && s.endsWith('-01')) {
+                const d = new Date(s);
+                const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                getEl('preDateEnd').value = end.toISOString().split('T')[0];
+                state.inputs['preDateEnd'] = getEl('preDateEnd').value;
+                save();
+            }
+        }
+
+        function autoCalcHoursBefore() {
+            const days = num(getEl('manualDays').value);
+            const red = num(getEl('manualRedDays').value);
+            const total = (days + red) * 7.5; 
+            getEl('hoursBefore').value = total.toFixed(1);
+            state.inputs['hoursBefore'] = total.toFixed(1);
+            save();
+            calc();
+        }
+
+        function autoCalcNotice() {
+            const dateStr = getEl('bankruptcyDate').value;
+            const pct = parseFloat(getEl('positionPercent').value) || 100;
+            if (!dateStr) return;
+
+            const start = new Date(dateStr);
+            const end = new Date(start);
+            end.setMonth(end.getMonth() + 1);
+
+            let days = 0;
+            let curr = new Date(start);
+            while(curr < end) {
+                const d = curr.getDay();
+                if(d !== 0 && d !== 6) days++;
+                curr.setDate(curr.getDate() + 1);
+            }
+
+            const hrs = days * 7.5 * (pct / 100);
+            getEl('hoursAfter').value = hrs.toFixed(1);
+            state.inputs['hoursAfter'] = hrs.toFixed(1);
+            save();
+            try { calc(); } catch(e){}
+        }
+
+        // --- ALLOWANCES ---
+        function renderAllowances() {
+            const list = getEl('allowanceList');
+            if(!list) return;
+            list.innerHTML = '';
+            
+            state.allowances.forEach((item, index) => {
+                const badge = item.cat === 'labor' 
+                    ? '<span class="badge badge-tax">LØNN</span>' 
+                    : '<span class="badge badge-free">UTLEGG</span>';
+                
+                const div = document.createElement('div');
+                div.className = 'bg-gray-50 p-3 rounded-lg border border-gray-200 fade-in text-sm';
+                div.innerHTML = `
+                    <div class="flex gap-2 mb-2 items-center">
+                        ${badge}
+                        <input type="text" value="${item.name}" onchange="updAll(${index}, 'name', this.value)" class="modern-input font-semibold flex-grow" placeholder="Navn">
+                        <button onclick="delAll(${index})" class="text-red-400 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="relative col-span-1">
+                            <input type="number" value="${item.val}" onchange="updAll(${index}, 'val', this.value)" class="modern-input" placeholder="0">
+                            <span class="absolute right-2 top-2 text-xs text-gray-400">kr</span>
+                        </div>
+                        <select onchange="updAll(${index}, 'unit', this.value)" class="modern-input modern-select col-span-1">
+                            <option value="hour" ${item.unit === 'hour'?'selected':''}>pr. time</option>
+                            <option value="day" ${item.unit === 'day'?'selected':''}>pr. dag</option>
+                            <option value="month" ${item.unit === 'month'?'selected':''}>pr. mnd</option>
+                        </select>
+                        <select onchange="updAll(${index}, 'cat', this.value)" class="modern-input modern-select col-span-1">
+                            <option value="labor" ${item.cat === 'labor'?'selected':''}>Lønn/Arb.</option>
+                            <option value="expense" ${item.cat === 'expense'?'selected':''}>Utlegg</option>
+                        </select>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        window.addAllowance = () => {
+            state.allowances.push({ id: Date.now(), name: "", val: 0, unit: "hour", cat: "labor" });
+            renderAllowances(); save();
+        };
+        window.delAll = (i) => { state.allowances.splice(i, 1); renderAllowances(); save(); calc(); };
+        window.updAll = (i, k, v) => { state.allowances[i][k] = (k==='val'?parseFloat(v):v); save(); renderAllowances(); calc(); };
+
+        // --- CALC ---
+        function calc() {
+            const rate = num(state.inputs.hourlyRate);
+            const fpRate = num(state.inputs.holidayRate) || 0.12;
+            const taxPct = num(state.inputs.taxPercent);
+            const bDate = state.inputs.bankruptcyDate;
+            const preStart = state.inputs.preDateStart;
+            const preEnd = state.inputs.preDateEnd;
+
+            // Notice Date
+            let noticeStart = bDate ? new Date(bDate) : null;
+            let noticeEnd = null;
+            let noticeStr = '-';
+            if(noticeStart && !isNaN(noticeStart)) {
+                noticeEnd = new Date(noticeStart);
+                noticeEnd.setMonth(noticeEnd.getMonth() + 1);
+                noticeEnd.setDate(noticeEnd.getDate() - 1); 
+                noticeStr = `${formatDate(bDate)} - ${formatDate(noticeEnd.toISOString().split('T')[0])}`;
+            }
+
+            const items = [];
+            let taxableTotal = 0;
+            let taxFreeTotal = 0;
+
+            // 1. Utestående Lønn
+            const h1 = num(state.inputs.hoursBefore);
+            if(h1 > 0) {
+                const amt = h1 * rate;
+                items.push({ 
+                    type: "Bruttolønn", 
+                    desc: "Utestående lønn (Periode A)", 
+                    from: preStart, to: preEnd, 
+                    amt,
+                    formula: `${h1} timer * ${rate} kr`
+                });
+                taxableTotal += amt;
+            }
+
+            // 2. Lønn i Oppsigelsestid
+            const h2 = num(state.inputs.hoursAfter);
+            if(h2 > 0) {
+                const amt = h2 * rate;
+                items.push({ 
+                    type: "Bruttolønn", 
+                    desc: "Lønn i oppsigelsestid (Periode B)", 
+                    from: bDate, to: noticeEnd?.toISOString().split('T')[0], 
+                    amt,
+                    formula: `${h2} timer * ${rate} kr (Beregnet)`
+                });
+                taxableTotal += amt;
+            }
+
+            // 3. Allowances
+            if(state.allowances) {
+                state.allowances.forEach(a => {
+                    const typeLabel = a.cat === 'labor' ? 'Annet arbeidsvederlag' : 'Andre krav';
+                    const isTaxable = a.cat === 'labor';
+                    
+                    // P1
+                    let q1 = 0;
+                    if(a.unit === 'hour') q1 = num(state.inputs.hoursBefore);
+                    if(a.unit === 'day') q1 = num(state.inputs.daysBefore);
+                    if(a.unit === 'month') q1 = (h1 > 0 ? 1 : 0); 
+                    if(q1 > 0 && a.val > 0) {
+                        const amt = q1 * a.val;
+                        items.push({ 
+                            type: typeLabel, 
+                            desc: `${a.name} (Utestående)`, 
+                            from: preStart, to: preEnd, 
+                            amt,
+                            formula: `${q1} ${a.unit==='hour'?'t':a.unit==='day'?'dg':'mnd'} * ${a.val} kr`
+                        });
+                        if(isTaxable) taxableTotal += amt; else taxFreeTotal += amt;
+                    }
+
+                    // P2
+                    let q2 = 0;
+                    if(a.unit === 'hour') q2 = num(state.inputs.hoursAfter);
+                    if(a.unit === 'day') q2 = num(state.inputs.daysAfter);
+                    if(a.unit === 'month') q2 = (h2 > 0 ? 1 : 0);
+                    if(q2 > 0 && a.val > 0) {
+                        const amt = q2 * a.val;
+                        items.push({ 
+                            type: typeLabel, 
+                            desc: `${a.name} (Oppsigelsestid)`, 
+                            from: bDate, to: noticeEnd?.toISOString().split('T')[0], 
+                            amt,
+                            formula: `${q2} ${a.unit==='hour'?'t':a.unit==='day'?'dg':'mnd'} * ${a.val} kr`
+                        });
+                        if(isTaxable) taxableTotal += amt; else taxFreeTotal += amt;
+                    }
+                });
+            }
+
+            // 4. Feriepenger
+            let fpTotal = 0;
+            const fpLast = num(state.inputs.fpLastYear);
+            if(fpLast > 0) {
+                const dStart = state.inputs.fpLastStart || '...';
+                const dEnd = state.inputs.fpLastEnd || '...';
+                items.push({ type: "Feriepenger", desc: `Opptjent i fjor (fra lønnsslipp)`, from: dStart, to: dEnd, amt: fpLast, formula: "Fra lønnsslipp" });
+                fpTotal += fpLast;
+            }
+            
+            const fpThis = num(state.inputs.fpThisYear);
+            if(fpThis > 0) {
+                const dStart = state.inputs.fpThisStart || '...';
+                const dEnd = state.inputs.fpThisEnd || '...';
+                items.push({ type: "Feriepenger", desc: `Opptjent i år (fra lønnsslipp)`, from: dStart, to: dEnd, amt: fpThis, formula: "Fra lønnsslipp" });
+                fpTotal += fpThis;
+            }
+
+            // FP på Utestående (P1)
+            if(h1 > 0) {
+                let p1Base = h1 * rate;
+                state.allowances.filter(a => a.cat === 'labor').forEach(a => {
+                    let q = 0;
+                    if(a.unit === 'hour') q = h1;
+                    if(a.unit === 'day') q = num(state.inputs.daysBefore);
+                    if(a.unit === 'month') q = 1;
+                    p1Base += (q * a.val);
+                });
+                const fpP1 = p1Base * fpRate;
+                if(fpP1 > 0) {
+                    items.push({ 
+                        type: "Feriepenger", 
+                        desc: "Opptjent av utestående lønn (Krav A)", 
+                        from: preStart, to: preEnd, 
+                        amt: fpP1,
+                        formula: `${formatKr(p1Base)} (Grunnlag) * ${(fpRate*100).toFixed(1)}%`
+                    });
+                    fpTotal += fpP1;
+                }
+            }
+
+            // FP på Oppsigelse (P2)
+            if(h2 > 0) {
+                let noticeBase = h2 * rate;
+                state.allowances.filter(a => a.cat === 'labor').forEach(a => {
+                    let q = 0;
+                    if(a.unit === 'hour') q = h2;
+                    if(a.unit === 'day') q = num(state.inputs.daysAfter);
+                    if(a.unit === 'month') q = 1;
+                    noticeBase += (q * a.val);
+                });
+                const fpNotice = noticeBase * fpRate;
+                if(fpNotice > 0) {
+                    items.push({ 
+                        type: "Feriepenger", 
+                        desc: "Opptjent av lønn i oppsigelsestid (Krav B)", 
+                        from: bDate, to: noticeEnd?.toISOString().split('T')[0], 
+                        amt: fpNotice,
+                        formula: `${formatKr(noticeBase)} (Grunnlag) * ${(fpRate*100).toFixed(1)}%`
+                    });
+                    fpTotal += fpNotice;
+                }
+            }
+            taxableTotal += fpTotal;
+
+            // 5. Fradrag / Pensjon
+            const ded = num(state.inputs.deduction);
+            if(ded > 0) items.push({ type: "Fradrag", desc: "Annen inntekt / NAV Dagpenger", from: bDate, to: noticeEnd?.toISOString().split('T')[0], amt: -ded, formula: "Inntekt trukket fra" });
+            
+            const pen = num(state.inputs.missingPension);
+            if(pen > 0) items.push({ type: "Andre krav", desc: "Manglende innbetalt pensjonstrekk", from: preStart, to: preEnd, amt: pen, formula: "Manuelt krav" });
+            
+            // TOTALS
+            let grandTotal = 0;
+            items.forEach(i => grandTotal += i.amt);
+
+            // NET ESTIMATE
+            const taxAmt = taxableTotal * (taxPct / 100);
+            const netEst = taxableTotal - taxAmt + taxFreeTotal + pen - ded;
+
+            // RENDER
+            const pTable = getEl('previewTable');
+            const printTable = getEl('printTableBody');
+            if(pTable) pTable.innerHTML = '';
+            if(printTable) printTable.innerHTML = '';
+
+            items.forEach((item, i) => {
+                const dStr = (item.from && item.to) ? `${formatDate(item.from)} - ${formatDate(item.to)}` : '-';
+                const amtStr = formatKr(item.amt);
+                const formulaStr = item.formula ? `<div class="text-[10px] text-gray-400 italic">${item.formula}</div>` : '';
+
+                if(pTable) pTable.innerHTML += `<tr><td class="py-2"><div class="font-bold text-xs uppercase text-gray-500">${item.type}</div><div>${item.desc}</div>${formulaStr}</td><td class="py-2 font-mono text-xs text-gray-500">${dStr}</td><td class="py-2 text-right font-bold ${item.amt<0?'text-red-600':''}">${amtStr}</td></tr>`;
+                
+                if(printTable) printTable.innerHTML += `<tr><td class="py-2 px-1 text-gray-400 align-top">${i+1}</td><td class="py-2 px-1 align-top"><div class="font-bold text-xs uppercase text-gray-500">${item.type}</div>${item.desc}${formulaStr}</td><td class="py-2 px-1 align-top font-mono text-xs">${dStr}</td><td class="py-2 px-1 align-top text-right font-bold ${item.amt<0?'text-red-600':''}">${amtStr}</td></tr>`;
+            });
+
+            getEl('previewTotal').innerText = formatKr(grandTotal);
+            getEl('displayTotal').innerText = formatKr(grandTotal);
+            getEl('p-total-sum').innerText = formatKr(grandTotal);
+            getEl('displayNet').innerText = formatKr(netEst);
+            getEl('p-netto').innerText = formatKr(netEst);
+
+            // Print Info
+            getEl('p-personalia').innerHTML = `<p>${state.inputs.firstName||''} ${state.inputs.lastName||''}</p><p>${state.inputs.address||''}</p><p>Født: ${formatDate(state.inputs.dob)}</p><p>Tlf: ${state.inputs.phone||''}</p><p>${state.inputs.email||''}</p>`;
+            getEl('p-comp-name').innerText = state.inputs.companyName || '-';
+            getEl('p-comp-org').innerText = state.inputs.companyOrg || '-';
+            getEl('p-bank-date').innerText = formatDate(bDate);
+            getEl('p-notice-dates').innerText = noticeStr;
+            getEl('p-rate').innerText = formatKr(rate);
+            getEl('p-tax').innerText = taxPct + ' %';
+            // Signature date only, no field
+            getEl('p-sign-date').innerText = new Date().toLocaleDateString('no-NO');
+        }
+
+        window.exportData = () => { const b = new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`lonnsgaranti_nav_${new Date().toISOString().slice(0,10)}.json`; a.click(); };
+        window.importData = (inp) => { const f = inp.files[0]; if(!f)return; const r = new FileReader(); r.onload=e=>{ try{ state=JSON.parse(e.target.result); localStorage.setItem(DB_KEY,JSON.stringify(state)); location.reload(); }catch(x){alert('Feil fil');} }; r.readAsText(f); };
+
+        init();
+    </script>
+</body>
+</html>

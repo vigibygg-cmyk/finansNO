@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiVyGa - Smart AI Text Assistant & Professional Writer</title>
+    
+    <!-- Advanced SEO & Meta Tags -->
+    <meta name="description" content="AiVyGa is a professional AI assistant for immigrants and international professionals. Create perfect CVs, cover letters, formal emails, and simplify complex official documents. Supports ChatGPT, Claude, Gemini, Grok, and Qwen.">
+    <meta name="keywords" content="AiVyGa, Vytautas Giedraitis, AI assistant, CV writing AI, cover letter generator, Grok AI, Qwen AI, Norway immigration help, formal email AI, simplify official documents, NAV help, UDI assistance, professional writer tool">
+    <meta name="author" content="Vytautas Giedraitis">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="AiVyGa - Smart AI Assistant">
+    <meta property="og:description" content="Master professional communication in any language. Optimized for immigrants and professionals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aivyga.com">
+    <meta property="og:image" content="https://aivyga.com/og-image.jpg">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #e2e8f0;
+            --input-bg: #ffffff;
+            --success: #10b981;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; transition: all 0.2s ease-in-out; }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            letter-spacing: -0.7px;
+        }
+        
+        .logo i { color: var(--accent); }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .lang-select {
+            appearance: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 40px 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%22%20fill%3D%22none%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .step-pill {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-btn {
+            color: var(--text-sub);
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .info-btn:hover { color: var(--accent); }
+
+        .tooltip {
+            visibility: hidden;
+            width: 260px;
+            background-color: var(--text-main);
+            color: #fff;
+            text-align: left;
+            border-radius: 12px;
+            padding: 15px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 130%;
+            left: 50%;
+            margin-left: -130px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.5;
+            pointer-events: none;
+            box-shadow: var(--shadow-lg);
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-main) transparent transparent transparent;
+        }
+
+        .info-btn:hover .tooltip { visibility: visible; opacity: 1; }
+
+        textarea {
+            width: 100%;
+            height: 550px;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.7;
+            resize: none;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.08);
+        }
+
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px 18px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: var(--input-bg);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        select:focus { border-color: var(--accent); }
+
+        .model-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .model-option {
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .model-option i { font-size: 20px; }
+        .model-option span { font-size: 11px; font-weight: 800; }
+
+        .model-option.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+            color: var(--accent);
+        }
+        
+        .badge-recommended {
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            background: var(--success);
+            color: white;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: none;
+        }
+        .model-option.recommended .badge-recommended { display: block; }
+
+        .btn-execute {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 6px 18px 0 rgba(59, 130, 246, 0.35);
+            margin-top: 10px;
+        }
+
+        .btn-execute:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            padding: 50px 20px;
+            margin-top: 50px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .copyright { font-size: 14px; color: var(--text-sub); font-weight: 500; }
+        .footer-links a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-main);
+            color: white;
+            padding: 18px 36px;
+            border-radius: 60px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            z-index: 9999;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 1000px) {
+            .workspace { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 20px; }
+            .footer-content { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AiVyGa</span>
+        </div>
+        <div class="header-actions">
+            <select class="lang-select" id="pageLang" onchange="changeUILanguage(); saveData();">
+                <option value="en">English</option>
+                <option value="no">Norsk</option>
+                <option value="lt">Lietuvių</option>
+                <option value="pl">Polski</option>
+                <option value="ru">Русский</option>
+                <option value="uk">Українська</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+            </select>
+            <a href="https://translate.google.com/" target="_blank" style="text-decoration: none; font-size: 14px; font-weight: 800; color: var(--text-sub); display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-language"></i> <span id="ui-google-translate">Translate</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <div class="input-section card">
+            <div class="section-header">
+                <span class="step-pill">Step 1</span>
+                <span class="section-title">
+                    <span id="ui-step-1">Source Content</span>
+                    <span class="info-btn">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="tooltip" id="tip-step-1">Paste the text you want to work with. Your text is auto-saved locally.</span>
+                    </span>
+                </span>
+            </div>
+            <textarea id="userText" oninput="saveData()" placeholder="Paste your text here..."></textarea>
+        </div>
+
+        <aside class="controls-section card">
+            <div class="section-header">
+                <span class="step-pill">Step 2</span>
+                <span class="section-title">
+                    <span id="ui-step-2">Intelligence Settings</span>
+                    <span class="info-btn">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="tooltip" id="tip-step-2">Configure how the AI should process your text.</span>
+                    </span>
+                </span>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label-row">
+                    <label id="ui-label-action">Service Type</label>
+                    <span class="info-btn">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="tooltip" id="tip-action">Select your goal. AI models will automatically switch to the best fit.</span>
+                    </span>
+                </div>
+                <select id="actionType" onchange="autoSelectBestModel(); saveData();"></select>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label-row">
+                    <label id="ui-label-lang">Response Language</label>
+                    <span class="info-btn">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="tooltip" id="tip-lang">The language the AI model will use to provide the final answer.</span>
+                    </span>
+                </div>
+                <select id="targetLanguage" onchange="saveData()">
+                    <option value="auto">⚡ Auto (Same as input)</option>
+                    <option value="Lithuanian">🇱🇹 Lietuvių</option>
+                    <option value="English">🇬🇧 English</option>
+                    <option value="Norwegian">🇳🇴 Norsk</option>
+                    <option value="Russian">🇷🇺 Русский</option>
+                    <option value="Polish">🇵🇱 Polski</option>
+                    <option value="German">🇩🇪 Deutsch</option>
+                    <option value="French">🇫🇷 Français</option>
+                    <option value="Ukrainian">🇺🇦 Українська</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label-row">
+                    <label id="ui-step-3">AI Engine</label>
+                    <span class="info-btn">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="tooltip" id="tip-model">Best model is auto-selected based on task type.</span>
+                    </span>
+                </div>
+                <div class="model-selector">
+                    <div class="model-option" id="model-chatgpt" onclick="selectModel('chatgpt', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-solid fa-bolt" style="color: #10a37f;"></i>
+                        <span>ChatGPT</span>
+                    </div>
+                    <div class="model-option" id="model-gemini" onclick="selectModel('gemini', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-brands fa-google" style="color: #4285f4;"></i>
+                        <span>Gemini</span>
+                    </div>
+                    <div class="model-option" id="model-claude" onclick="selectModel('claude', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-solid fa-robot" style="color: #d97757;"></i>
+                        <span>Claude</span>
+                    </div>
+                    <div class="model-option" id="model-grok" onclick="selectModel('grok', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-solid fa-terminal" style="color: #000000;"></i>
+                        <span>Grok</span>
+                    </div>
+                    <div class="model-option" id="model-qwen" onclick="selectModel('qwen', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-solid fa-brain" style="color: #6366f1;"></i>
+                        <span>Qwen</span>
+                    </div>
+                    <div class="model-option" id="model-minimax" onclick="selectModel('minimax', this, true); saveData();">
+                        <span class="badge-recommended">BEST</span>
+                        <i class="fa-solid fa-dragon" style="color: #f59e0b;"></i>
+                        <span>MiniMax</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-execute" onclick="executeAI()">
+                <span id="ui-execute">Generate Professional Prompt</span>
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </aside>
+    </main>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <div class="copyright">© 2026 AiVyGa. Developed by <strong>Vytautas Giedraitis</strong>.</div>
+        <div class="footer-links">
+            <a href="contact.html"><i class="fa-solid fa-comment-dots"></i> <span id="ui-contact">Contact & Support</span></a>
+        </div>
+    </div>
+</footer>
+
+<div class="toast" id="toast">
+    <i class="fa-solid fa-check-circle" style="color: #10b981;"></i>
+    <span id="ui-toast">Prompt copied!</span>
+</div>
+
+<script>
+    const translations = {
+        en: {
+            appName: "AiVyGa", googleTranslate: "Translate",
+            step1: "Source Content", placeholder: "Paste your text, email, job ad, or contract part here...",
+            tipStep1: "Paste the text you want to work with. Your text is auto-saved locally.",
+            step2: "Intelligence Settings", tipStep2: "Configure how the AI should process your text. Recommended models are auto-selected.",
+            labelAction: "Service Type", tipAction: "Select your goal. AI models will automatically switch to the best fit.",
+            labelLang: "Response Language", tipLang: "The language the AI model will use to provide the final answer.",
+            step3: "AI Engine", tipModel: "Best model is auto-selected based on task type.",
+            autoLang: "⚡ Auto (Original)", execute: "Generate Professional Prompt", 
+            toast: "Prompt copied! Now paste it in the AI window.", alertText: "Please paste content first.",
+            contact: "Contact & Support",
+            actions: [
+                { val: "improve", text: "✍️ Fix Grammar & Professionalism" },
+                { val: "simplify", text: "💡 Simplify Complex/Official Text" },
+                { val: "reply_gen", text: "✉️ Suggest Replies to Email/Message" },
+                { val: "cover_letter", text: "💼 Write Cover Letter (from Job Ad)" },
+                { val: "cv_fix", text: "📄 Improve CV / Resume" },
+                { val: "contract_key", text: "🔍 Extract Key Info from Contract" },
+                { val: "email", text: "📧 Make Formal Email Draft" },
+                { val: "inquiry_official", text: "🏛️ Official Inquiry (Institutions)" },
+                { val: "school_note", text: "🏫 Message to School/Kindergarten" },
+                { val: "medical_note", text: "🏥 Note for Doctor/Clinic" },
+                { val: "neighbor_note", text: "🏠 Message to Neighbors" },
+                { val: "summary", text: "📝 Summarize Content" },
+                { val: "translate", text: "🌐 Professional Translation" }
+            ]
+        },
+        no: {
+            appName: "AiVyGa", googleTranslate: "Oversetter",
+            step1: "Kildetekst", placeholder: "Lim inn tekst, e-post, jobbannonse eller kontrakt her...",
+            tipStep1: "Lim inn teksten din. Den lagres automatisk lokalt.",
+            step2: "Innstillinger", tipStep2: "Konfigurer hvordan AI skal behandle teksten.",
+            labelAction: "Tjenestetype", tipAction: "Velg målet ditt. AI-modeller bytter automatisk til det beste alternativet.",
+            labelLang: "Svarspråk", tipLang: "Språket AI-modellen vil bruke for det endelige svaret.",
+            step3: "AI-motor", tipModel: "Beste modell velges automatisk basert på oppgaven.",
+            autoLang: "⚡ Auto (Original)", execute: "Generer profesjonell instruksjon", 
+            toast: "Instruksjon kopiert! Lim den inn i AI-vinduet.", alertText: "Vennligst lim inn innhold først.",
+            contact: "Kontakt og støtte",
+            actions: [
+                { val: "improve", text: "✍️ Rett grammatikk og stil" },
+                { val: "simplify", text: "💡 Forenkle komplisert tekst" },
+                { val: "reply_gen", text: "✉️ Foreslå svar på e-post" },
+                { val: "cover_letter", text: "💼 Skriv søknadsbrev" },
+                { val: "cv_fix", text: "📄 Forbedre CV" },
+                { val: "contract_key", text: "🔍 Hent ut viktig info fra kontrakt" },
+                { val: "email", text: "📧 Lag formell e-post" },
+                { val: "inquiry_official", text: "🏛️ Offentlig henvendelse" },
+                { val: "school_note", text: "🏫 Melding til skole/barnehage" },
+                { val: "medical_note", text: "🏥 Notat til lege/klinikk" },
+                { val: "neighbor_note", text: "🏠 Melding til naboer" },
+                { val: "summary", text: "📝 Lag sammendrag" },
+                { val: "translate", text: "🌐 Profesjonell oversettelse" }
+            ]
+        },
+        lt: {
+            appName: "AiVyGa", googleTranslate: "Vertėjas",
+            step1: "Pradinis tekstas", placeholder: "Įklijuokite tekstą, el. laišką, skelbimą ar sutartį čia...",
+            tipStep1: "Įklijuokite tekstą. Jis automatiškai išsaugomas jūsų naršyklėje.",
+            step2: "Išmanieji nustatymai", tipStep2: "Konfigūruokite AI apdorojimą. Geriausi modeliai parenkami automatiškai.",
+            labelAction: "Paslaugos tipas", tipAction: "Pasirinkite tikslą. AI modelis bus parinktas automatiškai.",
+            labelLang: "Atsakymo kalba", tipLang: "Kalba, kuria AI modelis parašys galutinį atsakymą.",
+            step3: "AI variklis", tipModel: "Geriausias modelis parenkamas pagal užduoties tipą.",
+            autoLang: "⚡ Auto (Pradinė)", execute: "Generuoti profesionalią instrukciją", 
+            toast: "Instrukcija nukopijuota! Įklijuokite į AI langą.", alertText: "Pirmiausia įklijuokite tekstą.",
+            contact: "Kontaktai ir pagalba",
+            actions: [
+                { val: "improve", text: "✍️ Taisyti gramatiką ir stilių" },
+                { val: "simplify", text: "💡 Supaprastinti sudėtingą tekstą" },
+                { val: "reply_gen", text: "✉️ Pasiūlyti atsakymus į laišką" },
+                { val: "cover_letter", text: "💼 Rašyti motyvacinį laišką" },
+                { val: "cv_fix", text: "📄 Patobulinti CV" },
+                { val: "contract_key", text: "🔍 Svarbiausia informacija sutartyje" },
+                { val: "email", text: "📧 Paruošti profesionalų laišką" },
+                { val: "inquiry_official", text: "🏛️ Užklausa institucijoms" },
+                { val: "school_note", text: "🏫 Žinutė mokyklai/darželiui" },
+                { val: "medical_note", text: "🏥 Raštelis gydytojui" },
+                { val: "neighbor_note", text: "🏠 Žinutė kaimynams" },
+                { val: "summary", text: "📝 Padaryti santrauką" },
+                { val: "translate", text: "🌐 Profesionalus vertimas" }
+            ]
+        },
+        pl: {
+            appName: "AiVyGa", googleTranslate: "Tłumacz",
+            step1: "Treść źródłowa", placeholder: "Wklej tekst, e-mail, ogłoszenie lub umowę tutaj...",
+            tipStep1: "Wklej tekst, nad którym chcesz pracować. Twoja treść jest automatycznie zapisywana lokalnie.",
+            step2: "Ustawienia inteligencji", tipStep2: "Skonfiguruj, jak AI ma przetworzyć Twój tekst. Zalecane modele są wybierane automatycznie.",
+            labelAction: "Typ usługi", tipAction: "Wybierz swój cel. Modele AI automatycznie przełączą się na najlepsze dopasowanie.",
+            labelLang: "Język odpowiedzi", tipLang: "Język, którego model AI użyje do udzielenia ostatecznej odpowiedzi.",
+            step3: "Silnik AI", tipModel: "Najlepszy model jest wybierany automatycznie na podstawie typu zadania.",
+            autoLang: "⚡ Auto (Oryginalny)", execute: "Generuj profesjonalną instrukcję", 
+            toast: "Instrukcja skopiowana! Wklej ją w oknie AI.", alertText: "Najpierw wklej treść.",
+            contact: "Kontakt i wsparcie",
+            actions: [
+                { val: "improve", text: "✍️ Popraw gramatykę i styl" },
+                { val: "simplify", text: "💡 Uprość złożony tekst" },
+                { val: "reply_gen", text: "✉️ Zasugeruj odpowiedzi na e-mail" },
+                { val: "cover_letter", text: "💼 Napisz list motywacyjny" },
+                { val: "cv_fix", text: "📄 Ulepsz CV" },
+                { val: "contract_key", text: "🔍 Wyciągnij kluczowe info z umowy" },
+                { val: "email", text: "📧 Napisz formalny e-mail" },
+                { val: "inquiry_official", text: "🏛️ Zapytanie oficjalne" },
+                { val: "school_note", text: "🏫 Wiadomość do szkoły/przedszkola" },
+                { val: "medical_note", text: "🏥 Notatka dla lekarza" },
+                { val: "neighbor_note", text: "🏠 Wiadomość do sąsiadów" },
+                { val: "summary", text: "📝 Zrób podsumowanie" },
+                { val: "translate", text: "🌐 Profesjonalne tłumaczenie" }
+            ]
+        },
+        ru: {
+            appName: "AiVyGa", googleTranslate: "Переводчик",
+            step1: "Исходный текст", placeholder: "Вставьте текст, письмо, вакансию или часть договора...",
+            tipStep1: "Вставьте текст, с которым хотите работать. Он автоматически сохраняется локально.",
+            step2: "Настройки интеллекта", tipStep2: "Настройте способ обработки текста. Рекомендуемые модели выбираются автоматически.",
+            labelAction: "Тип услуги", tipAction: "Выберите вашу цель. Модели ИИ автоматически переключатся на подходящую.",
+            labelLang: "Язык ответа", tipLang: "Язык, на котором ИИ составит финальный ответ.",
+            step3: "ИИ движок", tipModel: "Лучшая модель выбирается автоматически в зависимости от задачи.",
+            autoLang: "⚡ Авто (Оригинал)", execute: "Создать проф. инструкцию", 
+            toast: "Инструкция скопирована! Вставьте её в окно ИИ.", alertText: "Сначала вставьте текст.",
+            contact: "Контакт и поддержка",
+            actions: [
+                { val: "improve", text: "✍️ Исправить грамматику и стиль" },
+                { val: "simplify", text: "💡 Упростить сложный текст" },
+                { val: "reply_gen", text: "✉️ Предложить ответы на письмо" },
+                { val: "cover_letter", text: "💼 Написать сопроводительное письмо" },
+                { val: "cv_fix", text: "📄 Улучшить резюме" },
+                { val: "contract_key", text: "🔍 Извлечь главное из договора" },
+                { val: "email", text: "📧 Составить офиц. письмо" },
+                { val: "inquiry_official", text: "🏛️ Официальный запрос" },
+                { val: "school_note", text: "🏫 Сообщение в школу/садик" },
+                { val: "medical_note", text: "🏥 Заметка для врача" },
+                { val: "neighbor_note", text: "🏠 Сообщение соседям" },
+                { val: "summary", text: "📝 Сделать краткое изложение" },
+                { val: "translate", text: "🌐 Профессиональный перевод" }
+            ]
+        },
+        uk: {
+            appName: "AiVyGa", googleTranslate: "Перекладач",
+            step1: "Початковий текст", placeholder: "Вставте текст, лист, вакансію або частину договору...",
+            tipStep1: "Вставте текст, з яким хочете працювати. Він автоматично зберігається локально.",
+            step2: "Налаштування інтелекту", tipStep2: "Налаштуйте спосіб обробки тексту. Рекомендовані моделі вибираються автоматично.",
+            labelAction: "Тип послуги", tipAction: "Виберіть вашу мету. Моделі ШІ автоматично перемикаються на найкращу.",
+            labelLang: "Мова відповіді", tipLang: "Мова, якою ШІ надасть фінальну відповідь.",
+            step3: "ШІ двигун", tipModel: "Найкраща модель вибирається автоматично залежно від завдання.",
+            autoLang: "⚡ Авто (Оригінал)", execute: "Створити проф. інструкцію", 
+            toast: "Інструкцію скопійовано! Вставте її у вікно ШІ.", alertText: "Спочатку вставте текст.",
+            contact: "Контакт та підтримка",
+            actions: [
+                { val: "improve", text: "✍️ Виправити граматику та стиль" },
+                { val: "simplify", text: "💡 Спростити складний текст" },
+                { val: "reply_gen", text: "✉️ Запропонувати відповіді на лист" },
+                { val: "cover_letter", text: "💼 Написати супровідний лист" },
+                { val: "cv_fix", text: "📄 Покращити резюме" },
+                { val: "contract_key", text: "🔍 Витягти головне з договору" },
+                { val: "email", text: "📧 Скласти офіц. лист" },
+                { val: "inquiry_official", text: "🏛️ Офіційний запит" },
+                { val: "school_note", text: "🏫 Повідомлення в школу/садок" },
+                { val: "medical_note", text: "🏥 Нотатка для лікаря" },
+                { val: "neighbor_note", text: "🏠 Повідомлення сусідам" },
+                { val: "summary", text: "📝 Зробити стислий зміст" },
+                { val: "translate", text: "🌐 Професійний переклад" }
+            ]
+        },
+        de: {
+            appName: "AiVyGa", googleTranslate: "Übersetzer",
+            step1: "Quelltext", placeholder: "Text, E-Mail, Anzeige oder Vertrag hier einfügen...",
+            tipStep1: "Fügen Sie den Text ein. Er wird automatisch lokal gespeichert.",
+            step2: "Intelligenz-Einstellungen", tipStep2: "Konfigurieren Sie die KI-Verarbeitung. Empfohlene Modelle werden automatisch gewählt.",
+            labelAction: "Dienstleistung", tipAction: "Wählen Sie Ihr Ziel. KI-Modelle wechseln automatisch zum besten Fit.",
+            labelLang: "Antwortsprache", tipLang: "Die Sprache, die das KI-Modell für die finale Antwort verwendet.",
+            step3: "KI-Modell", tipModel: "Das beste Modell wird basierend auf dem Aufgabentyp automatisch gewählt.",
+            autoLang: "⚡ Auto (Original)", execute: "Profi-Anweisung generieren", 
+            toast: "Anweisung kopiert! Im KI-Fenster einfügen.", alertText: "Bitte zuerst Inhalt einfügen.",
+            contact: "Kontakt & Support",
+            actions: [
+                { val: "improve", text: "✍️ Grammatik & Stil korrigieren" },
+                { val: "simplify", text: "💡 Komplexen Text vereinfachen" },
+                { val: "reply_gen", text: "✉️ Antwortvorschläge für E-Mail" },
+                { val: "cover_letter", text: "💼 Bewerbungsschreiben erstellen" },
+                { val: "cv_fix", text: "📄 Lebenslauf optimieren" },
+                { val: "contract_key", text: "🔍 Wichtigste Infos aus Vertrag" },
+                { val: "email", text: "📧 Formale E-Mail erstellen" },
+                { val: "inquiry_official", text: "🏛️ Offizielle Anfrage" },
+                { val: "school_note", text: "🏫 Nachricht an Schule/Kita" },
+                { val: "medical_note", text: "🏥 Notiz für Arzt/Klinik" },
+                { val: "neighbor_note", text: "🏠 Nachricht an Nachbarn" },
+                { val: "summary", text: "📝 Zusammenfassung erstellen" },
+                { val: "translate", text: "🌐 Professionelle Übersetzung" }
+            ]
+        },
+        fr: {
+            appName: "AiVyGa", googleTranslate: "Traduction",
+            step1: "Contenu source", placeholder: "Collez votre texte, e-mail, annonce ou contrat ici...",
+            tipStep1: "Collez votre texte. Il est automatiquement enregistré localement.",
+            step2: "Paramètres d'intelligence", tipStep2: "Configurez le traitement de l'IA. Les modèles recommandés sont choisis automatiquement.",
+            labelAction: "Type de service", tipAction: "Sélectionnez votre objectif. L'IA passera automatiquement au meilleur modèle.",
+            labelLang: "Langue de réponse", tipLang: "La langue que l'IA utilisera pour fournir la réponse finale.",
+            step3: "Moteur IA", tipModel: "Le meilleur modèle est choisi automatiquement selon la tâche.",
+            autoLang: "⚡ Auto (Original)", execute: "Générer l'instruction pro", 
+            toast: "Instruction copiée ! Collez-la dans l'IA.", alertText: "Veuillez d'abord coller du contenu.",
+            contact: "Contact & Support",
+            actions: [
+                { val: "improve", text: "✍️ Corriger la grammaire & le style" },
+                { val: "simplify", text: "💡 Simplifier un texte complexe" },
+                { val: "reply_gen", text: "✉️ Suggérer des réponses" },
+                { val: "cover_letter", text: "💼 Rédiger une lettre de motivation" },
+                { val: "cv_fix", text: "📄 Optimiser le CV" },
+                { val: "contract_key", text: "🔍 Extraire les infos du contrat" },
+                { val: "email", text: "📧 Créer un e-mail formel" },
+                { val: "inquiry_official", text: "🏛️ Demande officielle" },
+                { val: "school_note", text: "🏫 Message école/crèche" },
+                { val: "medical_note", text: "🏥 Note pour médecin" },
+                { val: "neighbor_note", text: "🏠 Message aux voisins" },
+                { val: "summary", text: "📝 Résumer le contenu" },
+                { val: "translate", text: "🌐 Traduction professionnelle" }
+            ]
+        }
+    };
+
+    let selectedModel = 'chatgpt';
+    let currentLang = 'en';
+    let manualModelSelection = false;
+
+    const actionModelMap = {
+        'improve': 'chatgpt', 'simplify': 'grok', 'reply_gen': 'chatgpt',
+        'cover_letter': 'claude', 'cv_fix': 'claude', 'contract_key': 'qwen',
+        'email': 'claude', 'inquiry_official': 'claude', 'school_note': 'chatgpt',
+        'medical_note': 'chatgpt', 'neighbor_note': 'chatgpt', 'summary': 'qwen',
+        'translate': 'chatgpt'
+    };
+
+    function saveData() {
+        const data = {
+            text: document.getElementById('userText').value,
+            pageLang: document.getElementById('pageLang').value,
+            action: document.getElementById('actionType').value,
+            targetLang: document.getElementById('targetLanguage').value,
+            model: selectedModel,
+            manual: manualModelSelection
+        };
+        localStorage.setItem('ai_vyga_data', JSON.stringify(data));
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('ai_vyga_data');
+        if (!saved) {
+            changeUILanguage();
+            return;
+        }
+        const data = JSON.parse(saved);
+        document.getElementById('userText').value = data.text || '';
+        document.getElementById('pageLang').value = data.pageLang || 'en';
+        changeUILanguage();
+        document.getElementById('actionType').value = data.action || 'improve';
+        document.getElementById('targetLanguage').value = data.targetLang || 'auto';
+        manualModelSelection = data.manual || false;
+        if (data.model) {
+            const el = document.getElementById(`model-${data.model}`);
+            if (el) selectModel(data.model, el, manualModelSelection);
+        }
+        autoSelectBestModel();
+    }
+
+    function autoSelectBestModel() {
+        if (manualModelSelection) return;
+        const action = document.getElementById('actionType').value;
+        const bestModel = actionModelMap[action] || 'chatgpt';
+        document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('recommended'));
+        const recommendedEl = document.getElementById(`model-${bestModel}`);
+        if (recommendedEl) recommendedEl.classList.add('recommended');
+        selectModel(bestModel, recommendedEl, false);
+    }
+
+    function selectModel(model, element, isManual) {
+        if (isManual) manualModelSelection = true;
+        selectedModel = model;
+        document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    function changeUILanguage() {
+        currentLang = document.getElementById('pageLang').value;
+        const t = translations[currentLang] || translations['en'];
+        document.getElementById('ui-google-translate').innerText = t.googleTranslate;
+        document.getElementById('ui-step-1').innerText = t.step1;
+        document.getElementById('tip-step-1').innerText = t.tipStep1;
+        document.getElementById('userText').placeholder = t.placeholder;
+        document.getElementById('ui-step-2').innerText = t.step2;
+        document.getElementById('tip-step-2').innerText = t.tipStep2;
+        document.getElementById('ui-label-action').innerText = t.labelAction;
+        document.getElementById('tip-action').innerText = t.tipAction;
+        document.getElementById('ui-label-lang').innerText = t.labelLang;
+        document.getElementById('tip-lang').innerText = t.tipLang;
+        document.getElementById('ui-step-3').innerText = t.step3;
+        document.getElementById('tip-model').innerText = t.tipModel;
+        document.getElementById('ui-execute').innerText = t.execute;
+        document.getElementById('ui-toast').innerText = t.toast;
+        document.getElementById('ui-contact').innerText = t.contact;
+        document.querySelector('#targetLanguage option[value="auto"]').innerText = t.autoLang;
+        const actionSelect = document.getElementById('actionType');
+        const currentVal = actionSelect.value;
+        actionSelect.innerHTML = '';
+        t.actions.forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a.val; opt.innerText = a.text;
+            actionSelect.appendChild(opt);
+        });
+        if (currentVal) actionSelect.value = currentVal;
+        autoSelectBestModel();
+    }
+
+    function generatePrompt(text, action, lang) {
+        const langPart = lang !== 'auto' ? `Your response MUST be written in ${lang}.` : "Respond in the same language as the input text.";
+        let modelStrategy = "";
+        if (selectedModel === 'claude') {
+            modelStrategy = "\n\nProvide the final output within <result></result> tags. Maintain a sophisticated, natural tone.";
+        } else if (selectedModel === 'gemini') {
+            modelStrategy = "\n\nThink step-by-step. Provide a brief analysis first, then the final result.";
+        } else if (selectedModel === 'grok') {
+            modelStrategy = "\n\nBe direct and concise. Avoid unnecessary preamble. Focus on real-world utility.";
+        } else if (selectedModel === 'qwen') {
+            modelStrategy = "\n\nUse rigorous logical reasoning. Ensure perfect structural formatting and technical accuracy.";
+        } else {
+            modelStrategy = "\n\nProvide a direct, high-quality professional response.";
+        }
+        const prompts = {
+            'improve': `Persona: Professional Editor. Instructions: Fix grammar, punctuation, and style. ${langPart}\n\nContent:\n"${text}"`,
+            'simplify': `Persona: Communication Specialist. Instructions: Rewrite this complex text into simple language. ${langPart}\n\nContent:\n"${text}"`,
+            'reply_gen': `Persona: Strategic Communicator. Instructions: Suggest 3 polite response variants. ${langPart}\n\nInput:\n"${text}"`,
+            'cover_letter': `Persona: Senior Career Consultant. Instructions: Write a high-converting cover letter. ${langPart}\n\nJob Ad:\n"${text}"`,
+            'cv_fix': `Persona: HR Headhunter. Instructions: Transform this CV content into achievement-based profile. ${langPart}\n\nCV:\n"${text}"`,
+            'contract_key': `Persona: Legal Analyst. Instructions: Identify core obligations, payments, and risks. ${langPart}\n\nContract:\n"${text}"`,
+            'email': `Persona: Executive Assistant. Instructions: Draft a formal, professional email. ${langPart}\n\nNotes:\n"${text}"`,
+            'inquiry_official': `Persona: Admin Expert. Instructions: Draft a precise formal inquiry to NAV/UDI/Skatteetaten. ${langPart}\n\nDetails:\n"${text}"`,
+            'school_note': `Persona: Polite Parent. Instructions: Write a respectful note to school staff in Norwegian. ${langPart}\n\nContext:\n"${text}"`,
+            'medical_note': `Persona: Patient. Instructions: Describe symptoms to a doctor in Norwegian objectively. ${langPart}\n\nContext:\n"${text}"`,
+            'neighbor_note': `Persona: Good Neighbor. Instructions: Write a friendly message to neighbors in Norwegian. ${langPart}\n\nContext:\n"${text}"`,
+            'summary': `Persona: Information Analyst. Instructions: Summarize this text into its 5 most critical points. ${langPart}\n\nText:\n"${text}"`,
+            'translate': `Persona: Master Translator. Instructions: Translate this text perfectly. ${langPart}\n\nText:\n"${text}"`
+        };
+        return `${prompts[action]}${modelStrategy}`;
+    }
+
+    async function executeAI() {
+        const text = document.getElementById('userText').value;
+        if (!text.trim()) { alert(translations[currentLang].alertText); return; }
+        const prompt = generatePrompt(text, document.getElementById('actionType').value, document.getElementById('targetLanguage').value);
+        try {
+            await navigator.clipboard.writeText(prompt);
+            showToast();
+            setTimeout(() => {
+                const urls = {
+                    'chatgpt': 'https://chatgpt.com/', 'gemini': 'https://gemini.google.com/',
+                    'claude': 'https://claude.ai/new', 'grok': 'https://x.com/i/grok',
+                    'qwen': 'https://chat.qwenlm.ai/', 'minimax': 'https://www.hailuoai.com/'
+                };
+                window.open(urls[selectedModel], '_blank');
+            }, 1500);
+        } catch (err) { alert("Clipboard failed."); }
+    }
+
+    function showToast() {
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    window.onload = loadData;
+</script>
+</body>
+</html>
