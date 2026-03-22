@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontakt oss | ProTools</title>
+    <title>Kontakt oss | ProCalcs — Vytautas Giedraitis</title>
+    <meta name="description" content="Kontakt ProCalcs og Vytautas Giedraitis. Har du forslag til nye verktøy eller funnet en feil? Send en melding eller ring oss.">
+    <meta name="keywords" content="kontakt procalcs, vytautas giedraitis kontakt, support, tilbakemelding, foreslå verktøy">
+    <meta name="author" content="Vytautas Giedraitis">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#2b6cb0">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://procalcs.no/contact.html">
+    <meta property="og:title" content="Kontakt oss — ProCalcs">
+    <meta property="og:description" content="Kom i kontakt med utvikleren bak ProCalcs. Vi setter pris på tilbakemeldinger og forslag.">
+    <meta property="og:image" content="https://procalcs.no/assets/og-contact.jpg">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -23,14 +35,14 @@
         
         /* Navbar */
         .navbar { background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .navbar-inner { display: flex; justify-content: space-between; align-items: center; min-height: 70px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; min-height: 70px; max-width: 1200px; margin: 0 auto; padding: 0 20px; flex-wrap: nowrap; }
         .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .logo-sub { font-size: 12px; color: var(--muted); }
-        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-right { display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; }
         .nav-links { display: flex; gap: 20px; }
-        .nav-link { color: var(--text); font-weight: 500; }
+        .nav-link { color: var(--text); font-weight: 500; white-space: nowrap; }
         .nav-link:hover, .nav-link.active { color: var(--primary); }
-        .phone-btn { background: var(--success-bg); color: var(--success); padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; }
+        .phone-btn { background: var(--success-bg); color: var(--success); padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; white-space: nowrap; }
         .lang-switcher { display: flex; gap: 4px; }
         .lang-btn { padding: 6px; font-size: 18px; border: 1px solid transparent; }
         .lang-btn.active { background: var(--bg); border-color: var(--border); }
@@ -93,10 +105,12 @@
         .footer-col a { color: #a0aec0; display: block; margin-bottom: 8px; }
         .bottom-bar { text-align: center; border-top: 1px solid #2d3748; padding-top: 20px; font-size: 12px; }
 
-        @media (max-width: 768px) {
-            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); }
+        @media (max-width: 1000px) {
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             .nav-links.active { display: flex; }
             .hamburger { display: block; }
+            .phone-btn { display: none; } /* Hide phone to prevent crowding */
+            .lang-switcher { display: none; } /* Hide lang switcher or move to menu */
             .info-grid { grid-template-columns: 1fr; }
             .form-layout { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr; }
@@ -108,11 +122,10 @@
     <nav class="navbar">
         <div class="navbar-inner">
             <a href="index.html" class="logo-area" style="display:flex; flex-direction:column;">
-                <div class="logo-title"><i class="fa-solid fa-calculator"></i> ProTools</div>
+                <div class="logo-title"><i class="fa-solid fa-calculator"></i> ProCalcs</div>
                 <div class="logo-sub">by Vytautas Giedraitis</div>
             </a>
             <div class="nav-right">
-                <button class="hamburger" id="mobile-menu-btn">☰</button>
                 <div class="nav-links" id="nav-links">
                     <a href="index.html" class="nav-link" data-i18n="nav_home">Hjem</a>
                     <a href="tools.html" class="nav-link" data-i18n="nav_tools">Verktøy</a>
@@ -126,6 +139,7 @@
                     <button class="lang-btn" data-lang="pl">PL</button>
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
+                <button class="hamburger" id="mobile-menu-btn">☰</button>
             </div>
         </div>
     </nav>
@@ -186,7 +200,7 @@
                         <div class="tool-select-wrapper" id="tool-select-wrap">
                             <label class="form-label" style="margin-top:10px;" data-i18n="label_tool">Hvilket verktøy?</label>
                             <select name="tool" id="f_tool" class="form-input">
-                                <option>Finansai NO</option>
+                                <option>FinansNO Calc</option>
                                 <option>KonkursKalk Pro</option>
                                 <option>AiVyGa</option>
                             </select>
@@ -248,12 +262,12 @@
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
-                <h4>🔨 ProTools</h4>
+                <h4>🔨 ProCalcs</h4>
                 <p data-i18n="footer_brand">Smarte verktøy for det norske markedet.</p>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav_tools">Verktøy</h4>
-                <a href="Finansai_NO.html" style="display:block; color:#a0aec0; margin-bottom:5px;">Finansai NO</a>
+                <a href="FinansNO_Calc.html" style="display:block; color:#a0aec0; margin-bottom:5px;">FinansNO Calc</a>
                 <a href="KonkursKalk.html" style="display:block; color:#a0aec0; margin-bottom:5px;">KonkursKalk</a>
                 <a href="Ai_VyGa.html" style="display:block; color:#a0aec0;">AiVyGa</a>
             </div>
@@ -264,13 +278,13 @@
                 <a href="tel:94844497">📞 94844497</a>
             </div>
         </div>
-        <div class="bottom-bar" data-i18n="footer_copy">© 2026 ProTools by Vytautas Giedraitis.</div>
+        <div class="bottom-bar" data-i18n="footer_copy">© 2026 ProCalcs by Vytautas Giedraitis.</div>
     </footer>
 
     <script>
         const T = {
             no: { 
-                nav_home: "Hjem", nav_about: "Om oss", nav_contact: "Kontakt", nav_tools: "Verktøy", hero_title: "Kontakt forfatteren", info_phone_title: "Ring direkte", info_phone_sub: "Tilgjengelig hverdager 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send melding", info_wa_sub: "Svar vanligvis innen 1–2 timer", info_loc_title: "Sted", info_loc_sub: "Betjener hele landet", draft_tip: "📝 Du har et uferdig utkast", label_name: "Navn", label_email: "E-post", label_subject: "Emne", opt_new: "Forslag til nytt verktøy", opt_bug: "Feil/bug i verktøy", opt_feed: "Gi tilbakemelding", opt_other: "Annen henvendelse", label_tool: "Hvilket verktøy?", label_msg: "Melding", msg_ph: "Beskriv ditt forslag eller spørsmål...", err_req: "Feltet er påkrevd", btn_submit: "📬 Send melding", form_note: "ℹ️ Dette skjemaet sender meldingen direkte til Vytautas. Ring 94844497 for rask respons.", succ_title: "Takk for meldingen!", succ_sub: "Vi kontakter deg snart.", sug_title: "💡 Foreslå et verktøy", sug_desc: "Mangler du en kalkulator? Vi lager verktøy basert på tilbakemelding fra brukere.", footer_brand: "Smarte verktøy for det norske markedet.", footer_copy: "© 2026 ProTools by Vytautas Giedraitis.",
+                nav_home: "Hjem", nav_about: "Om oss", nav_contact: "Kontakt", nav_tools: "Verktøy", hero_title: "Kontakt forfatteren", info_phone_title: "Ring direkte", info_phone_sub: "Tilgjengelig hverdager 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send melding", info_wa_sub: "Svar vanligvis innen 1–2 timer", info_loc_title: "Sted", info_loc_sub: "Betjener hele landet", draft_tip: "📝 Du har et uferdig utkast", label_name: "Navn", label_email: "E-post", label_subject: "Emne", opt_new: "Forslag til nytt verktøy", opt_bug: "Feil/bug i verktøy", opt_feed: "Gi tilbakemelding", opt_other: "Annen henvendelse", label_tool: "Hvilket verktøy?", label_msg: "Melding", msg_ph: "Beskriv ditt forslag eller spørsmål...", err_req: "Feltet er påkrevd", btn_submit: "📬 Send melding", form_note: "ℹ️ Dette skjemaet sender meldingen direkte til Vytautas. Ring 94844497 for rask respons.", succ_title: "Takk for meldingen!", succ_sub: "Vi kontakter deg snart.", sug_title: "💡 Foreslå et verktøy", sug_desc: "Mangler du en kalkulator? Vi lager verktøy basert på tilbakemelding fra brukere.", footer_brand: "Smarte verktøy for det norske markedet.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 idea_1: "📈 Skattekalkulator", idea_1_full: "Forslag: Mer detaljert trinnskatt-kalkulator", 
                 idea_2: "🏠 Leiekontrakt-sjekk", idea_2_full: "Forslag: AI som sjekker leiekontrakter", 
                 idea_3: "📑 CV-bygger", idea_3_full: "Forslag: Spesialisert CV-bygger for håndverkere", 
@@ -279,7 +293,7 @@
                 supp_title: "☕ Støtt prosjektet", supp_desc: "Verktøyene er gratis. Du kan støtte videreutvikling ved å spandere en kaffe.", supp_note: "Takk for din støtte!"
             },
             en: { 
-                nav_home: "Home", nav_about: "About", nav_contact: "Contact", nav_tools: "Tools", hero_title: "Contact the Author", info_phone_title: "Call directly", info_phone_sub: "Available weekdays 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send message", info_wa_sub: "Usually replies in 1-2 hrs", info_loc_title: "Location", info_loc_sub: "Serves the whole country", draft_tip: "📝 You have a draft", label_name: "Name", label_email: "Email", label_subject: "Subject", opt_new: "Suggest new tool", opt_bug: "Bug/Error", opt_feed: "Feedback", opt_other: "Other", label_tool: "Which tool?", label_msg: "Message", msg_ph: "Describe your idea...", err_req: "Required", btn_submit: "📬 Send Message", form_note: "ℹ️ This form sends the message directly to Vytautas. Call 94844497 for quick response.", succ_title: "Thank you!", succ_sub: "We will contact you soon.", sug_title: "💡 Suggest a tool", sug_desc: "Missing a tool? We build calculators based on feedback.", footer_brand: "Smart tools for the Norwegian market.", footer_copy: "© 2026 ProTools by Vytautas Giedraitis.",
+                nav_home: "Home", nav_about: "About", nav_contact: "Contact", nav_tools: "Tools", hero_title: "Contact the Author", info_phone_title: "Call directly", info_phone_sub: "Available weekdays 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send message", info_wa_sub: "Usually replies in 1-2 hrs", info_loc_title: "Location", info_loc_sub: "Serves the whole country", draft_tip: "📝 You have a draft", label_name: "Name", label_email: "Email", label_subject: "Subject", opt_new: "Suggest new tool", opt_bug: "Bug/Error", opt_feed: "Feedback", opt_other: "Other", label_tool: "Which tool?", label_msg: "Message", msg_ph: "Describe your idea...", err_req: "Required", btn_submit: "📬 Send Message", form_note: "ℹ️ This form sends the message directly to Vytautas. Call 94844497 for quick response.", succ_title: "Thank you!", succ_sub: "We will contact you soon.", sug_title: "💡 Suggest a tool", sug_desc: "Missing a tool? We build calculators based on feedback.", footer_brand: "Smart tools for the Norwegian market.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 idea_1: "📈 Tax Calculator", idea_1_full: "Suggestion: Detailed step-tax calculator", 
                 idea_2: "🏠 Contract AI Checker", idea_2_full: "Suggestion: AI tool to check rental contracts", 
                 idea_3: "📑 CV Builder", idea_3_full: "Suggestion: Specialized CV builder for tradesmen", 
@@ -288,7 +302,7 @@
                 supp_title: "☕ Support the project", supp_desc: "These tools are free. Support development by buying a coffee.", supp_note: "Thank you for your support!"
             },
             lt: { 
-                nav_home: "Pradžia", nav_about: "Apie mus", nav_contact: "Kontaktai", nav_tools: "Įrankiai", hero_title: "Susisiekti su autoriumi", info_phone_title: "Skambinti", info_phone_sub: "Darbo dienomis 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Siųsti žinutę", info_wa_sub: "Atsako per 1-2 val.", info_loc_title: "Vieta", info_loc_sub: "Aptarnauja visą šalį", draft_tip: "📝 Turite nebaigtą žinutę", label_name: "Vardas", label_email: "El. paštas", label_subject: "Tema", opt_new: "Naujo įrankio idėja", opt_bug: "Klaida", opt_feed: "Atsiliepimas", opt_other: "Kita", label_tool: "Kuris įrankis?", label_msg: "Žinutė", msg_ph: "Aprašykite savo idėją...", err_req: "Privalomas laukas", btn_submit: "📬 Siųsti", form_note: "ℹ️ Ši forma siunčia žinutę tiesiogiai Vytautui. Skambinkite 94844497.", succ_title: "Ačiū!", succ_sub: "Susisieksime netrukus.", sug_title: "💡 Siūlyti įrankį", sug_desc: "Trūksta skaičiuoklės? Kuriame įrankius pagal jūsų poreikius.", footer_brand: "Išmanūs įrankiai Norvegijos rinkai.", footer_copy: "© 2026 ProTools by Vytautas Giedraitis.",
+                nav_home: "Pradžia", nav_about: "Apie mus", nav_contact: "Kontaktai", nav_tools: "Įrankiai", hero_title: "Susisiekti su autoriumi", info_phone_title: "Skambinti", info_phone_sub: "Darbo dienomis 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Siųsti žinutę", info_wa_sub: "Atsako per 1-2 val.", info_loc_title: "Vieta", info_loc_sub: "Aptarnauja visą šalį", draft_tip: "📝 Turite nebaigtą žinutę", label_name: "Vardas", label_email: "El. paštas", label_subject: "Tema", opt_new: "Naujo įrankio idėja", opt_bug: "Klaida", opt_feed: "Atsiliepimas", opt_other: "Kita", label_tool: "Kuris įrankis?", label_msg: "Žinutė", msg_ph: "Aprašykite savo idėją...", err_req: "Privalomas laukas", btn_submit: "📬 Siųsti", form_note: "ℹ️ Ši forma siunčia žinutę tiesiogiai Vytautui. Skambinkite 94844497.", succ_title: "Ačiū!", succ_sub: "Susisieksime netrukus.", sug_title: "💡 Siūlyti įrankį", sug_desc: "Trūksta skaičiuoklės? Kuriame įrankius pagal jūsų poreikius.", footer_brand: "Išmanūs įrankiai Norvegijos rinkai.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 idea_1: "📈 Mokesčių skaičiuoklė", idea_1_full: "Pasiūlymas: Detali mokesčių (Trinnskatt) skaičiuoklė", 
                 idea_2: "🏠 Sutarčių tikrinimas", idea_2_full: "Pasiūlymas: AI įrankis nuomos sutarčių tikrinimui", 
                 idea_3: "📑 CV Kūrėjas", idea_3_full: "Pasiūlymas: Specializuotas CV kūrimas statybininkams", 
@@ -297,7 +311,7 @@
                 supp_title: "☕ Paremkite projektą", supp_desc: "Įrankiai nemokami. Paremkite tolesnį kūrimą nupirkdami kavos.", supp_note: "Ačiū už jūsų paramą!"
             },
             pl: { 
-                nav_home: "Główna", nav_about: "O nas", nav_contact: "Kontakt", nav_tools: "Narzędzia", hero_title: "Kontakt z autorem", info_phone_title: "Zadzwoń", info_phone_sub: "Dni robocze 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Wyślij wiadomość", info_wa_sub: "Odpowiedź w 1-2 godz.", info_loc_title: "Lokalizacja", info_loc_sub: "Cały kraj", draft_tip: "📝 Masz wersję roboczą", label_name: "Imię", label_email: "E-mail", label_subject: "Temat", opt_new: "Propozycja narzędzia", opt_bug: "Błąd", opt_feed: "Opinia", opt_other: "Inne", label_tool: "Które narzędzie?", label_msg: "Wiadomość", msg_ph: "Opisz swój pomysł...", err_req: "Wymagane", btn_submit: "📬 Wyślij", form_note: "ℹ️ Ten formularz wysyła wiadomość bezpośrednio do Vytautasa. Zadzwoń 94844497.", succ_title: "Dziękujemy!", succ_sub: "Wkrótce się skontaktujemy.", sug_title: "💡 Zaproponuj narzędzie", sug_desc: "Brakuje kalkulatora? Tworzymy narzędzia na podstawie opinii.", footer_brand: "Inteligentne narzędzia na rynek norweski.", footer_copy: "© 2026 ProTools by Vytautas Giedraitis.",
+                nav_home: "Główna", nav_about: "O nas", nav_contact: "Kontakt", nav_tools: "Narzędzia", hero_title: "Kontakt z autorem", info_phone_title: "Zadzwoń", info_phone_sub: "Dni robocze 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Wyślij wiadomość", info_wa_sub: "Odpowiedź w 1-2 godz.", info_loc_title: "Lokalizacja", info_loc_sub: "Cały kraj", draft_tip: "📝 Masz wersję roboczą", label_name: "Imię", label_email: "E-mail", label_subject: "Temat", opt_new: "Propozycja narzędzia", opt_bug: "Błąd", opt_feed: "Opinia", opt_other: "Inne", label_tool: "Które narzędzie?", label_msg: "Wiadomość", msg_ph: "Opisz swój pomysł...", err_req: "Wymagane", btn_submit: "📬 Wyślij", form_note: "ℹ️ Ten formularz wysyła wiadomość bezpośrednio do Vytautasa. Zadzwoń 94844497.", succ_title: "Dziękujemy!", succ_sub: "Wkrótce się skontaktujemy.", sug_title: "💡 Zaproponuj narzędzie", sug_desc: "Brakuje kalkulatora? Tworzymy narzędzia na podstawie opinii.", footer_brand: "Inteligentne narzędzia na rynek norweski.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 idea_1: "📈 Kalkulator podatkowy", idea_1_full: "Propozycja: Szczegółowy kalkulator podatkowy (Trinnskatt)", 
                 idea_2: "🏠 Sprawdzanie umów", idea_2_full: "Propozycja: AI do sprawdzania umów najmu", 
                 idea_3: "📑 Kreator CV", idea_3_full: "Propozycja: Kreator CV dla budowlańców", 
@@ -306,7 +320,7 @@
                 supp_title: "☕ Wesprzyj projekt", supp_desc: "Narzędzia są darmowe. Wesprzyj rozwój, stawiając kawę.", supp_note: "Dziękujemy za wsparcie!"
             },
             ru: {
-                nav_home: "Главная", nav_about: "О нас", nav_contact: "Контакт", nav_tools: "Инструменты", hero_title: "Связаться с автором", info_phone_title: "Позвонить", info_phone_sub: "Будни 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Отправить", info_wa_sub: "Ответ за 1-2 ч", info_loc_title: "Место", info_loc_sub: "Вся Норвегия", draft_tip: "📝 Есть черновик", label_name: "Имя", label_email: "Email", label_subject: "Тема", opt_new: "Идея инструмента", opt_bug: "Ошибка", opt_feed: "Отзыв", opt_other: "Другое", label_tool: "Какой инструмент?", label_msg: "Сообщение", msg_ph: "Опишите идею...", err_req: "Обязательно", btn_submit: "📬 Отправить", form_note: "ℹ️ Сообщение отправляется Витаутасу. Звоните 94844497.", succ_title: "Спасибо!", succ_sub: "Мы свяжемся с вами.", sug_title: "💡 Предложить идею", sug_desc: "Нужен калькулятор? Мы создаем их по отзывам.", footer_brand: "Умные инструменты для Норвегии.", footer_copy: "© 2026 ProTools by Vytautas Giedraitis.",
+                nav_home: "Главная", nav_about: "О нас", nav_contact: "Контакт", nav_tools: "Инструменты", hero_title: "Связаться с автором", info_phone_title: "Позвонить", info_phone_sub: "Будни 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Отправить", info_wa_sub: "Ответ за 1-2 ч", info_loc_title: "Место", info_loc_sub: "Вся Норвегия", draft_tip: "📝 Есть черновик", label_name: "Имя", label_email: "Email", label_subject: "Тема", opt_new: "Идея инструмента", opt_bug: "Ошибка", opt_feed: "Отзыв", opt_other: "Другое", label_tool: "Какой инструмент?", label_msg: "Сообщение", msg_ph: "Опишите идею...", err_req: "Обязательно", btn_submit: "📬 Отправить", form_note: "ℹ️ Сообщение отправляется Витаутасу. Звоните 94844497.", succ_title: "Спасибо!", succ_sub: "Мы свяжемся с вами.", sug_title: "💡 Предложить идею", sug_desc: "Нужен калькулятор? Мы создаем их по отзывам.", footer_brand: "Умные инструменты для Норвегии.", footer_copy: "© 2026 ProCalcs by Vytautas Giedraitis.",
                 idea_1: "📈 Налоговый калькулятор", idea_1_full: "Предложение: Детальный расчет налогов (Trinnskatt)", 
                 idea_2: "🏠 Проверка контрактов", idea_2_full: "Предложение: ИИ для проверки аренды", 
                 idea_3: "📑 Конструктор резюме", idea_3_full: "Предложение: Резюме для строителей", 
@@ -336,11 +350,11 @@
             document.getElementById('idea-4').textContent = T[lang].idea_4;
             document.getElementById('idea-other').textContent = T[lang].idea_other;
             
-            localStorage.setItem('pb_lang', lang);
+            localStorage.setItem('procalcs_lang', lang);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('pb_lang') || 'no';
+            const saved = localStorage.getItem('procalcs_lang') || 'no';
             setLang(saved);
             document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
             document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('nav-links').classList.toggle('active'));
@@ -353,7 +367,7 @@
             const ideas = [{id:'idea-1',k:'idea_1_full'}, {id:'idea-2',k:'idea_2_full'}, {id:'idea-3',k:'idea_3_full'}, {id:'idea-4',k:'idea_4_full'}, {id:'idea-other',k:'idea_other_full'}];
             ideas.forEach(i => {
                 document.getElementById(i.id).addEventListener('click', () => {
-                    const lang = localStorage.getItem('pb_lang') || 'no';
+                    const lang = localStorage.getItem('procalcs_lang') || 'no';
                     const msg = document.getElementById('f_msg');
                     msg.value = T[lang][i.k];
                     subj.value = 'new';

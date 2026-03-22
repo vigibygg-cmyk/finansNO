@@ -934,7 +934,7 @@
 
                 renderAllowances();
                 calc();
-            } catch (err) { alert("Refresh page"); }
+            } catch (err) { console.error("Init error:", err); }
         }
 
         function save() {

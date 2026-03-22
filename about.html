@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Om oss | ProTools</title>
+    <title>Om oss | ProCalcs — Vytautas Giedraitis</title>
+    <meta name="description" content="Om ProCalcs og Vytautas Giedraitis. Vårt mål er å forenkle hverdagen for innvandrere i Norge gjennom smarte digitale verktøy.">
+    <meta name="keywords" content="om procalcs, vytautas giedraitis, om oss, kontakt informasjon, prosjektbeskrivelse, innvandrere norge verktøy">
+    <meta name="author" content="Vytautas Giedraitis">
+    <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#2b6cb0">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://procalcs.no/about.html">
+    <meta property="og:title" content="Om oss — ProCalcs">
+    <meta property="og:description" content="Vi utvikler verktøy som hjelper innvandrere i Norge. Lær mer om teamet og visjonen.">
+    <meta property="og:image" content="https://procalcs.no/assets/og-about.jpg">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Paimta tiesiai iš about_pvz.html */
@@ -19,14 +31,14 @@
 
         /* Navbar */
         .navbar { background: var(--card); border-bottom: 1px solid var(--border); padding: 15px 0; margin-bottom: 40px; position: sticky; top: 0; z-index: 100; }
-        .navbar-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; flex-wrap: nowrap; }
         .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
         .logo-sub { font-size: 12px; color: var(--muted); }
-        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-right { display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; }
         .nav-links { display: flex; gap: 20px; }
-        .nav-link { color: var(--text); font-weight: 500; transition: color 0.2s; }
+        .nav-link { color: var(--text); font-weight: 500; transition: color 0.2s; white-space: nowrap; }
         .nav-link:hover, .nav-link.active { color: var(--primary); }
-        .phone-btn { background: #f0fff4; color: #276749; padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; }
+        .phone-btn { background: #f0fff4; color: #276749; padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; white-space: nowrap; }
         .lang-switcher { display: flex; gap: 4px; }
         .lang-btn { padding: 6px; font-size: 18px; border: 1px solid transparent; background: transparent; cursor: pointer; }
         .lang-btn.active { background: var(--bg); border-color: var(--border); border-radius: 4px; }
@@ -43,10 +55,13 @@
         
         footer { text-align: center; padding: 40px 0; color: var(--muted); font-size: 14px; }
 
-        @media (max-width: 768px) {
-            .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--border); }
+        @media (max-width: 1000px) {
+            .nav-links { display: none; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); flex-direction: column; padding: 20px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             .nav-links.active { display: flex; }
             .hamburger { display: block; }
+            .phone-btn { display: none; } /* Hide phone to prevent crowding */
+            .lang-switcher { display: none; } /* Hide lang switcher or move to menu */
+            .nav-links .lang-switcher { display: flex; margin-top: 10px; } /* Assuming we add it to mobile menu if needed, though current HTML doesn't have it inside nav-links. We'll leave as is for now, just hiding to prevent break. */
         }
     </style>
 </head>
@@ -55,7 +70,7 @@
     <nav class="navbar">
         <div class="navbar-inner">
             <a href="index.html" class="logo-area" style="display:flex; flex-direction:column;">
-                <div class="logo-title"><i class="fa-solid fa-calculator"></i> ProTools</div>
+                <div class="logo-title"><i class="fa-solid fa-calculator"></i> ProCalcs</div>
                 <div class="logo-sub">by Vytautas Giedraitis</div>
             </a>
             <div class="nav-right">
@@ -92,7 +107,7 @@
             <h2 data-i18n="mission_title">Vår misjon</h2>
             <p data-i18n="mission_text">
                 Å navigere i det norske systemet som innvandrer kan være utfordrende. Skatteregler, NAV-rettigheter og byråkrati er ofte komplisert.
-                ProTools er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.
+                ProCalcs er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.
             </p>
 
             <h2 data-i18n="free_title">Alltid gratis</h2>
@@ -109,7 +124,7 @@
 
     <footer>
         <div class="container">
-            <p>© 2026 ProTools by Vytautas Giedraitis</p>
+            <p>© 2026 ProCalcs by Vytautas Giedraitis</p>
         </div>
     </footer>
 
@@ -121,7 +136,7 @@
                 dev_title: "Utviklet av Vytautas Giedraitis",
                 dev_desc: "Selvstendig utvikler & finans-entusiast",
                 mission_title: "Vår misjon",
-                mission_text: "Å navigere i det norske systemet som innvandrer kan være utfordrende. ProTools er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.",
+                mission_text: "Å navigere i det norske systemet som innvandrer kan være utfordrende. ProCalcs er laget for å forenkle dette. Vi tilbyr gratis, profesjonelle verktøy som gir deg kontroll over din økonomi og dine rettigheter.",
                 free_title: "Alltid gratis",
                 free_text: "Jeg tror på tilgjengelig kunnskap. Disse verktøyene er gratis å bruke for alle. Prosjektet drives på fritiden.",
                 tech_title: "Teknologien",
@@ -133,7 +148,7 @@
                 dev_title: "Developed by Vytautas Giedraitis",
                 dev_desc: "Independent Developer & Finance Enthusiast",
                 mission_title: "Our Mission",
-                mission_text: "Navigating the Norwegian system as an immigrant can be challenging. ProTools makes it simple. We provide free, professional tools to give you control over your finances and rights.",
+                mission_text: "Navigating the Norwegian system as an immigrant can be challenging. ProCalcs makes it simple. We provide free, professional tools to give you control over your finances and rights.",
                 free_title: "Always Free",
                 free_text: "I believe in accessible knowledge. These tools are free for everyone. The project is run in my spare time.",
                 tech_title: "Technology",
@@ -145,7 +160,7 @@
                 dev_title: "Sukūrė Vytautas Giedraitis",
                 dev_desc: "Nepriklausomas kūrėjas ir finansų entuziastas",
                 mission_title: "Mūsų misija",
-                mission_text: "Imigrantams Norvegijos sistema gali būti paini. ProTools sukurta tam, kad tai palengvintų. Teikiame nemokamus, profesionalius įrankius jūsų finansiniam saugumui.",
+                mission_text: "Imigrantams Norvegijos sistema gali būti paini. ProCalcs sukurta tam, kad tai palengvintų. Teikiame nemokamus, profesionalius įrankius jūsų finansiniam saugumui.",
                 free_title: "Visada nemokamai",
                 free_text: "Tikiu prieinamomis žiniomis. Visi įrankiai yra nemokami. Projektas vystomas laisvalaikiu.",
                 tech_title: "Technologija",
@@ -157,7 +172,7 @@
                 dev_title: "Opracowane przez Vytautasa Giedraitisa",
                 dev_desc: "Niezależny deweloper i entuzjasta finansów",
                 mission_title: "Nasza misja",
-                mission_text: "Poruszanie się po norweskim systemie może być trudne. ProTools to ułatwia. Oferujemy darmowe narzędzia, które dają kontrolę nad Twoimi finansami.",
+                mission_text: "Poruszanie się po norweskim systemie może być trudne. ProCalcs to ułatwia. Oferujemy darmowe narzędzia, które dają kontrolę nad Twoimi finansami.",
                 free_title: "Zawsze za darmo",
                 free_text: "Wierzę w dostępną wiedzę. Narzędzia są darmowe dla wszystkich. Projekt prowadzony w wolnym czasie.",
                 tech_title: "Technologia",
@@ -169,7 +184,7 @@
                 dev_title: "Разработано Витаутасом Гедрайтисом",
                 dev_desc: "Разработчик и финансовый энтузиаст",
                 mission_title: "Наша миссия",
-                mission_text: "Навигация в норвежской системе может быть сложной. ProTools упрощает это. Мы предлагаем бесплатные инструменты для контроля над вашими финансами.",
+                mission_text: "Навигация в норвежской системе может быть сложной. ProCalcs упрощает это. Мы предлагаем бесплатные инструменты для контроля над вашими финансами.",
                 free_title: "Всегда бесплатно",
                 free_text: "Я верю в доступность знаний. Инструменты бесплатны. Проект разрабатывается в свободное время.",
                 tech_title: "Технологии",
@@ -185,11 +200,11 @@
                 if(T[lang][key]) el.textContent = T[lang][key];
             });
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
-            localStorage.setItem('protools_lang', lang);
+            localStorage.setItem('procalcs_lang', lang);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('protools_lang') || 'no';
+            const saved = localStorage.getItem('procalcs_lang') || 'no';
             setLang(saved);
             document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
             document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('nav-links').classList.toggle('active'));
